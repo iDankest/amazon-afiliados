@@ -13,56 +13,89 @@ const descanso = byCat('descanso');
 const teclados = byCat('teclados');
 ---
 
-<Base title="Orza — guías y precios vistos en Amazon.es" description="Guías honestas de descanso y teclados, y un registro de precios anotados a mano. Si no se ha probado, se dice. Sin claims médicos.">
-  <h1>Orza</h1>
-  <p class="lede">Guías cortas y un registro de precios vistos en Amazon.es. Experiencia real cuando la hay; si no se ha probado, se dice. Nada de tops inventados ni testimonios falsos.</p>
+<Base title="Orza — Cuaderno de navegación y registro de precios en Amazon.es" description="Guías honestas de descanso y teclados, y un registro de precios anotados a mano. Si no se ha probado, se dice. Sin claims médicos.">
+  
+  <!-- Consola de Puente / Hero de Tesis -->
+  <section class="helm-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Bitácora de Campo // Rumbo Fijo</span>
+      <span class="badge">[Mesa de Cartas]</span>
+    </div>
+    <h1 class="helm-thesis">La orza es la pieza que impide la deriva del barco.</h1>
+    <p class="helm-text">
+      Frente a la corriente de reseñas artificiales, compras impulsivas y granjas de afiliación: dos cuadernos de campo con experiencia directa y un registro manual de precios en Amazon.es. Si un producto no se ha probado, se etiqueta en grande. Criterio propio antes del clic.
+    </p>
 
-  <h2 id="descanso">Descanso</h2>
-  <p class="section-desc">Dormir a oscuras, sin inventar milagros: antifaces, tapones y kits.</p>
+    <div class="helm-pillars">
+      <div class="helm-pillar-card">
+        <h4>01. Cuaderno de Descanso</h4>
+        <p>Dormir a oscuras y en silencio: antifaces 3D, tapones auditivos y comparativas de kits sin promesas médicas.</p>
+        <a class="helm-pillar-link" href="#descanso">Consultar cartas de descanso &rarr;</a>
+      </div>
+      <div class="helm-pillar-card">
+        <h4>02. Cuaderno de Teclados</h4>
+        <p>Switches mecánicos, formatos compactos y ergonomía de escritorio: lo que está probado y lo que queda por probar.</p>
+        <a class="helm-pillar-link" href="#teclados">Consultar cartas de teclados &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sector 01: Descanso -->
+  <h2 id="descanso">Sector Descanso</h2>
+  <p class="section-desc">Dormir a oscuras, sin inventar milagros: antifaces, tapones y kits analizados con honestidad.</p>
   <div class="grid">
     <article class="card">
       <div>
+        <div class="card-header-mono">Guía de campo // 01</div>
         <h3>Antifaz para dormir</h3>
         <p>3D vs plano, velcro, luz por la nariz, dormir de lado.</p>
       </div>
       <div class="card-actions">
-        <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Leer guía de campo <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
+
     <article class="card">
       <div>
+        <div class="card-header-mono">Guía de campo // 02</div>
         <h3>Tapones para dormir</h3>
         <p>Espuma, silicona, reutilizables. Lo que suele fallar.</p>
       </div>
       <div class="card-actions">
-        <a class="card-link" href={u('guias/tapones-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        <a class="card-link" href={u('guias/tapones-para-dormir/')}>Leer guía de campo <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
+
     <article class="card">
       <div>
+        <div class="card-header-mono">Comparativa // 03</div>
         <h3>¿Kit o por separado?</h3>
         <p>Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.</p>
       </div>
       <div class="card-actions">
-        <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Comparar <span aria-hidden="true">&rarr;</span></a>
+        <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Comparar opciones <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
   </div>
 
   {descanso.length > 0 && (
     <>
-      <h2>Productos seguidos (descanso)</h2>
-      <p class="note">Sin snapshots anotados no se publica ningún precio: lo que ves aquí es solo el registro, no una oferta.</p>
+      <h2>Registro de Productos (Descanso)</h2>
+      <div class="note">
+        <span class="note-badge">Regla de Bitácora</span>
+        Sin snapshots anotados no se publica ningún precio: lo que ves aquí es solo el registro verificado, no una oferta comercial inventada.
+      </div>
       <div class="grid">
         {descanso.map((p) => (
           <article class="card">
             <div>
+              <div class="card-header-mono">Ficha de producto // {p.category}</div>
               <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-              <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+              <p><span class={`badge ${p.tested}`}>[{testedLabel[p.tested]}]</span></p>
               <p>{p.notes}</p>
             </div>
             <div class="card-actions">
-              <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
+              <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro de precios <span aria-hidden="true">&rarr;</span></a>
             </div>
           </article>
         ))}
@@ -70,37 +103,46 @@ const teclados = byCat('teclados');
     </>
   )}
 
-  <h2 id="teclados">Teclados</h2>
+  <!-- Sector 02: Teclados -->
+  <h2 id="teclados">Sector Teclados</h2>
+  <p class="section-desc">Criterio táctil para el escritorio: switches, formatos y componentes mecánicos.</p>
   <div class="grid">
     <article class="card">
       <div>
+        <div class="card-header-mono">Guía de compra // 01</div>
         <h3>Teclados mecánicos</h3>
         <p>Guía de compra honesta: switch, tamaño, conexión, layout. Aún no hay reviews propias; lo no probado se etiqueta.</p>
       </div>
       <div class="card-actions">
-        <a class="card-link" href={u('guias/teclados/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        <a class="card-link" href={u('guias/teclados/')}>Leer guía de teclados <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
     {teclados.map((p) => (
       <article class="card">
         <div>
+          <div class="card-header-mono">Ficha de producto // {p.category}</div>
           <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-          <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+          <p><span class={`badge ${p.tested}`}>[{testedLabel[p.tested]}]</span></p>
           <p>{p.notes}</p>
         </div>
         <div class="card-actions">
-          <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
+          <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro de precios <span aria-hidden="true">&rarr;</span></a>
         </div>
       </article>
     ))}
   </div>
 
-  <h2>Buscar en Amazon.es</h2>
+  <!-- Estación de Búsqueda Directa -->
+  <h2>Rumbo Directo a Amazon.es</h2>
+  <p class="section-desc">Búsquedas preconfiguradas con términos precisos de catálogo:</p>
   <div class="btn-group">
-    <AmazonLink query="antifaz para dormir 3D">Antifaces 3D</AmazonLink>
-    <AmazonLink query="tapones oidos para dormir">Tapones para dormir</AmazonLink>
-    <AmazonLink query="loop quiet 2">Loop Quiet 2</AmazonLink>
-    <AmazonLink query="teclado mecanico">Teclado mecánico</AmazonLink>
+    <AmazonLink query="antifaz para dormir 3D">Antifaces 3D &rarr;</AmazonLink>
+    <AmazonLink query="tapones oidos para dormir">Tapones para dormir &rarr;</AmazonLink>
+    <AmazonLink query="loop quiet 2">Loop Quiet 2 &rarr;</AmazonLink>
+    <AmazonLink query="teclado mecanico">Teclados mecánicos &rarr;</AmazonLink>
   </div>
-  <p class="note">Los botones abren búsquedas de Amazon.es, no un producto concreto. Cuando haya tag de afiliado, esas visitas pueden generar comisión si compras en 24 h.</p>
+  <div class="note">
+    <span class="note-badge">Aviso de Afiliación</span>
+    Los botones abren búsquedas directas en Amazon.es, no un producto concreto. Cuando haya un tag de afiliado configurado, esas visitas pueden generar una pequeña comisión si compras en las siguientes 24 horas, sin coste extra para ti.
+  </div>
 </Base>

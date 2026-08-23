@@ -1,218 +1,236 @@
 ---
 name: Orza
-description: Guías honestas de descanso y teclados con registro manual de precios y estética editorial sobria.
+description: Cuaderno de navegación y registro honesto para Amazon.es. Estética de mesa de cartas náuticas, latón pulido y guardia nocturna.
 colors:
-  primary: "#0f766e"
-  primary-dark: "#2dd4bf"
-  neutral-bg: "#f4f0e8"
-  neutral-bg-dark: "#0c100f"
-  neutral-card: "#fffcf7"
-  neutral-card-dark: "#151a19"
-  neutral-ink: "#1c1917"
-  neutral-ink-dark: "#e7e5e4"
-  neutral-muted: "#57534e"
-  neutral-muted-dark: "#a3a09b"
-  neutral-line: "#d6d3d1"
-  neutral-line-dark: "#242c2a"
-  banner-bg: "#ecfdf5"
-  banner-bg-dark: "#09211d"
-  banner-ink: "#065f46"
-  banner-ink-dark: "#a7f3d0"
-  banner-line: "#a7f3d0"
-  banner-line-dark: "#134e4a"
+  primary: "#b45309"
+  primary-dark: "#f59e0b"
+  beacon: "#0369a1"
+  beacon-dark: "#38bdf8"
+  neutral-bg: "#f4f0e6"
+  neutral-bg-dark: "#070b10"
+  neutral-card: "#fdfbf7"
+  neutral-card-dark: "#0e151e"
+  neutral-ink: "#0f1923"
+  neutral-ink-dark: "#e2e8f0"
+  neutral-muted: "#475569"
+  neutral-muted-dark: "#8493a8"
+  neutral-line: "#d3cbbe"
+  neutral-line-dark: "#1c2734"
+  banner-bg: "#eef4f8"
+  banner-bg-dark: "#081a24"
+  banner-ink: "#0c4a6e"
+  banner-ink-dark: "#7dd3fc"
+  banner-line: "#bae6fd"
+  banner-line-dark: "#0369a1"
 typography:
   display:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "clamp(1.85rem, 4vw, 2.35rem)"
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "clamp(2rem, 5vw, 2.75rem)"
     fontWeight: 700
     lineHeight: 1.15
-    letterSpacing: "-0.025em"
+    letterSpacing: "-0.01em"
   headline:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "clamp(1.2rem, 2.5vw, 1.4rem)"
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "clamp(1.25rem, 3vw, 1.6rem)"
     fontWeight: 600
     lineHeight: 1.25
-    letterSpacing: "-0.015em"
+    letterSpacing: "0.02em"
+  thesis:
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "clamp(1.4rem, 3.5vw, 1.85rem)"
+    fontWeight: 700
+    lineHeight: 1.25
+  brand:
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "1.3rem"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0.08em"
   title:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "1.05rem"
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "1.15rem"
     fontWeight: 600
     lineHeight: 1.35
-    letterSpacing: "-0.01em"
   lede:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "1.1rem"
+    fontFamily: "Albert Sans, system-ui, sans-serif"
+    fontSize: "1.125rem"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.65
+  sub:
+    fontFamily: "Albert Sans, system-ui, sans-serif"
+    fontSize: "1.1rem"
+    fontWeight: 700
+    lineHeight: 1.35
+  card-title:
+    fontFamily: "Albert Sans, system-ui, sans-serif"
+    fontSize: "1.05rem"
+    fontWeight: 500
+    lineHeight: 1.65
   body:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "Albert Sans, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
-    lineHeight: 1.55
-  sub:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "0.95rem"
-    fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.6
   note:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "Albert Sans, system-ui, sans-serif"
     fontSize: "0.9rem"
     fontWeight: 400
-    lineHeight: 1.5
-  label:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    lineHeight: 1.55
+  mono-ui:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
     fontSize: "0.85rem"
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: "0.05em"
+  card-link:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.82rem"
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: "0.04em"
+  nav:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.8rem"
     fontWeight: 500
     lineHeight: 1.4
-  fine:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "0.82rem"
-    fontWeight: 400
-    lineHeight: 1.6
+    letterSpacing: "0.04em"
   badge:
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-    fontSize: "0.78rem"
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.75rem"
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: "0.04em"
+  meta:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.72rem"
     fontWeight: 500
-    lineHeight: 1.3
+    lineHeight: 1.2
+    letterSpacing: "0.08em"
+  kicker:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.7rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.08em"
+  mono-sub:
+    fontFamily: "Overpass Mono, ui-monospace, monospace"
+    fontSize: "0.65rem"
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: "0.12em"
 rounded:
-  sm: "0.45rem"
-  md: "0.6rem"
+  none: "0px"
+  xs: "2px"
+  sm: "3px"
+  md: "4px"
+  lg: "6px"
   full: "999px"
 spacing:
   xs: "0.35rem"
-  sm: "0.7rem"
-  md: "1.15rem"
-  lg: "1.75rem"
-  xl: "2.5rem"
+  sm: "0.75rem"
+  md: "1.25rem"
+  lg: "2rem"
+  xl: "3.5rem"
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "#ffffff"
     rounded: "{rounded.sm}"
-    padding: "0.65rem 1.15rem"
+    padding: "0.75rem 1.35rem"
   button-primary-hover:
-    backgroundColor: "#115e59"
+    backgroundColor: "#92400e"
   card:
     backgroundColor: "{colors.neutral-card}"
     rounded: "{rounded.md}"
-    padding: "1.15rem"
+    padding: "1.35rem"
 ---
 
-# Design System: Orza
+# Design System: Orza (Nautical Chart Table & Night Helm)
 
 ## Overview
 
-**Creative North Star: \"The Honest Curator's Ledger\"**
+**Creative North Star: "The Night Helm & Maritime Chart Table"**
 
-Orza is an editorial buying guide and transparent price registry focused on sleep quality and mechanical keyboards for Spain (Amazon.es). The visual language feels like an authentic field notebook or curator's ledger: calm, confident, tactile, and completely devoid of artificial marketing noise, aggressive badges, or fabricated urgency.
+Orza is the daggerboard or tiller that prevents leeway at sea. On the modern web, algorithmic noise, manufactured urgency, fake reviews, and opaque affiliate farms cause perpetual drift. Orza is the captain's solid chart table: deliberate, tactical, illuminated by warm incandescent brass lanterns by night and unrolled over crisp navigation parchment by day.
 
-The atmosphere balances warm natural bone/ivory paper in light mode with deep pine-charcoal night in dark mode. Both modes are first-class citizens designed for prolonged reading and late-night decision-making on mobile devices.
+The aesthetic marries maritime instrument precision (brass compass rules, coordinate telemetry, tabular logbooks) with high-density editorial readability. It refuses generic cream-serif minimalism and neon-cyberpunk clichés.
 
 **Key Characteristics:**
-- Restrained editorial typography with generous line-height and strict 65–75ch column measure.
-- Organic, dual-theme palette: Deep Teal and Warm Bone by day; Luminous Mint and Pine Slate by night.
-- Flat-by-default architectural surfaces with hairline tonal dividers instead of heavy dropshadows.
-- Explicit visual honesty: untested items, price histories, and affiliate disclosures receive dignified, structured space.
+- **Cinzel display typography:** Engraved, authoritative, evoking maritime cartography and navigational astrolabes.
+- **Overpass Mono telemetry:** Telemetry headers, coordinates, and manual price snapshots with strict `tabular-nums` fidelity.
+- **Tactile Materiality:** Architectural brass accents (`#b45309` / `#f59e0b`), deep ocean canvas (`#070b10` / `#f4f0e6`), and sea-beacon accents (`#0369a1` / `#38bdf8`).
+- **Thesis-first Viewport:** The opening viewport acts as a complete navigation bridge with live telemetry, strategic rumbos, and an explicit anti-deriva manifesto.
 
 ## Colors
 
-The palette is rooted in natural pigments: bone paper, charcoal stone, and botanical pine/teal accents that evoke restorative sleep and precise craftsmanship.
+### Primary & Brass Accent
+- **Polished Brass** (`#b45309` light, `#f59e0b` dark): The signature instrument accent. Used for primary CTAs, critical bearings, and chart calipers.
+- **Beacon Cyan** (`#0369a1` light, `#38bdf8` dark): Secondary signal color for telemetry status, active coordinates, and link interactions.
 
-### Primary
-- **Pine Teal** (`#0f766e` in light, `#2dd4bf` in dark): The focused signature accent for primary interactive elements, links, and verified highlights.
-- **Accent Ink** (`#f0fdfa` in light, `#04211d` in dark): High-contrast foreground pairing for text sitting directly on primary accent fills.
-
-### Neutral
-- **Page Canvas** (`#f4f0e8` light, `#0e1211` dark): Warm unbleached paper by day; deep midnight charcoal by night.
-- **Card Surface** (`#fffcf7` light, `#161b1a` dark): Crisp elevated container tone providing quiet structural separation.
-- **Stone Ink** (`#1c1917` light, `#e7e5e4` dark): High-contrast primary reading tone.
-- **Muted Stone** (`#57534e` light, `#a8a29e` dark): Secondary labels, timestamps, metadata, and body context.
-- **Hairline Divider** (`#d6d3d1` light, `#2b3230` dark): 1px structural framing for cards, header, and tabular data.
-
-### Functional Disclosures
-- **Banner Pine/Mint** (`#ecfdf5` bg / `#115e59` ink in light; `#0b2420` bg / `#99f6e4` ink in dark): Quiet, non-alarmist status and transparency notice banner.
+### Neutral & Surfaces
+- **Chart Parchment / Abyssal Night** (`#f4f0e6` light, `#070b10` dark): The foundational chart ground.
+- **Instrument Console Surface** (`#fdfbf7` light, `#0e151e` dark): Elevated container cards with technical hairline framing.
+- **India Ink / Starlight White** (`#0f1923` light, `#e2e8f0` dark): High-contrast primary reading tones.
+- **Slate Markings** (`#475569` light, `#8493a8` dark): Secondary metadata, coordinate labels, and timestamps.
+- **Chart Hairline** (`#d3cbbe` light, `#1c2734` dark): 1px structural framing.
 
 ### Named Rules
-**The Dual-Sovereign Theme Rule.** Dark mode is never an inverted filter or gray tint; it is an authored midnight atmosphere with recalibrated contrast, luminosity, and accent radiance.
-**The Intentional Accent Rule.** The primary accent is reserved strictly for interactive triggers, active routes, and price trend signals. It covers ≤10% of any viewport.
+**The Dual-Watch Atmosphere Rule.** Day mode is an unrolled parchment chart under daylight; night mode is a darkened ship bridge at 03:00 with glowing amber indicators and phosphorescent gauges.
+**The No-Faux-Glow Rule.** No neon blurry halos. Lighting is rendered through high-contrast tonal placement and razor-sharp brass hairline borders.
 
 ## Typography
 
-**Body & Display Font:** `'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif`
-**Tabular Data:** Tabular numerals (`font-variant-numeric: tabular-nums`) for price snapshots and historical dates.
-
-**Character:** Clean, humanist, highly legible at small sizes on mobile screens under any ambient lighting condition.
+- **Display Face:** `Cinzel, Georgia, serif` — used for site identity, section anchors, and manifesto titles.
+- **Body Face:** `Albert Sans, system-ui, sans-serif` — used for long-form reading, guide analysis, and notes.
+- **Telemetry / Mono Face:** `Overpass Mono, monospace` — used for coordinates, status pills, timestamps, prices, and telemetry badges.
 
 ### Hierarchy
-- **Display** (700, `1.75rem` / `clamp(1.75rem, 4vw, 2.2rem)`, `line-height: 1.2`): Page title and primary brand identification.
-- **Headline** (600, `1.25rem`, `line-height: 1.3`): Major category and guide section anchors.
-- **Title** (600, `1.05rem`, `line-height: 1.4`): Card headings, product titles, and comparative topics.
-- **Body** (400, `1rem`, `line-height: 1.55`): Editorial commentary, guide analysis, and product notes. Max line-length constrained to `42rem` (~65-72ch).
-- **Label / Fine** (500–600, `0.8rem`–`0.85rem`, `letter-spacing: 0.02em`): Disclosures, testing status badges, timestamps, table headers.
-
-### Named Rules
-**The Honest Tabular Rule.** Any numeric price or dated snapshot must render with `font-variant-numeric: tabular-nums` to maintain vertical alignment and ledger credibility.
+- **Display** (700, `clamp(2rem, 5vw, 2.75rem)`, `line-height: 1.15`): Navigational thesis title.
+- **Headline** (600, `clamp(1.25rem, 3vw, 1.6rem)`, `line-height: 1.25`): Section boundaries.
+- **Thesis** (700, `clamp(1.4rem, 3.5vw, 1.85rem)`, `line-height: 1.25`): Hero thesis title.
+- **Brand** (700, `1.3rem`, `line-height: 1`): Maritime brand name.
+- **Title** (600, `1.15rem`, `line-height: 1.35`): Section sub-headings and card titles.
+- **Lede** (400, `1.125rem`, `line-height: 1.65`): Core mission statement.
+- **Body** (400, `1rem`, `line-height: 1.6`): Standard editorial reading.
+- **Note** (400, `0.9rem`, `line-height: 1.55`): Field log notes.
+- **Mono UI / CTA** (600, `0.85rem`, `line-height: 1.4`): Buttons and table data.
+- **Nav** (500, `0.8rem`, `line-height: 1.4`): Bridge navigation links.
+- **Badge** (600, `0.75rem`, `line-height: 1.2`): Testing status pills.
+- **Telemetry / Stamp** (500-700, `0.65rem - 0.72rem`): Coordinate badges and kickers.
 
 ## Layout
 
-A centered single-column reading column (`max-width: 42rem`) with responsive gutter padding (`1.1rem`). Responsive grid layouts adapt smoothly between mobile single-column cards and multi-column comparison cards.
-
-Vertical rhythm follows a predictable spatial scale:
-- Tight inline groupings: `0.35rem`–`0.7rem` (`var(--space-xs)` / `var(--space-sm)`)
-- Component inner padding: `1rem`–`1.1rem` (`var(--space-md)`)
-- Section separation: `1.6rem`–`2.4rem` (`var(--space-lg)` / `var(--space-xl)`), guaranteeing generous breathing room above headings.
+- **Container:** Max-width `48rem` (`768px`) with responsive `1.25rem` gutters.
+- **Grid:** Responsive multi-column chart grids (`repeat(auto-fit, minmax(280px, 1fr))`) with `1rem` gaps.
+- **Structural Accents:** Corner tick-marks, coordinate stamps, and subtle maritime dividing rules.
 
 ## Elevation & Depth
 
-Flat, architectural layering using tonal hierarchy and hairline borders (`1px solid var(--line)`). No heavy drop-shadows.
-
-### Shadow Vocabulary
-- **Resting state:** `box-shadow: none` (flat, clean, honest).
-- **Card Interactive Hover:** `box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04)` in light mode, `0 4px 16px rgba(0, 0, 0, 0.25)` in dark mode with a subtle border highlight.
-
-### Named Rules
-**The Zero-Gimmick Depth Rule.** Depth is created through surface luminance and hairline borders, never through artificial 3D bevels, colorful glow halos, or heavy skeuomorphic shadows.
-
-## Shapes
-
-- **Cards & Visual Containers:** `0.6rem` (`8px`–`10px`) subtle corner radius.
-- **Buttons & Interactive Controls:** `0.45rem` (`6px`–`7px`) rounded geometry for clear tactile affordance.
-- **Status Pills & Chips:** `999px` full capsule radius.
+- **Resting state:** Crisp 1px structural boundary (`border: 1px solid var(--line)`) with subtle tonal shift (`var(--card)` on `var(--bg)`).
+- **Interactive hover:** Fine brass border highlight (`border-color: var(--accent)`) and subtle lift (`transform: translateY(-2px)`).
 
 ## Components
 
-### Buttons & Amazon CTAs
-- **Shape:** `0.45rem` radius, min 44px touch height.
-- **Primary Action:** Solid background (`var(--accent)`), crisp text (`var(--accent-ink)`), padding `0.7rem 1.1rem`.
-- **Hover/Active:** Subtle tonal shift to deeper/brighter accent tone, smooth `150ms ease-out` transition.
+### Navigational Bridge Hero
+Instrument-grade split console presenting the Orza manifesto on the port side and live Amazon search telemetry on the starboard side.
 
-### Cards & Guide Modules
-- **Corner Style:** `0.6rem` radius.
-- **Background:** `var(--card)` tone distinct from `var(--bg)` canvas.
-- **Border:** `1px solid var(--line)` framing.
-- **Internal Padding:** `1.1rem`.
+### Field Log Cards
+Crisp container cards featuring monospace category tags, tested badges, notes, and directional link calipers (`→`).
 
-### Status Badges & Chips
-- **Style:** Pill shape (`999px`), `font-size: 0.78rem`, `font-weight: 500`.
-- **Tested / Untested:** Neutral bordered chip for general status; subtle soft mint/teal tint (`var(--banner-bg)` / `var(--banner-ink)`) for "No lo he probado" notices.
+### Telemetry Badges
+Monospace capsule badges indicating testing status (`[PROBADO EN CAMPO]` vs `[NO PROBADO — ETIQUETADO]`).
 
-### Price Sparklines & History Tables
-- **Sparklines:** Responsive SVG polyline in `var(--accent)`, subtle baseline framing.
-- **Tables:** Hairline bottom borders (`1px solid var(--line)`), clean left alignment, muted headers.
-
-### Theme Switcher
-- **Style:** Subtly framed control (`min-height: 44px`), clear textual and `aria-pressed` state reflecting current theme.
+### Dual-Watch Theme Dial
+Rotary-inspired theme toggle displaying current guard watch (`[☾ GUARDIA NOCTURNA]` / `[☼ CARTA DIURNA]`).
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** preserve full WCAG AA contrast (≥4.5:1 for text, ≥3:1 for large text and controls) across both light and dark themes.
-- **Do** maintain a strict 44px minimum tap target for all buttons, links, and switches on mobile.
-- **Do** use semantic HTML elements (`<main>`, `<header>`, `<article>`, `<nav>`, `<footer>`) with explicit ARIA labels.
-- **Do** state "No lo he probado" prominently on unverified products.
+- **Do** treat every product and guide as a dated field log entry with uncompromised honesty.
+- **Do** use `Overpass Mono` with `font-variant-numeric: tabular-nums` for all coordinates and price logs.
+- **Do** preserve 100% accessible contrast across both daylight chart and night bridge modes.
 
 ### Don't:
-- **Don't** use colored side-tab borders (`border-left: 3px solid accent`) on cards or callout notes. Use subtle tonal background tints or clean borders.
-- **Don't** invent star ratings, fake sales badges ("¡OFERTÓN!", "Top #1 Ventas"), or false testimonials.
-- **Don't** use gradient text or aggressive zero-blur offset drop shadows.
-- **Don't** hide affiliate disclosures or Amazon attribution notices.
+- **Don't** use generic clipart anchors, cartoon waves, or nautical gimmicks. Materiality is expressed through typography, brass accents, and chart structure.
+- **Don't** use Inter, Playfair, Fraunces, or system-ui for display headings.
+- **Don't** invent product reviews, ratings, or prices.

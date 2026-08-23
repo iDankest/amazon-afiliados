@@ -21,11 +21,11 @@ const bannerText = hasTag
     u('aviso-afiliados/');
 
 const nav: Array<[string, string]> = [
-  ['Inicio', u('')],
-  ['Registro', u('registro/')],
+  ['Bitácora', u('')],
   ['Descanso', u('') + '#descanso'],
   ['Teclados', u('guias/teclados/')],
   ['Guías', u('guias/')],
+  ['Registro', u('registro/')],
   ['Afiliados', u('aviso-afiliados/')],
 ];
 
@@ -44,7 +44,10 @@ const isCurrent = (href: string) => {
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#f4f0e8" id="meta-theme-color" />
+    <meta name="theme-color" content="#f4f0e6" id="meta-theme-color" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@600;700;800&family=Overpass+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script is:inline>
       (function () {
         var t = 'light';
@@ -55,19 +58,44 @@ const isCurrent = (href: string) => {
         } catch (e) {}
         document.documentElement.setAttribute('data-theme', t);
         var meta = document.getElementById('meta-theme-color');
-        if (meta) meta.setAttribute('content', t === 'dark' ? '#0c100f' : '#f4f0e8');
+        if (meta) meta.setAttribute('content', t === 'dark' ? '#070b10' : '#f4f0e6');
       })();
     </script>
   </head>
   <body>
+    <!-- THESIS: La orza fija el rumbo y corta la deriva del algoritmo. Criterio propio antes del clic. -->
+    <!-- OWN-WORLD: Carta náutica, latón pulido, tipografía Cinzel y Overpass Mono, telemetría y guardia nocturna. -->
+    <!-- FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->
+    
+    <div class="telemetry-bar">
+      <span class="telemetry-item"><span class="telemetry-dot"></span> 43°32′N 05°39′W</span>
+      <span class="telemetry-item">REGISTRO DE CAMPO // AMAZON.ES</span>
+      <span class="telemetry-item">SIN DERIVA NI RESEÑAS FALSAS</span>
+    </div>
+
     <header>
       <div class="wrap header-inner">
-        <a class="logo" href={u('')}>Orza</a>
-        <nav aria-label="Navegación principal">
+        <a class="brand-anchor" href={u('')} aria-label="Orza — Inicio">
+          <div class="brand-mark" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="12 2 15 12 12 22 9 12" fill="currentColor" opacity="0.3" />
+              <line x1="12" y1="2" x2="12" y2="22" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="logo">ORZA</span>
+            <span class="logo-sub">Cuaderno de navegación</span>
+          </div>
+        </a>
+        <nav aria-label="Navegación de puente">
           {nav.map(([label, href]) => (
             <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
           ))}
-          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
+          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre guardia nocturna y carta diurna">
+            <span id="theme-icon" aria-hidden="true">☼</span> <span id="theme-text">CARTA DIURNA</span>
+          </button>
         </nav>
       </div>
     </header>
@@ -78,31 +106,31 @@ const isCurrent = (href: string) => {
     <footer>
       <div class="wrap">
         <p class="fine">
-          {DISCLOSURE}
-          Amazon y el logotipo de Amazon son marcas de Amazon.com, Inc. o de sus afiliados. Este sitio no es Amazon
-          ni está afiliado a Bulkhead/Team17 ni a ningún estudio de videojuegos.
+          <strong>ORZA // Criterio honesto antes del clic.</strong> {DISCLOSURE}
+          Amazon y el logotipo de Amazon son marcas de Amazon.com, Inc. o de sus afiliados. Este sitio no es una tienda directa ni está afiliado a ningún estudio de desarrollo ni tienda de terceros.
         </p>
-        <p class="fine">
-          <a href={u('aviso-afiliados/')}>Aviso de afiliados</a> · <a href={u('privacidad/')}>Privacidad</a> ·
-          <a href={u('cookies/')}>Cookies</a> · <a href={u('sobre/')}>Sobre</a>
-        </p>
+        <div class="footer-nav">
+          <a href={u('aviso-afiliados/')}>[Aviso de afiliados]</a>
+          <a href={u('privacidad/')}>[Privacidad]</a>
+          <a href={u('cookies/')}>[Cookies]</a>
+          <a href={u('sobre/')}>[Sobre la bitácora]</a>
+        </div>
       </div>
     </footer>
     <script>
       const btn = document.getElementById('theme-toggle');
+      const textEl = document.getElementById('theme-text');
+      const iconEl = document.getElementById('theme-icon');
       const meta = document.getElementById('meta-theme-color');
-      function labelFor(t: string) {
-        return t === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
-      }
+
       function syncTheme(t: string) {
-        if (btn) {
-          btn.textContent = labelFor(t);
-          btn.setAttribute('aria-pressed', String(t === 'dark'));
-        }
-        if (meta) {
-          meta.setAttribute('content', t === 'dark' ? '#0c100f' : '#f4f0e8');
-        }
+        const isDark = t === 'dark';
+        if (textEl) textEl.textContent = isDark ? 'GUARDIA NOCTURNA' : 'CARTA DIURNA';
+        if (iconEl) iconEl.textContent = isDark ? '☾' : '☼';
+        if (btn) btn.setAttribute('aria-pressed', String(isDark));
+        if (meta) meta.setAttribute('content', isDark ? '#070b10' : '#f4f0e6');
       }
+
       btn?.addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme');
         const next = cur === 'dark' ? 'light' : 'dark';
@@ -112,6 +140,7 @@ const isCurrent = (href: string) => {
         } catch (e) {}
         syncTheme(next);
       });
+
       const initial = document.documentElement.getAttribute('data-theme') || 'light';
       syncTheme(initial);
     </script>

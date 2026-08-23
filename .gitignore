@@ -9,3 +9,11 @@ Thumbs.db
 node_modules/
 dist/
 .astro/
+
+# Agent harnesses & skills
+.agent/
+.agents/
+.atl/
+.github/agents/
+.github/hooks/
+.github/skills/

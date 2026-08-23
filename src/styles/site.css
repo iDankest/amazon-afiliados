@@ -1,42 +1,51 @@
-/* Orza — temas reales: light y dark, ambos legibles. */
+/* Orza — Cuaderno de navegación y registro honesto para Amazon.es */
+/* Visual World: Nautical Night Helm & Chart Table */
 
 :root,
 html[data-theme='light'] {
-  --bg: #f4f0e8;
-  --ink: #1c1917;
-  --muted: #57534e;
-  --line: #d6d3d1;
-  --line-subtle: #e7e5e4;
-  --accent: #0f766e;
-  --accent-hover: #115e59;
+  --bg: #f4f0e6;
+  --bg-grid: rgba(24, 35, 44, 0.045);
+  --card: #fdfbf7;
+  --card-alt: #eae4d5;
+  --ink: #0f1923;
+  --muted: #475569;
+  --line: #d3cbbe;
+  --line-subtle: #e5ded2;
+  --line-focus: #b45309;
+  --accent: #b45309;
+  --accent-hover: #92400e;
   --accent-ink: #ffffff;
-  --card: #fffcf7;
-  --card-hover: #ffffff;
-  --banner-bg: #ecfdf5;
-  --banner-ink: #065f46;
-  --banner-line: #a7f3d0;
-  --focus-ring: #0f766e;
-  --shadow-subtle: 0 2px 8px rgba(28, 25, 23, 0.04);
-  --shadow-hover: 0 4px 16px rgba(28, 25, 23, 0.08);
+  --beacon: #0369a1;
+  --beacon-ink: #f0f9ff;
+  --banner-bg: #eef4f8;
+  --banner-ink: #0c4a6e;
+  --banner-line: #bae6fd;
+  --focus-ring: #b45309;
+  --shadow-subtle: 0 1px 3px rgba(15, 25, 35, 0.06), 0 1px 2px rgba(15, 25, 35, 0.04);
+  --shadow-hover: 0 10px 25px rgba(180, 83, 9, 0.1), 0 2px 6px rgba(15, 25, 35, 0.05);
 }
 
 html[data-theme='dark'] {
-  --bg: #0c100f;
-  --ink: #e7e5e4;
-  --muted: #a3a09b;
-  --line: #242c2a;
-  --line-subtle: #1c2321;
-  --accent: #2dd4bf;
-  --accent-hover: #5eead4;
-  --accent-ink: #04211d;
-  --card: #151a19;
-  --card-hover: #1b2220;
-  --banner-bg: #09211d;
-  --banner-ink: #a7f3d0;
-  --banner-line: #134e4a;
-  --focus-ring: #2dd4bf;
-  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --bg: #070b10;
+  --bg-grid: rgba(56, 189, 248, 0.035);
+  --card: #0e151e;
+  --card-alt: #141e2b;
+  --ink: #e2e8f0;
+  --muted: #8493a8;
+  --line: #1c2734;
+  --line-subtle: #141d27;
+  --line-focus: #f59e0b;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-ink: #0a0f14;
+  --beacon: #38bdf8;
+  --beacon-ink: #082f49;
+  --banner-bg: #081a24;
+  --banner-ink: #7dd3fc;
+  --banner-line: #0369a1;
+  --focus-ring: #f59e0b;
+  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 10px 30px rgba(245, 158, 11, 0.14), 0 0 1px rgba(245, 158, 11, 0.6);
 }
 
 * {
@@ -57,10 +66,10 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background: var(--bg);
+  font-family: 'Albert Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg);
   color: var(--ink);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 ::selection {
@@ -71,85 +80,161 @@ body {
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
-  border-radius: 0.45rem;
+  border-radius: 3px;
 }
 
 .wrap {
-  max-width: 44rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
 
+/* Telemetría y Barra de Coordenadas */
+.telemetry-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.4rem 1.25rem;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: var(--card-alt);
+  border-bottom: 1px solid var(--line);
+}
+
+.telemetry-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.telemetry-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* Header & Puente de Mando */
 header {
   border-bottom: 1px solid var(--line);
   background: var(--card);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  backdrop-filter: blur(8px);
 }
 
 .header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 3.6rem;
+  min-height: 3.8rem;
   gap: 1rem;
 }
 
-.logo {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--ink);
+.brand-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   text-decoration: none;
-  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
-.logo:hover {
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--card-alt);
   color: var(--accent);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.logo-sub {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 
 nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  font-size: 0.95rem;
+  gap: 0.85rem;
   align-items: center;
 }
 
 nav a {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
-  font-weight: 500;
-  padding: 0.25rem 0;
-  transition: color 0.15s ease;
+  padding: 0.35rem 0.5rem;
+  border-radius: 3px;
+  transition: all 0.15s ease;
 }
 
-nav a:hover,
+nav a:hover {
+  color: var(--ink);
+  background: var(--card-alt);
+}
+
 nav a[aria-current='page'] {
   color: var(--accent);
+  font-weight: 700;
+  border-bottom: 2px solid var(--accent);
+  background: var(--card-alt);
 }
 
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  background: var(--bg);
+  gap: 0.4rem;
+  background: var(--card-alt);
   border: 1px solid var(--line);
   color: var(--muted);
-  border-radius: 0.45rem;
+  border-radius: 3px;
   padding: 0.35rem 0.75rem;
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
-  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  min-height: 38px;
+  transition: all 0.15s ease;
 }
 
 .theme-toggle:hover {
-  color: var(--ink);
+  color: var(--accent);
   border-color: var(--accent);
   background: var(--card);
 }
@@ -157,42 +242,62 @@ nav a[aria-current='page'] {
 .banner {
   background: var(--banner-bg);
   color: var(--banner-ink);
-  font-size: 0.85rem;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
   line-height: 1.5;
-  padding: 0.75rem 1.25rem;
+  padding: 0.65rem 1.25rem;
   border-bottom: 1px solid var(--banner-line);
 }
 
-main {
-  padding: 2rem 0 3.5rem;
+.banner a {
+  color: var(--banner-ink);
+  font-weight: 600;
+  text-decoration: underline;
 }
 
+main {
+  padding: 2rem 0 4rem;
+}
+
+/* Tipografía de Carta Náutica */
 h1 {
-  font-size: clamp(1.85rem, 4vw, 2.35rem);
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 2.75rem);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   line-height: 1.15;
-  margin: 0 0 0.85rem;
+  margin: 0 0 1rem;
   color: var(--ink);
   text-wrap: balance;
 }
 
 h2 {
-  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.02em;
   line-height: 1.25;
-  margin: 2.5rem 0 0.75rem;
+  margin: 3rem 0 0.85rem;
   color: var(--ink);
   text-wrap: balance;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+h2::before {
+  content: '■';
+  font-size: 0.65em;
+  color: var(--accent);
 }
 
 h3 {
-  font-size: 1.05rem;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.15rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   line-height: 1.35;
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.45rem;
   color: var(--ink);
 }
 
@@ -207,39 +312,150 @@ p {
 }
 
 .lede {
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: 1.125rem;
+  line-height: 1.65;
   color: var(--muted);
-  margin: 0 0 1.75rem;
-  max-width: 65ch;
+  margin: 0 0 2rem;
+  max-width: 68ch;
 }
 
 .section-desc {
-  font-size: 0.98rem;
+  font-family: 'Albert Sans', system-ui, sans-serif;
+  font-size: 1rem;
   color: var(--muted);
-  margin: -0.35rem 0 1rem;
+  margin: -0.35rem 0 1.25rem;
 }
 
+/* El Timón / Hero Consola Náutica */
+.helm-hero {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--card);
+  padding: 1.75rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+}
+
+.helm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.helm-kicker {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.helm-thesis {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0.25rem 0 1rem;
+  color: var(--ink);
+}
+
+.helm-text {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.helm-pillars {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin: 1.25rem 0 1.5rem;
+}
+
+@media (min-width: 580px) {
+  .helm-pillars {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.helm-pillar-card {
+  background: var(--card-alt);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.helm-pillar-card h4 {
+  font-family: 'Cinzel', Georgia, serif;
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.helm-pillar-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0 0 0.85rem;
+  line-height: 1.5;
+}
+
+.helm-pillar-link {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.helm-pillar-link:hover {
+  text-decoration: underline;
+}
+
+/* Tarjetas de Bitácora / Field Log Cards */
 .card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 0.6rem;
-  padding: 1.15rem;
+  border-radius: 4px;
+  padding: 1.35rem;
   margin: 0;
   box-shadow: var(--shadow-subtle);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  position: relative;
 }
 
 .card:hover {
   border-color: var(--accent);
   box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-header-mono {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
 }
 
 .card p {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.85rem;
 }
 
 .card p:last-child {
@@ -248,38 +464,43 @@ p {
 
 .card-actions {
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--line);
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.85rem;
-  margin: 0.85rem 0;
+  gap: 1rem;
+  margin: 1rem 0;
 }
 
-@media (min-width: 560px) {
+@media (min-width: 600px) {
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
 a {
-  color: var(--accent);
+  color: var(--beacon);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   transition: color 0.15s ease;
 }
 
 a:hover {
-  color: var(--accent-hover);
+  color: var(--accent);
 }
 
 .card-link {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-weight: 500;
+  gap: 0.35rem;
   text-decoration: none;
 }
 
@@ -287,18 +508,21 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Botones de Latón y Navegación */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   background: var(--accent);
   color: var(--accent-ink) !important;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding: 0.65rem 1.15rem;
-  border-radius: 0.45rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 3px;
   min-height: 44px;
   line-height: 1.4;
   border: 1px solid transparent;
@@ -319,7 +543,7 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
 }
 
 .fine {
@@ -330,17 +554,18 @@ a:hover {
 
 footer {
   border-top: 1px solid var(--line);
-  padding: 2rem 0 3rem;
+  padding: 2.5rem 0 3.5rem;
   background: var(--card);
-  margin-top: 3rem;
+  margin-top: 3.5rem;
 }
 
-footer .fine {
-  margin: 0 0 0.85rem;
-}
-
-footer .fine:last-child {
-  margin-bottom: 0;
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  margin-top: 1rem;
 }
 
 footer a {
@@ -360,25 +585,39 @@ ul.plain {
 .note {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 0.6rem;
-  padding: 0.85rem 1.1rem;
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
   color: var(--muted);
   font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 1.25rem 0;
+  line-height: 1.55;
+  margin: 1.5rem 0;
+  position: relative;
 }
 
-/* Registro de precios */
+.note-badge {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+/* Registro de precios e insignias */
 .badge {
   display: inline-flex;
   align-items: center;
-  font-size: 0.78rem;
-  font-weight: 500;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.15rem 0.65rem;
+  border-radius: 3px;
+  padding: 0.15rem 0.55rem;
   color: var(--muted);
-  background: var(--bg);
+  background: var(--card-alt);
   line-height: 1.3;
 }
 
@@ -388,7 +627,14 @@ ul.plain {
   border-color: var(--banner-line);
 }
 
+.badge.yes {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--card-alt);
+}
+
 .price-now {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--ink);
@@ -396,6 +642,7 @@ ul.plain {
 }
 
 .price-seen {
+  font-family: 'Overpass Mono', ui-monospace, monospace;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--muted);
@@ -405,21 +652,26 @@ ul.plain {
 table.history {
   width: 100%;
   border-collapse: collapse;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
+  font-size: 0.88rem;
 }
 
 table.history th,
 table.history td {
   text-align: left;
-  padding: 0.55rem 0.65rem;
+  padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--line);
 }
 
 table.history th {
   color: var(--muted);
   font-weight: 600;
-  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  background: var(--card-alt);
 }
 
 .spark {
@@ -435,24 +687,30 @@ table.history th {
   height: 160px;
   color: var(--accent);
   border: 1px solid var(--line);
-  border-radius: 0.6rem;
+  border-radius: 4px;
   background: var(--card);
 }
 
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 1.5rem;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-family: 'Overpass Mono', ui-monospace, monospace;
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
   .header-inner {
     flex-direction: column;
     align-items: flex-start;
-    padding: 0.75rem 0;
-    gap: 0.75rem;
+    padding: 0.85rem 0;
+    gap: 0.85rem;
+  }
+  
+  .helm-hero {
+    padding: 1.25rem;
   }
 }
+

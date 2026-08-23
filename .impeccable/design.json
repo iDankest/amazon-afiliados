@@ -1,85 +1,85 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-23T21:01:47.731Z",
-  "title": "Design System: Orza",
+  "generatedAt": "2026-08-23T21:45:07.440Z",
+  "title": "Design System: Orza (Nautical Chart Table & Night Helm)",
   "extensions": {
     "colorMeta": {
       "primary": {
         "role": "primary",
-        "displayName": "Pine Teal",
-        "canonical": "#0f766e",
+        "displayName": "Polished Brass",
+        "canonical": "#b45309",
         "tonalRamp": [
-          "#042f2e",
-          "#115e59",
-          "#0f766e",
-          "#14b8a6",
-          "#2dd4bf",
-          "#5eead4",
-          "#99f6e4",
-          "#ccfbf1"
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fef3c7"
+        ]
+      },
+      "beacon": {
+        "role": "secondary",
+        "displayName": "Beacon Cyan",
+        "canonical": "#0369a1",
+        "tonalRamp": [
+          "#082f49",
+          "#0c4a6e",
+          "#0369a1",
+          "#0284c7",
+          "#38bdf8",
+          "#7dd3fc",
+          "#bae6fd",
+          "#e0f2fe"
         ]
       },
       "neutral-bg": {
         "role": "neutral",
-        "displayName": "Page Canvas",
-        "canonical": "#f4f0e8",
+        "displayName": "Chart Parchment",
+        "canonical": "#f4f0e6",
         "tonalRamp": [
-          "#1c1917",
-          "#292524",
-          "#44403c",
-          "#78716c",
-          "#a8a29e",
-          "#d6d3d1",
-          "#e7e5e4",
-          "#f4f0e8"
-        ]
-      },
-      "neutral-card": {
-        "role": "neutral",
-        "displayName": "Card Surface",
-        "canonical": "#fffcf7",
-        "tonalRamp": [
-          "#161b1a",
-          "#2b3230",
-          "#57534e",
-          "#a8a29e",
-          "#d6d3d1",
-          "#f4f0e8",
-          "#fffcf7",
-          "#ffffff"
+          "#070b10",
+          "#0e151e",
+          "#1c2734",
+          "#475569",
+          "#8493a8",
+          "#d3cbbe",
+          "#f4f0e6",
+          "#fdfbf7"
         ]
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Display",
-        "purpose": "Hero brand headers and page titles."
+        "displayName": "Cinzel",
+        "purpose": "Engraved nautical identity and architectural manifesto headings."
       },
       "headline": {
-        "displayName": "Headline",
-        "purpose": "Category and guide section titles."
+        "displayName": "Cinzel",
+        "purpose": "Section boundaries and logbook titles."
       },
       "body": {
-        "displayName": "Body",
-        "purpose": "Long-form editorial reading and notes."
+        "displayName": "Albert Sans",
+        "purpose": "High-cadence editorial reading and notes."
       },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Status pills, metadata, and timestamps."
+      "mono": {
+        "displayName": "Overpass Mono",
+        "purpose": "Coordinates, telemetry, timestamps, and tabular ledger entries."
       }
     },
     "shadows": [
       {
-        "name": "card-hover",
-        "value": "0 4px 16px rgba(0,0,0,0.06)",
-        "purpose": "Subtle tactile depth on card hover."
+        "name": "console-hover",
+        "value": "0 8px 24px rgba(0,0,0,0.12)",
+        "purpose": "Tactile lift on instrument cards."
       }
     ],
     "motion": [
       {
-        "name": "ease-standard",
-        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
-        "purpose": "State transitions for buttons and cards."
+        "name": "ease-nautical",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Smooth instrument transitions."
       }
     ],
     "breakpoints": [
@@ -89,78 +89,50 @@
       },
       {
         "name": "md",
-        "value": "672px"
+        "value": "720px"
       }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Nautical Bridge Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Solid primary action button for external Amazon.es navigation.",
-      "html": "<a href=\"#\" class=\"ds-btn-primary\">Ver en Amazon.es</a>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: #0f766e; color: #f0fdfa; text-decoration: none; padding: 0.7rem 1.1rem; border-radius: 0.45rem; min-height: 44px; font-weight: 500; transition: background 0.15s ease, transform 0.1s ease; } .ds-btn-primary:hover { background: #115e59; transform: translateY(-1px); }"
-    },
-    {
-      "name": "Article Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Standard editorial module with hairline border.",
-      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Antifaz para dormir</h3><p class=\"ds-card-body\">3D vs plano, ajuste y oscuridad real.</p><a href=\"#\" class=\"ds-card-link\">Leer guía</a></article>",
-      "css": ".ds-card { background: #fffcf7; border: 1px solid #d6d3d1; border-radius: 0.6rem; padding: 1.1rem; } .ds-card-title { margin: 0 0 0.4rem; font-size: 1.05rem; color: #1c1917; font-weight: 600; } .ds-card-body { margin: 0 0 0.8rem; font-size: 0.95rem; color: #57534e; } .ds-card-link { color: #0f766e; font-weight: 500; text-decoration: none; } .ds-card-link:hover { text-decoration: underline; }"
-    },
-    {
-      "name": "Status Badge",
-      "kind": "chip",
-      "refersTo": "badge",
-      "description": "Capsule badge denoting testing status without sensationalism.",
-      "html": "<span class=\"ds-badge-tested\">No lo he probado</span>",
-      "css": ".ds-badge-tested { display: inline-block; font-size: 0.78rem; font-weight: 500; border: 1px solid #99f6e4; background: #ecfdf5; color: #115e59; border-radius: 999px; padding: 0.15rem 0.65rem; }"
+      "description": "Solid brass action button with monospace telemetry indicators.",
+      "html": "<a href=\"#\" class=\"ds-btn-brass\"><span>RUMBO AMAZON.ES</span> &rarr;</a>",
+      "css": ".ds-btn-brass { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #b45309; color: #ffffff; text-decoration: none; padding: 0.75rem 1.35rem; border-radius: 3px; font-family: \"Overpass Mono\", monospace; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; transition: all 0.15s ease; } .ds-btn-brass:hover { background: #92400e; transform: translateY(-1px); }"
     }
   ],
   "narrative": {
-    "northStar": "The Honest Curator's Ledger",
-    "overview": "Orza is an editorial buying guide and transparent price registry focused on sleep quality and mechanical keyboards for Spain (Amazon.es). The visual language feels like an authentic field notebook or curator's ledger: calm, confident, tactile, and completely devoid of artificial marketing noise, aggressive badges, or fabricated urgency.",
+    "northStar": "The Night Helm & Maritime Chart Table",
+    "overview": "Orza is the daggerboard or tiller that prevents leeway at sea. On the modern web, algorithmic noise, manufactured urgency, fake reviews, and opaque affiliate farms cause perpetual drift. Orza is the captain's solid chart table: deliberate, tactical, illuminated by warm incandescent brass lanterns by night and unrolled over crisp navigation parchment by day.",
     "keyCharacteristics": [
-      "Restrained editorial typography with generous line-height and strict 65–75ch column measure.",
-      "Organic, dual-theme palette: Deep Teal and Warm Bone by day; Luminous Mint and Pine Slate by night.",
-      "Flat-by-default architectural surfaces with hairline tonal dividers instead of heavy dropshadows.",
-      "Explicit visual honesty: untested items, price histories, and affiliate disclosures receive dignified, structured space."
+      "Cinzel display typography: Engraved, authoritative, evoking maritime cartography and navigational astrolabes.",
+      "Overpass Mono telemetry: Telemetry headers, coordinates, and manual price snapshots with strict tabular-nums fidelity.",
+      "Tactile Materiality: Architectural brass accents, deep ocean canvas, and sea-beacon accents.",
+      "Thesis-first Viewport: The opening viewport acts as a complete navigation bridge with live telemetry, strategic rumbos, and an explicit anti-deriva manifesto."
     ],
     "rules": [
       {
-        "name": "The Dual-Sovereign Theme Rule",
-        "body": "Dark mode is never an inverted filter or gray tint; it is an authored midnight atmosphere with recalibrated contrast, luminosity, and accent radiance.",
+        "name": "The Dual-Watch Atmosphere Rule",
+        "body": "Day mode is an unrolled parchment chart under daylight; night mode is a darkened ship bridge at 03:00 with glowing amber indicators and phosphorescent gauges.",
         "section": "colors"
       },
       {
-        "name": "The Intentional Accent Rule",
-        "body": "The primary accent is reserved strictly for interactive triggers, active routes, and price trend signals. It covers ≤10% of any viewport.",
-        "section": "colors"
-      },
-      {
-        "name": "The Honest Tabular Rule",
-        "body": "Any numeric price or dated snapshot must render with font-variant-numeric: tabular-nums to maintain vertical alignment and ledger credibility.",
-        "section": "typography"
-      },
-      {
-        "name": "The Zero-Gimmick Depth Rule",
-        "body": "Depth is created through surface luminance and hairline borders, never through artificial 3D bevels, colorful glow halos, or heavy skeuomorphic shadows.",
+        "name": "The No-Faux-Glow Rule",
+        "body": "No neon blurry halos. Lighting is rendered through high-contrast tonal placement and razor-sharp brass hairline borders.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do preserve full WCAG AA contrast (≥4.5:1 for text, ≥3:1 for large text and controls) across both light and dark themes.",
-      "Do maintain a strict 44px minimum tap target for all buttons, links, and switches on mobile.",
-      "Do use semantic HTML elements (<main>, <header>, <article>, <nav>, <footer>) with explicit ARIA labels.",
-      "Do state \"No lo he probado\" prominently on unverified products."
+      "Do treat every product and guide as a dated field log entry with uncompromised honesty.",
+      "Do use Overpass Mono with font-variant-numeric: tabular-nums for all coordinates and price logs.",
+      "Do preserve 100% accessible contrast across both daylight chart and night bridge modes."
     ],
     "donts": [
-      "Don't use colored side-tab borders (border-left: 3px solid accent) on cards or callout notes. Use subtle tonal background tints or clean borders.",
-      "Don't invent star ratings, fake sales badges (\"¡OFERTÓN!\", \"Top #1 Ventas\"), or false testimonials.",
-      "Don't use gradient text or aggressive zero-blur offset drop shadows.",
-      "Don't hide affiliate disclosures or Amazon attribution notices."
+      "Don't use generic clipart anchors, cartoon waves, or nautical gimmicks. Materiality is expressed through typography, brass accents, and chart structure.",
+      "Don't use Inter, Playfair, Fraunces, or system-ui for display headings.",
+      "Don't invent product reviews, ratings, or prices."
     ]
   }
 }
