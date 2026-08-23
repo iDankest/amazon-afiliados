@@ -31,7 +31,7 @@ Category SEO **and** honesty in front. Farms can copy tops and “deals of the w
 
 ## Operating Context
 
-- 0€ hosting: GitHub Pages (`iDankest/amazon-afiliados`).
+- 0€ hosting: GitHub Pages (`iDankest/orza`).
 - Spanish copy. Mobile first.
 - Affiliate disclosure on every page. Tag may be empty; links still go to Amazon.es without commission until Associates issues a tag.
 - Sleep-mask videos (0€) can send traffic here later. No first-party checkout. No Steam/game wiki.

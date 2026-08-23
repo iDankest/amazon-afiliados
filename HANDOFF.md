@@ -3,19 +3,23 @@
 Clona esto en el otro PC. El chat de Grok **no** viaja; este archivo sí.
 
 ```bash
-git clone git@github.com:iDankest/amazon-afiliados.git
-cd amazon-afiliados
+git clone git@github.com:iDankest/orza.git
+cd orza
 npm install
 npm run dev
 ```
 
-Abre `http://localhost:4321/amazon-afiliados/` (el `base` es GitHub Pages).
+Abre `http://localhost:4321/orza/` (el `base` es GitHub Pages). En este Mac el directorio local sigue siendo `Documents/amazon-afiliados/`.
 
 ## Qué es
 
 Marca **Orza**. Afiliados Amazon.es: guías (descanso + teclados) + **registro de precios anotados a mano**. Sin snapshot no hay euros. Dark/light. Astro, no Nuxt.
 
-Dominio previsto: `orza.es` (no comprado). Tag Associates: vacío (`PUBLIC_AMAZON_TAG`). Cuenta vieja: comprobar si sigue abierta.
+Dominio `orza.es` / `orzar.es`: **no comprar**. Tag: `dankest-21` en `js/config.js`; Astro usa `PUBLIC_AMAZON_TAG` (var de Pages). StoreID Associates: `dankest-21`.
+
+**Associates:** URL de la web `https://idankest.github.io/orza/` (ya listada). La caja de apps va vacía. Pulsa Confirmar. Sin auto-clic. 3 ventas cualificadas / 180 días.
+
+**Aparcado:** plataforma tipo ClaveCD/Chollometro/Idealo + Telegram. No es Orza. No abrir repo nuevo.
 
 Añadir un precio **solo si lo has visto** en Amazon.es:
 
@@ -31,7 +35,7 @@ No scrape. No inventar tops ni ofertas. No mezclar con Medusa/dropshipping. No a
 
 | Repo | Estado |
 |---|---|
-| `iDankest/amazon-afiliados` | Orza. Tip `06b7eca` + este handoff |
+| `iDankest/orza` | Orza. Repo renombrado (antes `amazon-afiliados`) |
 | `iDankest/dropshipping-research` | Kit JUEYONG. I4 aparcado: este PC tenía Node 26 y sin Docker |
 | `iDankest/income-ideas` | Mapa de vías. Una a la vez |
 
@@ -39,6 +43,6 @@ Vídeos 0€ del antifaz: `dropshipping-research/operacion/SEMANA_0_EUROS.md`.
 
 ## Pages
 
-https://github.com/iDankest/amazon-afiliados/settings/pages → Source **GitHub Actions**. URL prevista: https://idankest.github.io/amazon-afiliados/
+Live: https://idankest.github.io/orza/ (source: GitHub Actions). GitHub redirige la URL vieja `/amazon-afiliados/` un tiempo.
 
 Impeccable (diseño): `npx impeccable install` luego `/impeccable init` ya tiene `PRODUCT.md`.

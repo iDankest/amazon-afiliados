@@ -4,7 +4,8 @@
 
 Marca: **Orza**. Dominio previsto: `orza.es` (comprobar en el registrador; no comprado). Nicho: descanso y teclados. Registro de precios anotados a mano. No es una wiki de videojuegos.
 
-- GitHub: https://github.com/iDankest/amazon-afiliados
+- GitHub: https://github.com/iDankest/orza
+- Pages: https://idankest.github.io/orza/
 - Registro afiliados: https://afiliados.amazon.es/
 
 ## Por qué este repo y no una wiki Tarkov/WARDOGS
