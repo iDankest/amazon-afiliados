@@ -5,7 +5,7 @@
  */
 window.AFFILIATE = {
   marketplace: 'https://www.amazon.es',
-  tag: '',
+  tag: 'dankest-21',
   disclosure:
     'Como participante en el Programa de Afiliados de Amazon, este sitio puede obtener ingresos por las compras adscritas que cumplen los requisitos aplicables.',
 }
