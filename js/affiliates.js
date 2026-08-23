@@ -12,7 +12,7 @@
     if (!el) return
     el.innerHTML =
       '<div class="wrap header-inner">' +
-      '<a class="logo" href="ROOT">Antes del clic</a>' +
+      '<a class="logo" href="ROOT">Orza</a>' +
       '<nav>' +
       '<a href="ROOT">Inicio</a>' +
       '<a href="DESCANSO">Descanso</a>' +

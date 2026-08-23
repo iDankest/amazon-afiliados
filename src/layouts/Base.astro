@@ -46,33 +46,11 @@ const nav: Array<[string, string]> = [
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
-    <script>
-      const btn = document.getElementById('theme-toggle');
-      function labelFor(t) {
-        return t === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
-      }
-      function syncBtn() {
-        if (!btn) return;
-        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-        btn.textContent = labelFor(cur);
-        btn.setAttribute('aria-pressed', String(cur === 'dark'));
-      }
-      btn?.addEventListener('click', () => {
-        const cur = document.documentElement.getAttribute('data-theme');
-        const next = cur === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        try {
-          localStorage.setItem('adc-theme', next);
-        } catch (e) {}
-        syncBtn();
-      });
-      syncBtn();
-    </script>
   </head>
   <body>
     <header>
       <div class="wrap header-inner">
-        <a class="logo" href={u('')}>Antes del clic</a>
+        <a class="logo" href={u('')}>Orza</a>
         <nav aria-label="Principal">
           {nav.map(([label, href]) => <a href={href}>{label}</a>)}
           <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
@@ -96,5 +74,27 @@ const nav: Array<[string, string]> = [
         </p>
       </div>
     </footer>
+    <script>
+      const btn = document.getElementById('theme-toggle');
+      function labelFor(t: string) {
+        return t === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
+      }
+      function syncBtn() {
+        if (!btn) return;
+        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        btn.textContent = labelFor(cur);
+        btn.setAttribute('aria-pressed', String(cur === 'dark'));
+      }
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('adc-theme', next);
+        } catch (e) {}
+        syncBtn();
+      });
+      syncBtn();
+    </script>
   </body>
 </html>

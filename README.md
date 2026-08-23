@@ -1,6 +1,6 @@
-# Antes del clic — Amazon afiliados (ES)
+# Orza — Amazon afiliados (ES)
 
-Sitio estático, **0€**. Nicho: descanso (antifaz, tapones) y teclados. No es una wiki de videojuegos.
+Marca: **Orza**. Dominio previsto: `orza.es` (comprobar en el registrador; no comprado). Nicho: descanso y teclados. Registro de precios anotados a mano. No es una wiki de videojuegos.
 
 - GitHub: https://github.com/iDankest/amazon-afiliados
 - Registro afiliados: https://afiliados.amazon.es/

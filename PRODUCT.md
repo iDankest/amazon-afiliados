@@ -49,7 +49,7 @@ Undecided: Associates tag (user has an old account — confirm if still open), P
 
 ## Brand Commitments
 
-Site name: **Antes del clic**. Spanish. Dark + light themes are a product constraint, not a later aesthetic whim. Former working title “Oscuro y quieto” is retired.
+Site name: **Orza**. Spanish. Target domain: `orza.es` (unconfirmed availability). Dark + light themes are a product constraint, not a later aesthetic whim. Retired titles: “Oscuro y quieto”, “Antes del clic”. “Antes del clic” may remain a line of copy, never the brand.
 
 ## Evidence on Hand
 
