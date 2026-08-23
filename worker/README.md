@@ -40,6 +40,19 @@ Ejemplo de línea de cron (validación diaria a las 07:15):
 15 7 * * *  adc  cd /opt/adc/amazon-afiliados && docker compose -f worker/compose.yml run --rm worker
 ```
 
+## Telegram (V1: DM al dueño)
+
+`worker/telegram/check.mjs` lee `data/snapshots/` y avisa si el último snapshot
+de un producto tiene más de 7 días (o no tiene ninguno). **Dry-run por defecto**:
+
+```sh
+node worker/telegram/check.mjs
+```
+
+Para enviar de verdad hacen falta `TELEGRAM_BOT_TOKEN` y `TELEGRAM_OWNER_CHAT_ID`
+en el entorno (`.env` con permisos 600 en el host, nunca en git). Sin canal público.
+Decisiones y checklist: `docs/noche/telegram.md` y `docs/noche/ubuntu.md`.
+
 ## PA-API
 
 Ver `worker/paapi.md`. Resumen: si Amazon responde `AssociateNotEligible`,
