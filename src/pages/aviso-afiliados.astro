@@ -49,31 +49,8 @@ import Base from '../layouts/Base.astro';
     border-radius: 14px;
     box-shadow: var(--shadow-subtle);
     padding: 1.6rem 1.6rem 1.75rem;
-    position: relative;
   }
 
-  .doc::before,
-  .doc::after {
-    content: '';
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    pointer-events: none;
-  }
-
-  .doc::before {
-    top: -1px;
-    left: -1px;
-    border-top: 2px solid var(--accent);
-    border-left: 2px solid var(--accent);
-  }
-
-  .doc::after {
-    bottom: -1px;
-    right: -1px;
-    border-bottom: 2px solid var(--accent);
-    border-right: 2px solid var(--accent);
-  }
 
   .doc h1 {
     margin-bottom: 0.5rem;
@@ -96,13 +73,10 @@ import Base from '../layouts/Base.astro';
   }
 
   .doc-colophon {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.82rem;
     color: var(--muted);
-    border-top: 1px dashed var(--line);
-    margin: 1.5rem 0 0;
+    border-top: 1px solid var(--line-subtle);
+    margin: 1.6rem 0 0;
     padding-top: 0.9rem;
   }
 
