@@ -30,8 +30,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   description="Registro histórico y comparador de precios de productos en Amazon.es. Detección de mínimos, medias y evolución."
 >
   <div style="margin-bottom: 2rem;">
-    <span class="kicker">Base de Datos de Precios</span>
-    <h1 style="margin: 0.25rem 0 0.75rem;">Histórico y Registro de Precios</h1>
+    <h1 style="margin: 0 0 0.75rem;">Histórico y Registro de Precios</h1>
     <p class="lede" style="margin-bottom: 1.25rem;">
       Tabla completa de productos monitoreados en Amazon.es. Cada registro almacena fechas reales para que compruebes si el precio actual es un chollo o está inflado.
     </p>
@@ -103,15 +102,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 </Base>
 
 <style>
-  .reg-kicker {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: -0.5rem 0 0.6rem;
-  }
+  
 
   .reg-meta {
     display: flex;

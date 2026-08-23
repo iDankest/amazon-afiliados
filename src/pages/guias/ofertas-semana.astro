@@ -21,7 +21,6 @@ const deals = products
 >
   <section class="g-hero">
     <div class="g-hero-head">
-      <span class="g-kicker">Rastreador de Ofertas</span>
       <span class="deal-badge">{deals.length} chollos detectados</span>
     </div>
     <h1>Chollos y Ofertas de la Semana</h1>
@@ -32,7 +31,6 @@ const deals = products
 
   {deals.length === 0 ? (
     <div class="empty-state">
-      <span class="kicker">Estado del registro</span>
       <h2 class="empty-state-title">Ahora mismo, no hay ninguna oferta con mínimo detectado</h2>
       <p class="empty-state-text">Aquí solo se listan productos con bajadas comprobadas frente a su histórico registrado.</p>
     </div>
@@ -122,14 +120,7 @@ const deals = products
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
-  .g-kicker {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
+  
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
