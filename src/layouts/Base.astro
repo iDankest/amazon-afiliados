@@ -28,6 +28,12 @@ const nav: Array<[string, string]> = [
   ['Guías', u('guias/')],
   ['Afiliados', u('aviso-afiliados/')],
 ];
+
+const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
+const isCurrent = (href: string) => {
+  const normHref = href.endsWith('/') ? href : href + '/';
+  return currentPath === normHref;
+};
 ---
 
 <!DOCTYPE html>
@@ -38,6 +44,7 @@ const nav: Array<[string, string]> = [
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f4f0e8" id="meta-theme-color" />
     <script is:inline>
       (function () {
         var t = 'light';
@@ -47,6 +54,8 @@ const nav: Array<[string, string]> = [
           else if (window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
         } catch (e) {}
         document.documentElement.setAttribute('data-theme', t);
+        var meta = document.getElementById('meta-theme-color');
+        if (meta) meta.setAttribute('content', t === 'dark' ? '#0c100f' : '#f4f0e8');
       })();
     </script>
   </head>
@@ -54,8 +63,10 @@ const nav: Array<[string, string]> = [
     <header>
       <div class="wrap header-inner">
         <a class="logo" href={u('')}>Orza</a>
-        <nav aria-label="Principal">
-          {nav.map(([label, href]) => <a href={href}>{label}</a>)}
+        <nav aria-label="Navegación principal">
+          {nav.map(([label, href]) => (
+            <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
+          ))}
           <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
         </nav>
       </div>
@@ -79,14 +90,18 @@ const nav: Array<[string, string]> = [
     </footer>
     <script>
       const btn = document.getElementById('theme-toggle');
+      const meta = document.getElementById('meta-theme-color');
       function labelFor(t: string) {
         return t === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
       }
-      function syncBtn() {
-        if (!btn) return;
-        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-        btn.textContent = labelFor(cur);
-        btn.setAttribute('aria-pressed', String(cur === 'dark'));
+      function syncTheme(t: string) {
+        if (btn) {
+          btn.textContent = labelFor(t);
+          btn.setAttribute('aria-pressed', String(t === 'dark'));
+        }
+        if (meta) {
+          meta.setAttribute('content', t === 'dark' ? '#0c100f' : '#f4f0e8');
+        }
       }
       btn?.addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme');
@@ -95,9 +110,10 @@ const nav: Array<[string, string]> = [
         try {
           localStorage.setItem('adc-theme', next);
         } catch (e) {}
-        syncBtn();
+        syncTheme(next);
       });
-      syncBtn();
+      const initial = document.documentElement.getAttribute('data-theme') || 'light';
+      syncTheme(initial);
     </script>
   </body>
 </html>

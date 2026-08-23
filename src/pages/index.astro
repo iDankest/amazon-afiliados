@@ -18,22 +18,34 @@ const teclados = byCat('teclados');
   <p class="lede">Guías cortas y un registro de precios vistos en Amazon.es. Experiencia real cuando la hay; si no se ha probado, se dice. Nada de tops inventados ni testimonios falsos.</p>
 
   <h2 id="descanso">Descanso</h2>
-  <p>Dormir a oscuras, sin inventar milagros: antifaces, tapones y kits.</p>
+  <p class="section-desc">Dormir a oscuras, sin inventar milagros: antifaces, tapones y kits.</p>
   <div class="grid">
     <article class="card">
-      <h3>Antifaz para dormir</h3>
-      <p>3D vs plano, velcro, luz por la nariz, dormir de lado.</p>
-      <a href={u('guias/antifaz-para-dormir/')}>Leer guía</a>
+      <div>
+        <h3>Antifaz para dormir</h3>
+        <p>3D vs plano, velcro, luz por la nariz, dormir de lado.</p>
+      </div>
+      <div class="card-actions">
+        <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+      </div>
     </article>
     <article class="card">
-      <h3>Tapones para dormir</h3>
-      <p>Espuma, silicona, reutilizables. Lo que suele fallar.</p>
-      <a href={u('guias/tapones-para-dormir/')}>Leer guía</a>
+      <div>
+        <h3>Tapones para dormir</h3>
+        <p>Espuma, silicona, reutilizables. Lo que suele fallar.</p>
+      </div>
+      <div class="card-actions">
+        <a class="card-link" href={u('guias/tapones-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+      </div>
     </article>
     <article class="card">
-      <h3>¿Kit o por separado?</h3>
-      <p>Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.</p>
-      <a href={u('guias/kit-antifaz-y-tapones/')}>Comparar</a>
+      <div>
+        <h3>¿Kit o por separado?</h3>
+        <p>Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.</p>
+      </div>
+      <div class="card-actions">
+        <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Comparar <span aria-hidden="true">&rarr;</span></a>
+      </div>
     </article>
   </div>
 
@@ -44,10 +56,14 @@ const teclados = byCat('teclados');
       <div class="grid">
         {descanso.map((p) => (
           <article class="card">
-            <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-            <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
-            <p>{p.notes}</p>
-            <p><a href={u(`p/${p.id}/`)}>Ver ficha y registro</a></p>
+            <div>
+              <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
+              <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+              <p>{p.notes}</p>
+            </div>
+            <div class="card-actions">
+              <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
+            </div>
           </article>
         ))}
       </div>
@@ -57,26 +73,34 @@ const teclados = byCat('teclados');
   <h2 id="teclados">Teclados</h2>
   <div class="grid">
     <article class="card">
-      <h3>Teclados mecánicos</h3>
-      <p>Guía de compra honesta: switch, tamaño, conexión, layout. Aún no hay reviews propias; lo no probado se etiqueta.</p>
-      <a href={u('guias/teclados/')}>Leer guía</a>
+      <div>
+        <h3>Teclados mecánicos</h3>
+        <p>Guía de compra honesta: switch, tamaño, conexión, layout. Aún no hay reviews propias; lo no probado se etiqueta.</p>
+      </div>
+      <div class="card-actions">
+        <a class="card-link" href={u('guias/teclados/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+      </div>
     </article>
     {teclados.map((p) => (
       <article class="card">
-        <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-        <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
-        <p>{p.notes}</p>
-        <p><a href={u(`p/${p.id}/`)}>Ver ficha y registro</a></p>
+        <div>
+          <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
+          <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+          <p>{p.notes}</p>
+        </div>
+        <div class="card-actions">
+          <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
+        </div>
       </article>
     ))}
   </div>
 
   <h2>Buscar en Amazon.es</h2>
-  <p>
+  <div class="btn-group">
     <AmazonLink query="antifaz para dormir 3D">Antifaces 3D</AmazonLink>
     <AmazonLink query="tapones oidos para dormir">Tapones para dormir</AmazonLink>
     <AmazonLink query="loop quiet 2">Loop Quiet 2</AmazonLink>
     <AmazonLink query="teclado mecanico">Teclado mecánico</AmazonLink>
-  </p>
+  </div>
   <p class="note">Los botones abren búsquedas de Amazon.es, no un producto concreto. Cuando haya tag de afiliado, esas visitas pueden generar comisión si compras en 24 h.</p>
 </Base>

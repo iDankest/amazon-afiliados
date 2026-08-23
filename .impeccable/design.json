@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-23T21:01:47.731Z",
+  "title": "Design System: Orza",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Pine Teal",
+        "canonical": "#0f766e",
+        "tonalRamp": [
+          "#042f2e",
+          "#115e59",
+          "#0f766e",
+          "#14b8a6",
+          "#2dd4bf",
+          "#5eead4",
+          "#99f6e4",
+          "#ccfbf1"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Page Canvas",
+        "canonical": "#f4f0e8",
+        "tonalRamp": [
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#78716c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#e7e5e4",
+          "#f4f0e8"
+        ]
+      },
+      "neutral-card": {
+        "role": "neutral",
+        "displayName": "Card Surface",
+        "canonical": "#fffcf7",
+        "tonalRamp": [
+          "#161b1a",
+          "#2b3230",
+          "#57534e",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f4f0e8",
+          "#fffcf7",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero brand headers and page titles."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Category and guide section titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Long-form editorial reading and notes."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Status pills, metadata, and timestamps."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hover",
+        "value": "0 4px 16px rgba(0,0,0,0.06)",
+        "purpose": "Subtle tactile depth on card hover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "State transitions for buttons and cards."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "520px"
+      },
+      {
+        "name": "md",
+        "value": "672px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid primary action button for external Amazon.es navigation.",
+      "html": "<a href=\"#\" class=\"ds-btn-primary\">Ver en Amazon.es</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: #0f766e; color: #f0fdfa; text-decoration: none; padding: 0.7rem 1.1rem; border-radius: 0.45rem; min-height: 44px; font-weight: 500; transition: background 0.15s ease, transform 0.1s ease; } .ds-btn-primary:hover { background: #115e59; transform: translateY(-1px); }"
+    },
+    {
+      "name": "Article Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard editorial module with hairline border.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Antifaz para dormir</h3><p class=\"ds-card-body\">3D vs plano, ajuste y oscuridad real.</p><a href=\"#\" class=\"ds-card-link\">Leer guía</a></article>",
+      "css": ".ds-card { background: #fffcf7; border: 1px solid #d6d3d1; border-radius: 0.6rem; padding: 1.1rem; } .ds-card-title { margin: 0 0 0.4rem; font-size: 1.05rem; color: #1c1917; font-weight: 600; } .ds-card-body { margin: 0 0 0.8rem; font-size: 0.95rem; color: #57534e; } .ds-card-link { color: #0f766e; font-weight: 500; text-decoration: none; } .ds-card-link:hover { text-decoration: underline; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Capsule badge denoting testing status without sensationalism.",
+      "html": "<span class=\"ds-badge-tested\">No lo he probado</span>",
+      "css": ".ds-badge-tested { display: inline-block; font-size: 0.78rem; font-weight: 500; border: 1px solid #99f6e4; background: #ecfdf5; color: #115e59; border-radius: 999px; padding: 0.15rem 0.65rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Honest Curator's Ledger",
+    "overview": "Orza is an editorial buying guide and transparent price registry focused on sleep quality and mechanical keyboards for Spain (Amazon.es). The visual language feels like an authentic field notebook or curator's ledger: calm, confident, tactile, and completely devoid of artificial marketing noise, aggressive badges, or fabricated urgency.",
+    "keyCharacteristics": [
+      "Restrained editorial typography with generous line-height and strict 65–75ch column measure.",
+      "Organic, dual-theme palette: Deep Teal and Warm Bone by day; Luminous Mint and Pine Slate by night.",
+      "Flat-by-default architectural surfaces with hairline tonal dividers instead of heavy dropshadows.",
+      "Explicit visual honesty: untested items, price histories, and affiliate disclosures receive dignified, structured space."
+    ],
+    "rules": [
+      {
+        "name": "The Dual-Sovereign Theme Rule",
+        "body": "Dark mode is never an inverted filter or gray tint; it is an authored midnight atmosphere with recalibrated contrast, luminosity, and accent radiance.",
+        "section": "colors"
+      },
+      {
+        "name": "The Intentional Accent Rule",
+        "body": "The primary accent is reserved strictly for interactive triggers, active routes, and price trend signals. It covers ≤10% of any viewport.",
+        "section": "colors"
+      },
+      {
+        "name": "The Honest Tabular Rule",
+        "body": "Any numeric price or dated snapshot must render with font-variant-numeric: tabular-nums to maintain vertical alignment and ledger credibility.",
+        "section": "typography"
+      },
+      {
+        "name": "The Zero-Gimmick Depth Rule",
+        "body": "Depth is created through surface luminance and hairline borders, never through artificial 3D bevels, colorful glow halos, or heavy skeuomorphic shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve full WCAG AA contrast (≥4.5:1 for text, ≥3:1 for large text and controls) across both light and dark themes.",
+      "Do maintain a strict 44px minimum tap target for all buttons, links, and switches on mobile.",
+      "Do use semantic HTML elements (<main>, <header>, <article>, <nav>, <footer>) with explicit ARIA labels.",
+      "Do state \"No lo he probado\" prominently on unverified products."
+    ],
+    "donts": [
+      "Don't use colored side-tab borders (border-left: 3px solid accent) on cards or callout notes. Use subtle tonal background tints or clean borders.",
+      "Don't invent star ratings, fake sales badges (\"¡OFERTÓN!\", \"Top #1 Ventas\"), or false testimonials.",
+      "Don't use gradient text or aggressive zero-blur offset drop shadows.",
+      "Don't hide affiliate disclosures or Amazon attribution notices."
+    ]
+  }
+}
