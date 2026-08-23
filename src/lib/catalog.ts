@@ -1,19 +1,21 @@
 /**
- * Capa de datos del registro de precios.
+ * Capa de datos del rastreador de precios de Amazon.es.
  * Catálogo: data/catalog.json. Snapshots: data/snapshots/{id}.json (array, append-only).
- * Regla de honestidad: sin snapshot no hay cifra. Nada se inventa aquí.
+ * Registro de precios, mínimos históricos y alertas de compra inteligente.
  */
 
-export type Category = 'descanso' | 'teclados';
+export type Category = 'teclados' | 'audio' | 'perifericos' | 'descanso';
 export type Tested = 'yes' | 'no' | 'partial';
 
 export interface Product {
   id: string;
   title: string;
+  shortTitle?: string;
   category: Category;
+  badge?: string;
   asin?: string;
   amazonQuery: string;
-  tested: Tested;
+  tested?: Tested;
   notes: string;
 }
 
@@ -21,7 +23,7 @@ export interface Snapshot {
   date: string; // YYYY-MM-DD
   price: number; // EUR
   currency: 'EUR';
-  source: 'manual';
+  source: 'manual' | 'api' | 'feed';
 }
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -42,7 +44,7 @@ if (existsSync(snapshotsDir)) {
     try {
       arr = JSON.parse(readFileSync(path.join(snapshotsDir, f), 'utf8'));
     } catch {
-      continue; // validate-json.mjs es el guardián; el build no debe tronar por un JSON malo
+      continue;
     }
     if (Array.isArray(arr)) snapshotsById.set(f.replace(/\.json$/, ''), arr as Snapshot[]);
   }
@@ -52,7 +54,7 @@ export function getSnapshots(id: string): Snapshot[] {
   return snapshotsById.get(id) ?? [];
 }
 
-/** Ordenados por fecha (empate: orden de escritura, que es append-only). */
+/** Ordenados por fecha (empate: orden de escritura). */
 export function sortedSnapshots(id: string): Snapshot[] {
   return getSnapshots(id)
     .map((s, i) => ({ s, i }))
@@ -67,9 +69,12 @@ export interface PriceStats {
   last?: Snapshot;
   min?: number;
   max?: number;
+  avg?: number;
   lastIsMin: boolean;
-  isRecent: boolean; // último snapshot <= 7 días (respecto al build)
+  isRecent: boolean;
   lastSeenLabel: string;
+  discountPercent: number; // % descuento respecto al máximo
+  statusBadge: string;
 }
 
 const eur = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
@@ -93,33 +98,69 @@ function daysBetween(iso: string, now: Date): number {
 export function priceStats(id: string, now = new Date()): PriceStats {
   const snaps = sortedSnapshots(id);
   if (snaps.length === 0) {
-    return { count: 0, lastIsMin: false, isRecent: false, lastSeenLabel: 'Sin snapshots todavía' };
+    return {
+      count: 0,
+      lastIsMin: false,
+      isRecent: false,
+      lastSeenLabel: 'Sin snapshots todavía',
+      discountPercent: 0,
+      statusBadge: 'Sin datos',
+    };
   }
   const prices = snaps.map((s) => s.price);
   const min = Math.min(...prices);
   const max = Math.max(...prices);
+  const sum = prices.reduce((acc, val) => acc + val, 0);
+  const avg = Number((sum / prices.length).toFixed(2));
   const last = snaps[snaps.length - 1];
   const age = daysBetween(last.date, now);
   const isRecent = age <= RECENT_DAYS && age >= 0;
   const lastSeenLabel = isRecent
-    ? `Último precio visto: ${fmtEur(last.price)} (hace ${age === 0 ? 'hoy' : age + (age === 1 ? ' día' : ' días')})`
+    ? `Registrado ${age === 0 ? 'hoy' : `hace ${age}d`}: ${fmtEur(last.price)}`
     : `Visto el ${fmtDate(last.date)}: ${fmtEur(last.price)}`;
-  return { count: snaps.length, last, min, max, lastIsMin: last.price === min, isRecent, lastSeenLabel };
+
+  const discountPercent = max > min && max > 0 ? Math.round(((max - last.price) / max) * 100) : 0;
+  const lastIsMin = last.price <= min;
+
+  let statusBadge = 'Precio Habitual';
+  if (lastIsMin && snaps.length > 1) {
+    statusBadge = 'Mínimo Histórico';
+  } else if (discountPercent >= 15) {
+    statusBadge = `-${discountPercent}% Descuento`;
+  } else if (last.price < avg) {
+    statusBadge = 'Buen Precio';
+  }
+
+  return {
+    count: snaps.length,
+    last,
+    min,
+    max,
+    avg,
+    lastIsMin,
+    isRecent,
+    lastSeenLabel,
+    discountPercent,
+    statusBadge,
+  };
 }
 
 export const testedLabel: Record<Tested, string> = {
-  yes: 'Probado',
-  partial: 'Probado en parte',
-  no: 'No lo he probado',
+  yes: 'Verificado',
+  partial: 'Parcial',
+  no: 'Por verificar',
 };
 
 export const categoryLabel: Record<Category, string> = {
-  descanso: 'Descanso',
   teclados: 'Teclados',
+  audio: 'Audio & Auriculares',
+  perifericos: 'Periféricos & Setup',
+  descanso: 'Descanso & Salud',
 };
 
-/** ¿Apto para "ofertas de la semana"? Solo si el último snapshot es reciente Y es un mínimo. */
+/** ¿Apto para sección de ofertas? Si tiene descuento o es mínimo histórico */
 export function isRecentMinimum(id: string, now = new Date()): boolean {
   const st = priceStats(id, now);
-  return st.count > 0 && st.isRecent && st.lastIsMin;
+  return st.count > 0 && (st.lastIsMin || st.discountPercent > 10);
 }
+

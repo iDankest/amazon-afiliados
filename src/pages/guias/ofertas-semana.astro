@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { products, isRecentMinimum, priceStats, fmtEur, fmtDate } from '../../lib/catalog';
+import AmazonLink from '../../components/AmazonLink.astro';
+import Sparkline from '../../components/Sparkline.astro';
+import { products, isRecentMinimum, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from '../../lib/catalog';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -9,48 +11,96 @@ const u = (p: string) => base + p.replace(/^\//, '');
 
 const deals = products
   .filter((p) => isRecentMinimum(p.id))
-  .map((p) => ({ p, st: priceStats(p.id) }));
+  .map((p) => ({ p, st: priceStats(p.id), snaps: sortedSnapshots(p.id) }))
+  .sort((a, b) => b.st.discountPercent - a.st.discountPercent);
 ---
 
-<Base title="Ofertas de la semana — Orza" description="Ofertas de la semana en descanso y teclados. Aún no hay fuente de descuentos verificada: no se inventan ofertas.">
+<Base
+  title="Ofertas y Chollos de la Semana — ORZA"
+  description="Selección semanal de ofertas y bajadas de precio reales en Amazon.es respaldadas por datos del tracker."
+>
   <section class="g-hero">
     <div class="g-hero-head">
-      <span class="g-kicker">Registro de precios</span>
-      <span class="badge">Sin fuente no hay lista</span>
+      <span class="g-kicker">Rastreador de Ofertas</span>
+      <span class="deal-badge">{deals.length} chollos detectados</span>
     </div>
-    <h1>Ofertas de la semana</h1>
-    <p class="lede">Descuentos reales de descanso y teclados en Amazon.es, cada uno con su fuente: un snapshot reciente del propio registro que marque un mínimo.</p>
+    <h1>Chollos y Ofertas de la Semana</h1>
+    <p class="lede">
+      Descuentos y bajadas de precio reales en Amazon.es. Cada producto listado aquí se encuentra en su mínimo histórico o con un descuento relevante frente a su precio habitual.
+    </p>
   </section>
 
   {deals.length === 0 ? (
     <div class="empty-state">
       <span class="kicker">Estado del registro</span>
-      <h2 class="empty-state-title">Ahora mismo, no hay ninguna oferta publicada</h2>
-      <p class="empty-state-text"><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
+      <h2 class="empty-state-title">Ahora mismo, no hay ninguna oferta con mínimo detectado</h2>
+      <p class="empty-state-text">Aquí solo se listan productos con bajadas comprobadas frente a su histórico registrado.</p>
     </div>
   ) : (
-    <div class="grid">
-      {deals.map(({ p, st }) => (
-        <article class="card">
-          <h2><a href={u(`p/${p.id}/`)}>{p.title}</a></h2>
-          <p class="price-now">{fmtEur(st.last!.price)} — visto {fmtDate(st.last!.date)}</p>
-          <p class="stats"><span>Mínimo del historial: <strong>{fmtEur(st.min!)}</strong></span></p>
-          <p><a href={u(`p/${p.id}/`)}>Ver historial</a></p>
+    <div class="products-grid">
+      {deals.map(({ p, st, snaps }) => (
+        <article class="product-card">
+          <div class="product-card-top">
+            <span class="product-cat">{categoryLabel[p.category]}</span>
+            <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
+              {st.lastIsMin ? '🔥 Mínimo Histórico' : `-${st.discountPercent}% Descuento`}
+            </span>
+          </div>
+
+          <h3 class="product-title">
+            <a href={u(`p/${p.id}/`)}>{p.title}</a>
+          </h3>
+
+          <p class="product-desc">{p.notes}</p>
+
+          <div class="price-block">
+            <div class="price-row">
+              <span class="price-current">{fmtEur(st.last!.price)}</span>
+              {st.max && st.max > st.last!.price && (
+                <span class="price-prev">{fmtEur(st.max)}</span>
+              )}
+            </div>
+            <div class="price-meta">
+              <span>{st.lastSeenLabel}</span>
+              {st.max && st.max > st.last!.price && (
+                <span style="color: var(--emerald); font-weight: 700;">
+                  Ahorras {fmtEur(st.max - st.last!.price)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {snaps.length >= 2 && (
+            <div style="margin-bottom: 0.85rem;">
+              <Sparkline
+                values={snaps.map((s) => s.price)}
+                label={`Evolución de ${p.title}`}
+              />
+            </div>
+          )}
+
+          <div class="product-actions">
+            <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy">
+              <span>Comprar en Amazon.es</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </AmazonLink>
+            <a href={u(`p/${p.id}/`)} class="btn-details">
+              Ver histórico y gráfica ({st.count} registros)
+            </a>
+          </div>
         </article>
       ))}
     </div>
   )}
 
-  <div class="note">
-    <span class="note-badge">Regla del sitio</span>
-    Cada oferta llevará su fecha y su enlace con la etiqueta correspondiente. Mientras no haya snapshot reciente en mínimo, esta página se queda así de corta.
-  </div>
-
-  <div class="g-next">
-    <span class="g-next-label">Siguientes guías</span>
+  <div class="g-next" style="margin-top: 3rem;">
+    <span class="g-next-label">Enlaces rápidos</span>
     <div class="g-next-links">
-      <a class="card-link" href={u('registro/')}>Registro de precios <span aria-hidden="true">&rarr;</span></a>
-      <a class="card-link" href={u('guias/')}>Índice de guías <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('registro/')}>Registro completo de precios →</a>
+      <a class="card-link" href={u('')}>Volver al inicio →</a>
     </div>
   </div>
 </Base>

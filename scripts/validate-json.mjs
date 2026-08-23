@@ -13,7 +13,7 @@ const catalogFile = path.resolve(repoRoot, 'data/catalog.json');
 const snapshotsDir = path.resolve(repoRoot, 'data/snapshots');
 
 const errors = [];
-const CATS = new Set(['descanso', 'teclados']);
+const CATS = new Set(['descanso', 'teclados', 'audio', 'perifericos']);
 const TESTED = new Set(['yes', 'no', 'partial']);
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -36,10 +36,10 @@ if (Array.isArray(catalog)) {
     if (ids.has(p.id)) errors.push(`${where}: id duplicado`);
     ids.add(p.id);
     if (typeof p.title !== 'string' || !p.title) errors.push(`${where}: falta title`);
-    if (!CATS.has(p.category)) errors.push(`${where}: category debe ser descanso|teclados`);
+    if (!CATS.has(p.category)) errors.push(`${where}: category debe ser descanso|teclados|audio|perifericos`);
     if (p.asin !== undefined && !/^[A-Z0-9]{10}$/.test(p.asin)) errors.push(`${where}: asin no parece ASIN`);
     if (typeof p.amazonQuery !== 'string' || !p.amazonQuery) errors.push(`${where}: falta amazonQuery`);
-    if (!TESTED.has(p.tested)) errors.push(`${where}: tested debe ser yes|no|partial`);
+    if (p.tested !== undefined && !TESTED.has(p.tested)) errors.push(`${where}: tested debe ser yes|no|partial`);
     if (typeof p.notes !== 'string') errors.push(`${where}: notes debe ser string`);
   }
 } else if (!errors.length) {

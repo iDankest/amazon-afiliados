@@ -1,148 +1,320 @@
 ---
 import Base from '../layouts/Base.astro';
 import AmazonLink from '../components/AmazonLink.astro';
-import { products, testedLabel, type Category } from '../lib/catalog';
+import Sparkline from '../components/Sparkline.astro';
+import { products, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from '../lib/catalog';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : import.meta.env.BASE_URL + '/';
 const u = (p: string) => base + p.replace(/^\//, '');
 
-const byCat = (c: Category) => products.filter((p) => p.category === c);
-const descanso = byCat('descanso');
-const teclados = byCat('teclados');
+// Precalcular estadísticas de todos los productos
+const allProductsWithStats = products.map((p) => {
+  const st = priceStats(p.id);
+  const snaps = sortedSnapshots(p.id);
+  return { p, st, snaps };
+});
+
+// Chollos y bajadas de precio
+const deals = [...allProductsWithStats]
+  .filter(({ st }) => st.count > 0 && (st.lastIsMin || st.discountPercent > 0))
+  .sort((a, b) => b.st.discountPercent - a.st.discountPercent);
+
+const totalTracked = products.length;
+const totalDeals = deals.length;
 ---
 
-<Base title="Orza — guías y registro de precios para Amazon.es" description="Guías honestas de descanso y teclados, y un registro de precios vistos a mano en Amazon.es. Si no se ha probado, se dice. Sin claims médicos.">
-  <section class="hero">
-    <h1>Orza</h1>
-    <p class="lede">
-      Guías de descanso y teclados, y un registro de precios vistos en Amazon.es.
-      Lo que no se ha probado se etiqueta como tal; sin anotación con fecha, no hay cifra.
+<Base
+  title="ORZA — Rastreador de Precios, Chollos y Tops de Amazon.es"
+  description="Rastreador inteligente de precios en Amazon.es. Históricos reales, detección de mínimos históricos, alertas de descuento y compras inteligentes."
+>
+  <!-- Hero Tracker -->
+  <section class="hero-tracker" aria-label="Buscador y Monitor de Precios">
+    <div class="hero-kicker">
+      <span class="telemetry-dot" aria-hidden="true"></span>
+      <span>Monitor de Precios en Directo · Amazon.es</span>
+    </div>
+    <h1 class="hero-title">Compra de forma inteligente al mejor precio registrado</h1>
+    <p class="hero-desc">
+      Monitoreamos el historial real de precios de productos clave en Amazon.es para detectar cuándo están en mínimo histórico o con un descuento real.
     </p>
-    <p class="hero-actions">
-      <a class="btn" href="#descanso">Descanso</a>
-      <a class="btn btn-ghost" href="#teclados">Teclados</a>
-    </p>
+
+    <!-- Buscador interactivo -->
+    <div class="search-box">
+      <input
+        type="search"
+        id="product-search"
+        class="search-input"
+        placeholder="Buscar producto (ej. teclado, auriculares, ratón, loop)..."
+        aria-label="Buscar en el catálogo de productos"
+      />
+      <button type="button" id="search-action-btn" class="search-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Buscar</span>
+      </button>
+    </div>
+
+    <!-- Telemetría en vivo -->
+    <div class="telemetry-chips">
+      <span class="telemetry-chip">
+        <strong>{totalTracked}</strong> productos monitoreados
+      </span>
+      <span class="telemetry-chip">
+        <strong>{totalDeals}</strong> chollos & bajadas detectadas
+      </span>
+      <span class="telemetry-chip">
+        <span class="telemetry-dot" style="background: var(--accent);" aria-hidden="true"></span>
+        Precios con fecha real
+      </span>
+    </div>
   </section>
 
-  <h2 id="descanso">Descanso</h2>
-  <p class="section-desc">Dormir a oscuras y en silencio: antifaces, tapones y kits. Sin promesas médicas.</p>
-  <div class="grid">
-    <article class="card">
-      <div>
-        <div class="card-header-mono">Guía</div>
-        <h3>Antifaz para dormir</h3>
-        <p>3D vs plano, velcro, luz por la nariz, dormir de lado.</p>
-      </div>
-      <div class="card-actions">
-        <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
+  <!-- Sección Chollos y Bajadas de Precio -->
+  <section id="chollos" aria-label="Chollos del Día">
+    <div class="section-header">
+      <h2>
+        <span>🔥</span>
+        <span>Chollos & Mínimos Históricos</span>
+      </h2>
+      <a class="section-link" href={u('registro/')}>Ver tabla completa →</a>
+    </div>
 
-    <article class="card">
-      <div>
-        <div class="card-header-mono">Guía</div>
-        <h3>Tapones para dormir</h3>
-        <p>Espuma, silicona, reutilizables. Lo que suele fallar.</p>
-      </div>
-      <div class="card-actions">
-        <a class="card-link" href={u('guias/tapones-para-dormir/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
+    <div class="products-grid" id="deals-grid">
+      {deals.map(({ p, st, snaps }) => (
+        <article class="product-card" data-category={p.category} data-title={p.title.toLowerCase()}>
+          <div class="product-card-top">
+            <span class="product-cat">{categoryLabel[p.category]}</span>
+            <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
+              {st.lastIsMin ? '🔥 Mínimo Histórico' : `-${st.discountPercent}% Descuento`}
+            </span>
+          </div>
 
-    <article class="card">
-      <div>
-        <div class="card-header-mono">Comparativa</div>
-        <h3>¿Kit o por separado?</h3>
-        <p>Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.</p>
-      </div>
-      <div class="card-actions">
-        <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Comparar <span aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-  </div>
+          <h3 class="product-title">
+            <a href={u(`p/${p.id}/`)}>{p.title}</a>
+          </h3>
 
-  {descanso.length > 0 && (
-    <>
-      <h2>Productos seguidos</h2>
-      <div class="note">
-        <span class="note-badge">Cómo funciona el registro</span>
-        Los precios se anotan a mano, con fecha. Sin snapshots anotados no se publica ninguna cifra: esto es un registro, no una oferta.
-      </div>
-      <div class="grid">
-        {descanso.map((p) => (
-          <article class="card">
-            <div>
-              <div class="card-header-mono">Producto seguido</div>
-              <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-              <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
-              <p>{p.notes}</p>
+          <p class="product-desc">{p.notes}</p>
+
+          <div class="price-block">
+            <div class="price-row">
+              <span class="price-current">{fmtEur(st.last!.price)}</span>
+              {st.max && st.max > st.last!.price && (
+                <span class="price-prev">{fmtEur(st.max)}</span>
+              )}
             </div>
-            <div class="card-actions">
-              <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
+            <div class="price-meta">
+              <span>{st.lastSeenLabel}</span>
+              {st.max && st.max > st.last!.price && (
+                <span style="color: var(--emerald); font-weight: 700;">
+                  Ahorras {fmtEur(st.max - st.last!.price)}
+                </span>
+              )}
             </div>
-          </article>
-        ))}
-      </div>
-    </>
-  )}
+          </div>
 
-  <h2 id="teclados">Teclados</h2>
-  <p class="section-desc">Criterio para el escritorio: switches, formatos y conexión. Aún sin reviews propias.</p>
-  <div class="grid">
-    <article class="card">
-      <div>
-        <div class="card-header-mono">Guía</div>
-        <h3>Teclados mecánicos</h3>
-        <p>Guía de compra honesta: switch, tamaño, conexión, layout. Lo no probado se etiqueta.</p>
-      </div>
-      <div class="card-actions">
-        <a class="card-link" href={u('guias/teclados/')}>Leer guía <span aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-    {teclados.map((p) => (
-      <article class="card">
-        <div>
-          <div class="card-header-mono">Producto seguido</div>
-          <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
-          <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
-          <p>{p.notes}</p>
-        </div>
-        <div class="card-actions">
-          <a class="card-link" href={u(`p/${p.id}/`)}>Ver ficha y registro <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-    ))}
-  </div>
+          {snaps.length >= 2 && (
+            <div style="margin-bottom: 0.85rem;">
+              <Sparkline
+                values={snaps.map((s) => s.price)}
+                label={`Evolución de ${p.title}: mín ${fmtEur(st.min!)}, máx ${fmtEur(st.max!)}`}
+              />
+            </div>
+          )}
 
-  <h2>Buscar en Amazon.es</h2>
-  <p class="section-desc">Búsquedas directas, no un producto concreto:</p>
-  <div class="btn-group">
-    <AmazonLink query="antifaz para dormir 3D">Antifaces 3D</AmazonLink>
-    <AmazonLink query="tapones oidos para dormir">Tapones para dormir</AmazonLink>
-    <AmazonLink query="loop quiet 2">Loop Quiet 2</AmazonLink>
-    <AmazonLink query="teclado mecanico">Teclados mecánicos</AmazonLink>
-  </div>
-  <div class="note">
-    <span class="note-badge">Aviso de afiliación</span>
-    Estos botones abren búsquedas en Amazon.es. Si hay tag de afiliado activo, comprar dentro de la ventana de atribución puede generar comisión, sin coste extra para ti.
-  </div>
+          <div class="product-actions">
+            <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy">
+              <span>Ver en Amazon.es</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </AmazonLink>
+            <a href={u(`p/${p.id}/`)} class="btn-details">
+              Ver histórico detallado ({st.count} registros)
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Spotlight / Banner de Monetización & Recomendación -->
+  <section class="ad-spotlight" aria-label="Recomendación Destacada">
+    <div class="ad-spotlight-content">
+      <div class="ad-spotlight-kicker">Destacado // Top Selección</div>
+      <h3 class="ad-spotlight-title">Logitech MX Master 3S en Mínimo Registrado</h3>
+      <p class="ad-spotlight-text">
+        El ratón ergonómico de referencia ha registrado una bajada de más de 35 € frente a su precio habitual en Amazon.es.
+      </p>
+    </div>
+    <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="btn">
+      <span>Ver oferta en Amazon.es →</span>
+    </AmazonLink>
+  </section>
+
+  <!-- Sección Tops & Catálogo por Categoría -->
+  <section id="tops" aria-label="Top Productos por Categoría">
+    <div class="section-header">
+      <h2>
+        <span>⭐</span>
+        <span>Top Productos Monitoreados</span>
+      </h2>
+    </div>
+
+    <!-- Pestañas de categoría -->
+    <div class="category-filter" role="tablist" aria-label="Filtrar por categoría">
+      <button type="button" class="cat-btn active" data-cat="all">Todos ({totalTracked})</button>
+      <button type="button" class="cat-btn" data-cat="teclados">Teclados</button>
+      <button type="button" class="cat-btn" data-cat="perifericos">Periféricos & Setup</button>
+      <button type="button" class="cat-btn" data-cat="audio">Audio & Auriculares</button>
+      <button type="button" class="cat-btn" data-cat="descanso">Descanso & Salud</button>
+    </div>
+
+    <div class="products-grid" id="catalog-grid">
+      {allProductsWithStats.map(({ p, st }) => (
+        <article class="product-card" data-category={p.category} data-title={p.title.toLowerCase()}>
+          <div class="product-card-top">
+            <span class="product-cat">{categoryLabel[p.category]}</span>
+            {p.badge && <span class="deal-badge">{p.badge}</span>}
+          </div>
+
+          <h3 class="product-title">
+            <a href={u(`p/${p.id}/`)}>{p.title}</a>
+          </h3>
+
+          <p class="product-desc">{p.notes}</p>
+
+          <div class="price-block">
+            <div class="price-row">
+              <span class="price-current">{st.count > 0 ? fmtEur(st.last!.price) : '—'}</span>
+              {st.count >= 2 && (
+                <span class="price-prev">{fmtEur(st.max!)}</span>
+              )}
+            </div>
+            <div class="price-meta">
+              <span>{st.lastSeenLabel}</span>
+              {st.count >= 2 && (
+                <span>Rango: {fmtEur(st.min!)} – {fmtEur(st.max!)}</span>
+              )}
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy">
+              <span>Ver en Amazon.es</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </AmazonLink>
+            <a href={u(`p/${p.id}/`)} class="btn-details">
+              Analizar precio y gráfica
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Buscador Rápido de Categorías en Amazon -->
+  <section id="buscador" aria-label="Búsqueda Directa en Amazon.es" style="margin-top: 3.5rem;">
+    <div class="section-header">
+      <h2>
+        <span>🎯</span>
+        <span>Accesos Directos a Amazon.es</span>
+      </h2>
+    </div>
+    <div class="products-grid">
+      <div class="product-card" style="justify-content: center; gap: 0.75rem;">
+        <span class="product-cat">Categoría</span>
+        <h3 class="product-title" style="margin: 0;">Teclados Mecánicos Hot-Swap</h3>
+        <p class="product-desc">Switches mecánicos, formatos 60%, 75% y TKL.</p>
+        <AmazonLink query="teclados mecanicos hot swap espana" class="btn-buy">
+          <span>Explorar Teclados en Amazon →</span>
+        </AmazonLink>
+      </div>
+      <div class="product-card" style="justify-content: center; gap: 0.75rem;">
+        <span class="product-cat">Categoría</span>
+        <h3 class="product-title" style="margin: 0;">Auriculares con Cancelación Activa</h3>
+        <p class="product-desc">Modelos inalámbricos con ANC para trabajo y viajes.</p>
+        <AmazonLink query="auriculares cancelacion ruido anc" class="btn-buy">
+          <span>Explorar Auriculares en Amazon →</span>
+        </AmazonLink>
+      </div>
+      <div class="product-card" style="justify-content: center; gap: 0.75rem;">
+        <span class="product-cat">Categoría</span>
+        <h3 class="product-title" style="margin: 0;">Ergonomía & Setup</h3>
+        <p class="product-desc">Brazos para monitor, ratones verticales y alfombrillas deskmat.</p>
+        <AmazonLink query="ergonomia setup escritorio brazo monitor" class="btn-buy">
+          <span>Explorar Ergonomía en Amazon →</span>
+        </AmazonLink>
+      </div>
+      <div class="product-card" style="justify-content: center; gap: 0.75rem;">
+        <span class="product-cat">Categoría</span>
+        <h3 class="product-title" style="margin: 0;">Descanso & Aislamiento</h3>
+        <p class="product-desc">Tapones de reducción de ruido y antifaces opacos 3D.</p>
+        <AmazonLink query="tapones oido dormir antifaz 3d" class="btn-buy">
+          <span>Explorar Descanso en Amazon →</span>
+        </AmazonLink>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script interactivo de filtrado y búsqueda client-side -->
+  <script is:inline>
+    (function () {
+      const searchInput = document.getElementById('product-search');
+      const searchBtn = document.getElementById('search-action-btn');
+      const catBtns = document.querySelectorAll('.cat-btn');
+      const cards = document.querySelectorAll('#catalog-grid .product-card, #deals-grid .product-card');
+
+      let currentCat = 'all';
+      let searchQuery = '';
+
+      function filterCards() {
+        cards.forEach((card) => {
+          const cardCat = card.getAttribute('data-category') || '';
+          const cardTitle = card.getAttribute('data-title') || '';
+
+          const matchesCat = currentCat === 'all' || cardCat === currentCat;
+          const matchesSearch = searchQuery === '' || cardTitle.includes(searchQuery);
+
+          if (matchesCat && matchesSearch) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = (e.target.value || '').trim().toLowerCase();
+          filterCards();
+        });
+      }
+
+      if (searchBtn && searchInput) {
+        searchBtn.addEventListener('click', () => {
+          const val = searchInput.value.trim();
+          if (val) {
+            location.href = '#tops';
+          }
+        });
+      }
+
+      catBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          catBtns.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCat = btn.getAttribute('data-cat') || 'all';
+          filterCards();
+        });
+      });
+    })();
+  </script>
 </Base>
-
-<style>
-  .hero {
-    margin-bottom: 1rem;
-  }
-
-  .hero .lede {
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin: 0 0 1rem;
-  }
-</style>

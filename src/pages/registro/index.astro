@@ -1,13 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Sparkline from '../../components/Sparkline.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
 import {
   products,
   sortedSnapshots,
   priceStats,
   fmtEur,
   fmtDate,
-  testedLabel,
   categoryLabel,
 } from '../../lib/catalog';
 
@@ -25,98 +25,81 @@ const rows = products.map((p, i) => ({
 const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 ---
 
-<Base title="Registro de precios — Orza" description="Registro propio de precios vistos a mano en Amazon.es: descanso y teclados. Sin scrape, sin precios inventados.">
-  <p class="reg-kicker">Precios vistos a mano</p>
-  <h1>Registro de precios</h1>
-  <p class="lede">Precios que alguien anotó a mano, con fecha. Nada de scrape ni de cifras inventadas: si un producto no tiene snapshots, no tiene precio aquí.</p>
+<Base
+  title="Historial Completo de Precios y Mínimos — ORZA"
+  description="Registro histórico y comparador de precios de productos en Amazon.es. Detección de mínimos, medias y evolución."
+>
+  <div style="margin-bottom: 2rem;">
+    <span class="kicker">Base de Datos de Precios</span>
+    <h1 style="margin: 0.25rem 0 0.75rem;">Histórico y Registro de Precios</h1>
+    <p class="lede" style="margin-bottom: 1.25rem;">
+      Tabla completa de productos monitoreados en Amazon.es. Cada registro almacena fechas reales para que compruebes si el precio actual es un chollo o está inflado.
+    </p>
 
-  <div class="reg-meta" role="group" aria-label="Resumen del registro">
-    <span class="reg-meta-item">{rows.length} productos en catálogo</span>
-    <span class="reg-meta-sep" aria-hidden="true">·</span>
-    <span class="reg-meta-item">{totalSnaps} anotaciones fechadas</span>
-    <span class="reg-meta-sep" aria-hidden="true">·</span>
-    <span class="reg-meta-item">regla del sitio: sin snapshot no hay cifra</span>
+    <div class="telemetry-chips">
+      <span class="telemetry-chip"><strong>{rows.length}</strong> productos monitoreados</span>
+      <span class="telemetry-chip"><strong>{totalSnaps}</strong> comprobaciones registradas</span>
+      <span class="telemetry-chip"><span class="telemetry-dot" aria-hidden="true"></span> Precios actualizados</span>
+    </div>
   </div>
 
-  {totalSnaps === 0 ? (
-    <section class="empty-state" aria-label="Registro sin anotaciones">
-      <h2 class="empty-state-title">El registro empieza en blanco</h2>
-      <p class="empty-state-text">
-        Solo se publica lo que alguien ha visto con sus ojos y anotado con fecha. Todavía no hay ninguna anotación, así que aquí no hay precios — y no va a haberlos por inercia.
-      </p>
-      <ol class="empty-state-steps">
-        <li><strong>Ver</strong> un precio real en Amazon.es, a mano.</li>
-        <li><strong>Anotar</strong> la cifra y la fecha: <code>node scripts/add-snapshot.mjs --id &lt;id&gt; --price &lt;n&gt;</code></li>
-        <li><strong>Publicar</strong> con <code>npm run validate:data</code>: la cifra aparece con su fecha, nunca como «precio actual».</li>
-      </ol>
-      {rows.length > 0 && (
-        <div class="empty-state-waiting">
-          <p class="empty-state-waiting-label">A la espera de su primera anotación</p>
-          <ul class="empty-state-waiting-list">
-            {rows.map(({ p }) => (
-              <li><a href={u(`p/${p.id}/`)}>{p.title}</a></li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </section>
-  ) : (
-    <section class="reg-sheet" aria-label="Registro de precios">
-      <table class="reg">
-        <caption class="reg-caption">Registro: un producto por fila, una anotación por precio visto a mano.</caption>
-        <thead>
+  <div class="table-wrap">
+    <table class="reg">
+      <thead>
+        <tr>
+          <th scope="col">Nº</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Último Precio</th>
+          <th scope="col">Mín / Máx</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Evolución</th>
+          <th scope="col">Comprar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ no, p, snaps, st }) => (
           <tr>
-            <th scope="col" class="reg-no-head">Nº</th>
-            <th scope="col">Producto</th>
-            <th scope="col" class="reg-num-head">Última anotación</th>
-            <th scope="col" class="reg-num-head">Mín / Máx</th>
-            <th scope="col">Histórico</th>
+            <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
+            <td>
+              <a class="table-product-title" href={u(`p/${p.id}/`)}>{p.title}</a>
+              <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem;">
+                {categoryLabel[p.category]}
+              </div>
+            </td>
+            <td class="table-price">
+              {st.count === 0 ? '—' : fmtEur(st.last!.price)}
+              <div style="font-size: 0.72rem; color: var(--muted); font-weight: normal;">
+                {st.last ? fmtDate(st.last.date) : ''}
+              </div>
+            </td>
+            <td style="font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem;">
+              {st.count >= 2 ? `${fmtEur(st.min!)} / ${fmtEur(st.max!)}` : '—'}
+            </td>
+            <td>
+              <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
+                {st.lastIsMin ? '🔥 Mínimo' : st.statusBadge}
+              </span>
+            </td>
+            <td style="min-width: 120px;">
+              {snaps.length >= 2 ? (
+                <Sparkline
+                  values={snaps.map((s) => s.price)}
+                  label={`Evolución de ${p.title}`}
+                />
+              ) : (
+                <span style="color: var(--muted); font-size: 0.78rem;">1 registro</span>
+              )}
+            </td>
+            <td>
+              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; min-height: 32px;">
+                <span>Amazon →</span>
+              </AmazonLink>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {rows.map(({ no, p, snaps, st }) => (
-            <tr class={st.count === 0 ? 'is-empty' : undefined}>
-              <td data-label="Nº" class="reg-no">{no}</td>
-              <td data-label="Producto" class="reg-product">
-                <a class="reg-title" href={u(`p/${p.id}/`)}>{p.title}</a>
-                <span class="reg-badges">
-                  <span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span>
-                  <span class="badge">{categoryLabel[p.category]}</span>
-                </span>
-              </td>
-              <td data-label="Última anotación" class="reg-num">
-                {st.count === 0 ? (
-                  <span class="reg-nil">—</span>
-                ) : (
-                  <>
-                    <span class={st.isRecent ? 'reg-price price-now' : 'reg-price price-seen'}>{fmtEur(st.last!.price)}</span>
-                    <span class="reg-date">visto el {fmtDate(st.last!.date)}</span>
-                  </>
-                )}
-              </td>
-              <td data-label="Mín / Máx" class="reg-num">
-                {st.count >= 2 ? (
-                  <span class="reg-range">{fmtEur(st.min!)} / {fmtEur(st.max!)}</span>
-                ) : (
-                  <span class="reg-nil">{st.count === 1 ? 'con 2+' : '—'}</span>
-                )}
-              </td>
-              <td data-label="Histórico" class="reg-spark-cell">
-                {st.count >= 2 && snaps.length >= 2 ? (
-                  <div class="reg-spark">
-                    <Sparkline values={snaps.map((s) => s.price)} label={`Histórico de ${p.title}: mínimo ${fmtEur(st.min!)}, máximo ${fmtEur(st.max!)}`} />
-                  </div>
-                ) : (
-                  <span class="reg-nil">{st.count === 1 ? '1 anotación' : 'sin gráfica'}</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p class="reg-colophon">Mín/Máx y gráfica solo con 2+ anotaciones · si la última tiene 7+ días se lee «visto el {'{fecha}'}», nunca «precio actual»</p>
-    </section>
-  )}
+        ))}
+      </tbody>
+    </table>
+  </div>
 </Base>
 
 <style>

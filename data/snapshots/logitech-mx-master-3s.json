@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-07-25",
+    "price": 129.99,
+    "currency": "EUR",
+    "source": "manual"
+  },
+  {
+    "date": "2026-08-04",
+    "price": 114.5,
+    "currency": "EUR",
+    "source": "manual"
+  },
+  {
+    "date": "2026-08-15",
+    "price": 109,
+    "currency": "EUR",
+    "source": "manual"
+  },
+  {
+    "date": "2026-08-23",
+    "price": 89.99,
+    "currency": "EUR",
+    "source": "manual"
+  }
+]

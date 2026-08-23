@@ -6,31 +6,27 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : import.meta.env.BASE_URL + '/';
 ---
 
-<Base title="Sobre Orza">
+<Base title="Sobre Orza — Rastreador de Precios y Ofertas">
   <article class="doc">
-    <h1>Orza</h1>
-
-    <div class="brandplate">
-      <svg class="brandplate-mark" viewBox="0 0 64 64" role="img" aria-label="Insignia de Orza: aguja vertical entre dos marcas laterales">
-        <rect width="64" height="64" rx="13" fill="var(--card-alt)" stroke="var(--accent)" stroke-width="1.5"/>
-        <path d="M10 32h9" stroke="var(--beacon)" stroke-width="3.5" stroke-linecap="round"/>
-        <path d="M54 32h-9" stroke="var(--beacon)" stroke-width="3.5" stroke-linecap="round"/>
-        <path d="M32 7.5 40 32l-8 24.5L24 32Z" fill="var(--accent)"/>
-        <path d="M32 7.5 40 32H24Z" fill="var(--accent-hover)"/>
-        <circle cx="32" cy="32" r="3.2" fill="var(--card-alt)"/>
-      </svg>
-      <p class="brandplate-text">La insignia: una aguja que se mantiene firme aunque el entorno empuje desde los lados.</p>
-    </div>
+    <span class="kicker">Sobre el proyecto</span>
+    <h1 style="margin: 0.25rem 0 1rem;">ORZA — Smart Price Tracker</h1>
 
     <section class="doc-section">
-      <p>Marca del sitio. Orza viene de orzar: mantener la dirección. Aquí: parar a mirar el precio y la guía antes de ir a Amazon.es. Dominio propio pendiente (orza.es y orza.com están ocupados).</p>
-      <p>Proyecto de afiliados Amazon.es, 0€ de hosting (GitHub Pages). Nicho: descanso (luz y ruido) y teclados, no videojuegos.</p>
-      <p>Por qué no una wiki tipo Tarkov: WARDOGS y similares ya tienen wikis EN y al menos una guía ES. Amazon no paga el juego de Steam. El contenido que sí se puede afiliar está en Amazon.es: antifaces, tapones, kits baratos y marcas tipo Loop.</p>
-      <p>Regla: si no se ha probado un producto, no se finge. Las primeras piezas de vídeo usan el antifaz personal del autor, no un SKU de tienda propia.</p>
-      <p>Los precios de este sitio salen de un <a href={base + 'registro/'}>registro propio de snapshots</a> anotados a mano: sin snapshot no hay cifra.</p>
+      <p><strong>Orza</strong> es una plataforma de análisis y seguimiento de precios diseñada para ayudar a compradores en España a encontrar el mejor momento para comprar productos en <strong>Amazon.es</strong>.</p>
+      
+      <h3>¿Cómo funciona?</h3>
+      <p>Monitoreamos de forma estructurada productos clave en categorías como periféricos, teclados mecánicos, audio, ergonomía y descanso. Guardamos históricos fechados para calcular:</p>
+      <ul>
+        <li><strong>Mínimos Históricos:</strong> Detectamos cuándo un producto alcanza su precio más bajo registrado.</li>
+        <li><strong>Descuentos Reales:</strong> Comparamos el precio actual con el histórico real para evitar falsas ofertas o rebajas infladas.</li>
+        <li><strong>Compra Inteligente:</strong> Ofrecemos enlaces directos con atribución de afiliado a Amazon.es.</li>
+      </ul>
+
+      <h3>Modelo de Sostenibilidad</h3>
+      <p>Orza se financia a través del <strong>Programa de Afiliados de Amazon EU</strong> y espacios publicitarios limpios. Cuando compras a través de nuestros enlaces, generamos una pequeña comisión que permite mantener los servidores y la infraestructura de datos sin ningún coste adicional para ti.</p>
     </section>
 
-    <p class="doc-colophon">Orza · guías y registro de precios · criterio propio antes del clic</p>
+    <p class="doc-colophon">ORZA · Tracker de precios, chollos y comparador inteligente para Amazon.es</p>
   </article>
 </Base>
 

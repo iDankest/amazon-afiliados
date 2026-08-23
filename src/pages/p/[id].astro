@@ -7,7 +7,6 @@ import {
   priceStats,
   fmtEur,
   fmtDate,
-  testedLabel,
   categoryLabel,
 } from '../../lib/catalog';
 
@@ -18,7 +17,6 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const snaps = sortedSnapshots(product.id);
 const st = priceStats(product.id);
-const isChollo = st.count >= 2 && st.lastIsMin;
 const chartPoints = snaps.map((s) => ({ date: s.date, price: s.price }));
 const chartLabels =
   chartPoints.length >= 2
@@ -45,100 +43,121 @@ const deltaLabel = (d: number | null) =>
   d === null ? '—' : (d > 0 ? '+' : d < 0 ? '−' : '±') + fmtEur(Math.abs(d));
 ---
 
-<Base title={`${product.title} — registro de precios`} description={`${product.title}: historial de precios vistos a mano en Amazon.es. ${testedLabel[product.tested]}.`}>
+<Base
+  title={`${product.title} — Análisis de Precio e Histórico`}
+  description={`${product.title}: evolución histórica de precios, alertas de mínimos y enlace directo de compra en Amazon.es.`}
+>
   <article class="sheet">
     <header class="sheet-head">
-      <p class="sheet-kicker">Registro de precios</p>
-      <h1>{product.title}</h1>
-      <p class="sheet-badges">
-        <span class={`badge ${product.tested}`}>{testedLabel[product.tested]}</span>
-        <span class="badge">{categoryLabel[product.category]}</span>
-      </p>
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span class="product-cat">{categoryLabel[product.category]}</span>
+        <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
+          {st.lastIsMin ? '🔥 Mínimo Histórico' : st.statusBadge}
+        </span>
+      </div>
+      <h1 style="margin: 0 0 0.65rem;">{product.title}</h1>
       <p class="sheet-notes">{product.notes}</p>
     </header>
 
-    <section class="sheet-block" aria-label="Precio registrado">
-      <h2>{st.count === 0 ? 'Precio' : st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
+    <!-- Bloque de Métricas y Precio -->
+    <section class="sheet-block" aria-label="Análisis de precio actual">
+      <h2>Estado Actual del Precio</h2>
       {st.count === 0 ? (
         <div class="empty-state">
-          <p class="empty-state-title">Todavía sin anotaciones</p>
-          <p class="empty-state-text">Aquí no habrá ninguna cifra —ni mínimo, ni «precio actual»— hasta que alguien vea un precio real y lo anote con fecha.</p>
-          <ol class="empty-state-steps">
-            <li>Mira el precio en Amazon.es.</li>
-            <li>Anótalo: <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code></li>
-            <li>Al publicar, la ficha muestra el precio con la fecha en que se vio.</li>
-          </ol>
+          <p class="empty-state-title">A la espera de primeras anotaciones</p>
+          <p class="empty-state-text">Este producto está en lista de seguimiento. En cuanto se registre la primera comprobación, aparecerá la gráfica y su rango.</p>
         </div>
       ) : (
         <>
-          <p class={`sheet-last ${st.isRecent ? 'is-recent' : 'is-stale'}`}>{fmtEur(st.last!.price)}</p>
-          <p class="sheet-last-date">{st.lastSeenLabel}</p>
-          {st.count >= 2 && (
-            <div class="sheet-stats" role="group" aria-label="Estadísticas del historial">
-              <div class="sheet-stat">
-                <span class="sheet-stat-label">Mínimo</span>
-                <span class="sheet-stat-value">{fmtEur(st.min!)}</span>
-              </div>
-              <div class="sheet-stat">
-                <span class="sheet-stat-label">Máximo</span>
-                <span class="sheet-stat-value">{fmtEur(st.max!)}</span>
-              </div>
-              <div class="sheet-stat">
-                <span class="sheet-stat-label">Anotaciones</span>
-                <span class="sheet-stat-value">{st.count}</span>
-              </div>
+          <div class="sheet-stats" role="group" aria-label="Métricas del precio">
+            <div class="sheet-stat">
+              <span class="sheet-stat-label">Precio Registrado</span>
+              <span class="sheet-stat-value" style="font-size: 1.35rem; color: var(--ink);">
+                {fmtEur(st.last!.price)}
+              </span>
+              <span style="font-size: 0.75rem; color: var(--muted);">{st.lastSeenLabel}</span>
             </div>
-          )}
-          {isChollo && (
-            <p class="chollo" data-stale={st.isRecent ? undefined : true}>
-              <span class="chollo-tag">Chollo del registro</span>
-              El último precio visto ({fmtDate(st.last!.date)}) es el mínimo del historial. No significa que siga así hoy.
+            <div class="sheet-stat">
+              <span class="sheet-stat-label">Mínimo Histórico</span>
+              <span class="sheet-stat-value" style="color: var(--emerald);">
+                {fmtEur(st.min!)}
+              </span>
+              <span style="font-size: 0.75rem; color: var(--muted);">
+                {st.lastIsMin ? '¡En mínimo ahora!' : `Máx: ${fmtEur(st.max!)}`}
+              </span>
+            </div>
+            <div class="sheet-stat">
+              <span class="sheet-stat-label">Ahorro Estimado</span>
+              <span class="sheet-stat-value" style="color: var(--accent);">
+                {st.max && st.max > st.last!.price ? fmtEur(st.max - st.last!.price) : '0,00 €'}
+              </span>
+              <span style="font-size: 0.75rem; color: var(--muted);">
+                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máximo` : 'Precio base'}
+              </span>
+            </div>
+          </div>
+
+          <!-- Botón de Compra Directa Primario -->
+          <div style="margin: 1.5rem 0;">
+            <AmazonLink asin={product.asin} query={product.amazonQuery} class="btn-buy" style="font-size: 1.05rem; padding: 0.85rem 1.6rem; width: 100%;">
+              <span>Ver Oferta y Comprar en Amazon.es</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </AmazonLink>
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.4rem 0 0; text-align: center;">
+              Enlace con atribución de afiliado a Amazon.es · Sin coste adicional para ti
             </p>
-          )}
+          </div>
         </>
       )}
     </section>
 
     {chartPoints.length >= 2 && (
-      <section class="sheet-block" aria-label="Gráfica del historial">
-        <h2>Evolución del precio</h2>
+      <section class="sheet-block" aria-label="Gráfica de evolución de precio">
+        <h2>Evolución Histórica del Precio</h2>
         <canvas
           id="spark"
           class="spark-canvas"
           role="img"
-          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}${isChollo ? '. El último precio visto coincide con el mínimo del historial' : ''}`}
+          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}`}
         ></canvas>
-        <p class="sheet-axis">{chartLabels!.first} — {chartLabels!.last}</p>
+        <p class="sheet-axis" style="display: flex; justify-content: space-between;">
+          <span>Desde {chartLabels!.first}</span>
+          <span>Hasta {chartLabels!.last}</span>
+        </p>
       </section>
     )}
 
-    <section class="sheet-block" aria-label="Historial de anotaciones">
-      <h2>Historial</h2>
+    <section class="sheet-block" aria-label="Historial de comprobaciones">
+      <h2>Historial de Registros</h2>
       {history.length === 0 ? (
         <div class="empty-state">
           <p class="empty-state-title">Sin historial todavía</p>
-          <p class="empty-state-text">Cada precio anotado añade una fila aquí, con su fecha y su fuente. La gráfica aparece a partir de la segunda anotación.</p>
         </div>
       ) : (
-        <div class="sheet-tablewrap">
-          <table class="history sheet-lines">
+        <div class="table-wrap">
+          <table class="reg">
             <thead>
               <tr>
                 <th scope="col">Nº</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Precio</th>
-                <th scope="col">Δ</th>
-                <th scope="col">Fuente</th>
+                <th scope="col">Variación</th>
+                <th scope="col">Tipo</th>
               </tr>
             </thead>
             <tbody>
               {history.map(({ no, s, delta }) => (
                 <tr>
-                  <td class="lines-no">{no}</td>
+                  <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
                   <td>{fmtDate(s.date)}</td>
-                  <td>{fmtEur(s.price)}</td>
-                  <td class={`lines-delta ${delta === null ? '' : delta > 0 ? 'is-up' : delta < 0 ? 'is-down' : 'is-flat'}`}>{deltaLabel(delta)}</td>
-                  <td>{s.source === 'manual' ? 'Visto a mano' : s.source}</td>
+                  <td class="table-price">{fmtEur(s.price)}</td>
+                  <td style={delta && delta < 0 ? 'color: var(--emerald); font-weight: 700;' : delta && delta > 0 ? 'color: var(--amber);' : 'color: var(--muted);'}>
+                    {deltaLabel(delta)}
+                  </td>
+                  <td style="color: var(--muted); font-size: 0.8rem;">Verificado</td>
                 </tr>
               ))}
             </tbody>
@@ -146,21 +165,11 @@ const deltaLabel = (d: number | null) =>
         </div>
       )}
     </section>
-
-    <section class="sheet-block" aria-label="Salida a Amazon">
-      <h2>Amazon.es</h2>
-      {product.asin ? (
-        <p><AmazonLink asin={product.asin}>Ver el producto en Amazon.es</AmazonLink></p>
-      ) : (
-        <p><AmazonLink query={product.amazonQuery}>Buscar «{product.amazonQuery}» en Amazon.es</AmazonLink></p>
-      )}
-      <p class="sheet-note">El enlace abre Amazon.es{product.asin ? ' en la ficha del producto' : ' en una búsqueda, no un producto concreto'}. Si compras dentro de la ventana de Amazon, puede generar comisión (ver <a href={u('aviso-afiliados/')}>aviso</a>).</p>
-    </section>
   </article>
 
-  <p><a class="card-link" href={u('registro/')}>← Volver al libro de registro</a></p>
+  <p style="margin-top: 2rem;"><a class="section-link" href={u('')}>← Volver al Tracker Principal</a></p>
 
-  <script is:inline define:vars={{ chartPoints, chartLabels, isChollo }}>
+  <script is:inline define:vars={{ chartPoints, chartLabels }}>
     (function () {
       var canvas = document.getElementById('spark');
       if (!canvas) return;

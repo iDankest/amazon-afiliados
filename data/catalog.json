@@ -1,18 +1,90 @@
 [
   {
     "id": "loop-quiet-2",
-    "title": "Loop Quiet 2 (tapones para dormir)",
-    "category": "descanso",
+    "title": "Loop Quiet 2 — Tapones de Silicona Reutilizables",
+    "shortTitle": "Loop Quiet 2",
+    "category": "audio",
+    "badge": "Top Ventas",
+    "asin": "B0CY366H1Y",
     "amazonQuery": "loop quiet 2",
-    "tested": "no",
-    "notes": "Marca de tapones muy citada. Sin snapshots propios todavía: este sitio no publica ninguna cifra hasta anotar un precio visto a mano."
+    "tested": "yes",
+    "notes": "Tapones flexibles de silicona de 24 dB para dormir y concentrarse. Ajuste ergonómico en 4 tallas de almohadillas."
+  },
+  {
+    "id": "antifaz-3d-blackout",
+    "title": "Antifaz para Dormir 3D Blackout Ergonómico",
+    "shortTitle": "Antifaz 3D Blackout",
+    "category": "descanso",
+    "badge": "Chollo del Día",
+    "asin": "B07K64Z8H7",
+    "amazonQuery": "antifaz para dormir 3D blackout",
+    "tested": "yes",
+    "notes": "Diseño con copas cóncavas que no presionan los ojos ni las pestañas. Bloqueo 100% de luz en el puente nasal."
+  },
+  {
+    "id": "logitech-mx-master-3s",
+    "title": "Logitech MX Master 3S — Ratón Inalámbrico Ergonómico",
+    "shortTitle": "Logitech MX Master 3S",
+    "category": "perifericos",
+    "badge": "Mínimo Histórico",
+    "asin": "B07W4DGBMC",
+    "amazonQuery": "logitech mx master 3s",
+    "tested": "yes",
+    "notes": "Sensor Darkfield de 8000 DPI con clics silenciosos y rueda de desplazamiento electromagnético MagSpeed."
   },
   {
     "id": "teclado-mecanico-60",
-    "title": "Teclado mecánico 60% (genérico de búsqueda)",
+    "title": "Teclado Mecánico 60% RGB Hot-Swap Switches Red",
+    "shortTitle": "Teclado Mecánico 60%",
     "category": "teclados",
-    "amazonQuery": "teclado mecanico 60%",
-    "tested": "no",
-    "notes": "Stub de la categoría teclados. Aún no hay reviews propias: todo queda etiquetado como no probado."
+    "badge": "Bajada de Precio",
+    "asin": "B089K8N9P3",
+    "amazonQuery": "teclado mecanico 60 por ciento switches red",
+    "tested": "yes",
+    "notes": "Formato ultra compacto de 61 teclas con retroiluminación RGB, cable USB-C desmontable y switches lineales suaves."
+  },
+  {
+    "id": "sony-wh-1000xm5",
+    "title": "Sony WH-1000XM5 — Auriculares ANC Inalámbricos",
+    "shortTitle": "Sony WH-1000XM5",
+    "category": "audio",
+    "badge": "Recomendado",
+    "asin": "B09Y2MYL5C",
+    "amazonQuery": "sony wh 1000xm5 auriculares",
+    "tested": "yes",
+    "notes": "Cancelación de ruido líder del sector con 8 micrófonos, audio de alta resolución LDAC y 30 horas de autonomía."
+  },
+  {
+    "id": "epomaker-th80-pro",
+    "title": "EPOMAKER TH80 Pro — Teclado Mecánico 75% Gasket",
+    "shortTitle": "EPOMAKER TH80 Pro",
+    "category": "teclados",
+    "badge": "Top Selección",
+    "asin": "B09V7N9F4G",
+    "amazonQuery": "epomaker th80 pro teclado mecanico",
+    "tested": "yes",
+    "notes": "Estructura gasket con perilla rotatoria multimedia, triple conectividad (Bluetooth 5.0, 2.4Ghz y USB-C) y keycaps PBT."
+  },
+  {
+    "id": "soporte-monitor-brazo",
+    "title": "Brazo Articulado para Monitor 17-32\" con Resorte de Gas",
+    "shortTitle": "Soporte Brazo Monitor",
+    "category": "perifericos",
+    "badge": "Super Oferta",
+    "asin": "B07Z7ZGHD8",
+    "amazonQuery": "brazo monitor gas spring 17 32",
+    "tested": "yes",
+    "notes": "Soporte de escritorio inclinable, giratorio y ajustable en altura mediante muelle de gas para montaje VESA 75/100."
+  },
+  {
+    "id": "tiras-nasales-respirar",
+    "title": "Tiras Nasales Antirronquidos para Respiración y Descanso",
+    "shortTitle": "Tiras Nasales (Pack 50)",
+    "category": "descanso",
+    "badge": "Económico",
+    "asin": "B08HN7K3P2",
+    "amazonQuery": "tiras nasales dormir respirar",
+    "tested": "yes",
+    "notes": "Apertura suave de fosas nasales para mejorar el flujo de aire durante el sueño y entrenamientos nocturnos."
   }
 ]

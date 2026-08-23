@@ -17,16 +17,15 @@ const canonical = new URL(canonicalPath, Astro.site);
 
 const bannerText = hasTag
   ? DISCLOSURE
-  : 'Enlaces a Amazon.es. Aún no hay tag de afiliado configurado: las compras no generan comisión. Aviso legal en ' +
+  : 'Rastreador de precios y ofertas en Amazon.es. Enlaces de compra directa con atribución legal. Más info en ' +
     u('aviso-afiliados/');
 
 const nav: Array<[string, string]> = [
-  ['Inicio', u('')],
-  ['Descanso', u('') + '#descanso'],
-  ['Teclados', u('') + '#teclados'],
-  ['Guías', u('guias/')],
-  ['Registro', u('registro/')],
-  ['Afiliados', u('aviso-afiliados/')],
+  ['Tracker', u('')],
+  ['🔥 Chollos', u('') + '#chollos'],
+  ['⭐ Tops', u('') + '#tops'],
+  ['📊 Histórico', u('registro/')],
+  ['🎯 Buscador', u('') + '#buscador'],
 ];
 
 const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
@@ -44,12 +43,12 @@ const isCurrent = (href: string) => {
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#f7f7f5" id="meta-theme-color" />
+    <meta name="theme-color" content="#f8fafc" id="meta-theme-color" />
     <link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={u('apple-touch-icon.png')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <script is:inline>
       (function () {
         var t = 'light';
@@ -60,7 +59,7 @@ const isCurrent = (href: string) => {
         } catch (e) {}
         document.documentElement.setAttribute('data-theme', t);
         var meta = document.getElementById('meta-theme-color');
-        if (meta) meta.setAttribute('content', t === 'dark' ? '#0f141a' : '#f7f7f5');
+        if (meta) meta.setAttribute('content', t === 'dark' ? '#0b0f17' : '#f8fafc');
       })();
     </script>
   </head>
@@ -68,7 +67,10 @@ const isCurrent = (href: string) => {
     <header>
       <div class="wrap header-inner">
         <div class="header-bar">
-          <a class="logo" href={u('')} aria-label="Orza — inicio">Orza</a>
+          <a class="brand-link" href={u('')} aria-label="Orza — Inicio">
+            <span class="logo">ORZA</span>
+            <span class="logo-tag">PRICE TRACKER</span>
+          </a>
           <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro" aria-pressed="false">
             <span class="theme-toggle-icon" aria-hidden="true">
               <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -89,31 +91,58 @@ const isCurrent = (href: string) => {
             <span id="theme-label" class="theme-toggle-label">Oscuro</span>
           </button>
         </div>
-        <nav aria-label="Principal">
+        <nav aria-label="Navegación principal">
           {nav.map(([label, href]) => (
             <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
           ))}
         </nav>
       </div>
     </header>
+
     <div class="banner">{bannerText}</div>
+
     <main class="wrap">
       <slot />
     </main>
+
     <footer>
       <div class="wrap">
-        <p class="fine">
-          <strong>Orza.</strong> {DISCLOSURE}
-          Amazon y el logotipo de Amazon son marcas de Amazon.com, Inc. o de sus afiliados. Este sitio no es Amazon ni una tienda.
-        </p>
-        <div class="footer-nav">
-          <a href={u('aviso-afiliados/')}>Aviso de afiliados</a>
-          <a href={u('privacidad/')}>Privacidad</a>
-          <a href={u('cookies/')}>Cookies</a>
-          <a href={u('sobre/')}>Sobre</a>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="logo">ORZA</span>
+            <p class="fine">
+              Rastreador inteligente de precios, mínimos históricos y chollos en Amazon.es. Diseñado para ayudarte a comprar con criterio y al mejor precio registrado.
+            </p>
+          </div>
+          <div class="footer-col">
+            <span class="footer-heading">Categorías</span>
+            <ul class="footer-links">
+              <li><a href={u('') + '#chollos'}>🔥 Chollos & Descuentos</a></li>
+              <li><a href={u('registro/')}>📊 Registro Histórico</a></li>
+              <li><a href={u('') + '#tops'}>⭐ Tops por Categoría</a></li>
+              <li><a href={u('') + '#buscador'}>🎯 Buscador Amazon</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <span class="footer-heading">Transparencia</span>
+            <ul class="footer-links">
+              <li><a href={u('aviso-afiliados/')}>Aviso de Afiliados</a></li>
+              <li><a href={u('privacidad/')}>Privacidad</a></li>
+              <li><a href={u('cookies/')}>Cookies</a></li>
+              <li><a href={u('sobre/')}>Sobre Orza</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="fine">
+            <strong>Aviso de Afiliación:</strong> {DISCLOSURE}
+            Amazon y el logotipo de Amazon son marcas comerciales de Amazon.com, Inc. o sus filiales. Este sitio web no está gestionado por Amazon ni es una tienda directa.
+          </p>
         </div>
       </div>
     </footer>
+
     <script>
       const btn = document.getElementById('theme-toggle');
       const labelEl = document.getElementById('theme-label');
@@ -134,7 +163,7 @@ const isCurrent = (href: string) => {
         try {
           localStorage.setItem('adc-theme', next);
         } catch (e) {}
-        if (meta) meta.setAttribute('content', next === 'dark' ? '#0d1217' : '#f7f7f5');
+        if (meta) meta.setAttribute('content', next === 'dark' ? '#0b0f17' : '#f8fafc');
         syncBtn();
       });
 
