@@ -1,20 +1,108 @@
 ---
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
 ---
 
-<Base title="Tapones para dormir — guía">
-  <h1>Tapones para dormir</h1>
-  <p>Los tapones de un kit barato de Amazon son el punto débil más repetido en reseñas: «no aíslan», «parecen de juguete». Un tapón de marca (p. ej. Loop Quiet) cuesta cerca de lo que cuesta un kit entero antifaz+tapones genérico.</p>
+<Base title="Tapones para dormir — guía" description="Tapones para dormir: espuma, silicona y reutilizables. Lo que suele fallar y por qué el SNR de la caja no es tu noche real.">
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Cuaderno de Descanso // Guía de Campo 02</span>
+      <span class="badge">[Sin claims médicos]</span>
+    </div>
+    <h1>Tapones para dormir</h1>
+    <p class="lede">Los tapones de un kit barato de Amazon son el punto débil más repetido en reseñas: «no aíslan», «parecen de juguete».</p>
+  </section>
+
+  <blockquote class="g-pull">Un tapón de marca (p. ej. Loop Quiet) cuesta cerca de lo que cuesta un kit entero antifaz+tapones genérico.</blockquote>
+
   <h2>Tipos</h2>
-  <ul class="plain">
-    <li>Espuma desechable: aísla más si se pone bien; molesta de lado.</li>
-    <li>Silicona / reutilizable: más cómodo, a menudo menos dB.</li>
-    <li>Filtros con «voz» (Loop Engage, etc.): para el día, no siempre para noche.</li>
-  </ul>
-  <p>
+  <p class="section-desc">Tres familias, cada una con su pérdida.</p>
+  <div class="grid">
+    <article class="card">
+      <div>
+        <div class="card-header-mono">Tipo // 01</div>
+        <h3>Espuma desechable</h3>
+        <p>Aísla más si se pone bien; molesta de lado.</p>
+      </div>
+    </article>
+    <article class="card">
+      <div>
+        <div class="card-header-mono">Tipo // 02</div>
+        <h3>Silicona / reutilizable</h3>
+        <p>Más cómodo, a menudo menos dB.</p>
+      </div>
+    </article>
+    <article class="card">
+      <div>
+        <div class="card-header-mono">Tipo // 03</div>
+        <h3>Filtros con «voz»</h3>
+        <p>Loop Engage y similares: para el día, no siempre para noche.</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="btn-group">
     <AmazonLink query="tapones oidos para dormir">Tapones dormir</AmazonLink>
     <AmazonLink query="loop quiet 2">Loop Quiet 2</AmazonLink>
-  </p>
-  <p class="note">SNR en la caja no es tu noche real. Prueba de lado y con el ruido que tú tienes (vecino, calle), no con un vídeo de marketing.</p>
+  </div>
+
+  <div class="note">
+    <span class="note-badge">Regla de Bitácora</span>
+    SNR en la caja no es tu noche real. Prueba de lado y con el ruido que tú tienes (vecino, calle), no con un vídeo de marketing.
+  </div>
+
+  <div class="g-next">
+    <span class="g-next-label">Siguiente rumbo</span>
+    <div class="g-next-links">
+      <a class="card-link" href={u('guias/espuma-vs-silicona/')}>Tapones: espuma vs silicona <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Kit antifaz + tapones <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </Base>
+
+<style>
+  .g-hero h1 {
+    margin-bottom: 0.75rem;
+  }
+  .g-hero .lede {
+    margin-bottom: 0;
+  }
+  .g-pull {
+    margin: 2.25rem 0;
+    padding: 1.1rem 1.4rem;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    background: var(--card-alt);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .g-next {
+    margin-top: 3.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .g-next-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .g-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
+</style>

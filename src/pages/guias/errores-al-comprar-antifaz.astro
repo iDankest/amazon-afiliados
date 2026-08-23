@@ -1,16 +1,101 @@
 ---
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const errores = [
+  'Comprar el más barato plano y esperar oscuridad total.',
+  'Ignorar el cierre: velcro vs pelo.',
+  'No mirar si es 3D si duermes de lado.',
+  'Creer «100% blackout» en el título de Amazon.',
+  'No leer las quejas de olor y calor.',
+];
 ---
 
-<Base title="Errores al comprar un antifaz">
-  <h1>Errores al comprar un antifaz</h1>
-  <ol>
-    <li>Comprar el más barato plano y esperar oscuridad total.</li>
-    <li>Ignorar el cierre: velcro vs pelo.</li>
-    <li>No mirar si es 3D si duermes de lado.</li>
-    <li>Creer «100% blackout» en el título de Amazon.</li>
-    <li>No leer las quejas de olor y calor.</li>
+<Base title="Errores al comprar un antifaz" description="Cinco errores al comprar un antifaz: oscuridad prometida, velcro, forma 3D y títulos de Amazon que prometen de más.">
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Cuaderno de Descanso // Lista de Guardia 04</span>
+      <span class="badge">[Sin claims médicos]</span>
+    </div>
+    <h1>Errores al comprar un antifaz</h1>
+    <p class="lede">Cinco comprobaciones antes de pagar por oscuridad.</p>
+  </section>
+
+  <ol class="g-errors">
+    {errores.map((e) => <li>{e}</li>)}
   </ol>
-  <p><AmazonLink query="antifaz para dormir lado 3D">Antifaz 3D para lado</AmazonLink></p>
+
+  <div class="btn-group">
+    <AmazonLink query="antifaz para dormir lado 3D">Antifaz 3D para lado</AmazonLink>
+  </div>
+
+  <div class="g-next">
+    <span class="g-next-label">Siguiente rumbo</span>
+    <div class="g-next-links">
+      <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Antifaz para dormir <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('guias/dormir-de-lado/')}>Dormir de lado con antifaz <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </Base>
+
+<style>
+  .g-hero h1 {
+    margin-bottom: 0.75rem;
+  }
+  .g-hero .lede {
+    margin-bottom: 0;
+  }
+  .g-errors {
+    list-style: none;
+    counter-reset: error;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+  .g-errors li {
+    counter-increment: error;
+    position: relative;
+    margin: 0;
+    padding: 1rem 1.15rem 1rem 3.4rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-errors li::before {
+    content: counter(error, decimal-leading-zero);
+    position: absolute;
+    left: 1.15rem;
+    top: 1rem;
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .g-next {
+    margin-top: 3.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .g-next-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .g-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
+</style>

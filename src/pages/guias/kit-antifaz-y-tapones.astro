@@ -1,12 +1,85 @@
 ---
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
 ---
 
-<Base title="Kit antifaz + tapones">
-  <h1>Kit antifaz + tapones</h1>
-  <p>En Amazon.es el pack 3D + tapones se ve por ~6–12 €. Un kit «de marca» de viaje (tipo Matador en otros mercados) o tapones Loop solos se van a 25 € o más. No es el mismo producto.</p>
+<Base title="Kit antifaz + tapones" description="¿Kit antifaz + tapones o piezas por separado? Packs de Amazon, marcas de viaje y cuándo gana cada opción.">
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Cuaderno de Descanso // Comparativa 03</span>
+      <span class="badge">[Sin claims médicos]</span>
+    </div>
+    <h1>Kit antifaz + tapones</h1>
+    <p class="lede">En Amazon.es el pack 3D + tapones se ve por ~6–12 €. Un kit «de marca» de viaje (tipo Matador en otros mercados) o tapones Loop solos se van a 25 € o más. No es el mismo producto.</p>
+  </section>
+
+  <h2>Cuándo gana el kit</h2>
+  <p class="section-desc">Todo depende del tapón que trae el pack.</p>
   <p>Si el tapón del pack es flojo, el kit no gana al antifaz solo + un tapón decente. Si el tapón vale, el pack ahorra un pedido.</p>
-  <p><AmazonLink query="kit antifaz tapones dormir">Buscar kits en Amazon.es</AmazonLink></p>
-  <p class="note">Este sitio no vende el kit de AliExpress. Aquí solo se enlaza Amazon.es.</p>
+
+  <blockquote class="g-pull">Si el tapón vale, el pack ahorra un pedido.</blockquote>
+
+  <div class="btn-group">
+    <AmazonLink query="kit antifaz tapones dormir">Buscar kits en Amazon.es</AmazonLink>
+  </div>
+
+  <div class="note">
+    <span class="note-badge">Rumbo Fijo</span>
+    Este sitio no vende el kit de AliExpress. Aquí solo se enlaza Amazon.es.
+  </div>
+
+  <div class="g-next">
+    <span class="g-next-label">Siguiente rumbo</span>
+    <div class="g-next-links">
+      <a class="card-link" href={u('guias/barato-vs-caro/')}>Barato de Amazon vs caro de marca <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('guias/tapones-para-dormir/')}>Tapones para dormir <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </Base>
+
+<style>
+  .g-hero h1 {
+    margin-bottom: 0.75rem;
+  }
+  .g-hero .lede {
+    margin-bottom: 0;
+  }
+  .g-pull {
+    margin: 2.25rem 0;
+    padding: 1.1rem 1.4rem;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    background: var(--card-alt);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .g-next {
+    margin-top: 3.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .g-next-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .g-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
+</style>

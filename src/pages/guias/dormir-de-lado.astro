@@ -1,11 +1,86 @@
 ---
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
 ---
 
-<Base title="Dormir de lado con antifaz">
-  <h1>Dormir de lado con antifaz</h1>
-  <p>De lado el antifaz se aplasta contra la almohada. Si no hay copa 3D, el ojo recibe presión y entra luz por el borde. La correa se desliza hacia arriba o abajo.</p>
-  <p>Prueba útil (gratis): linterna del móvil a 10 cm, de lado, 10 segundos. Si ves el flash, ese antifaz no es «blackout» para ti.</p>
-  <p><AmazonLink query="antifaz dormir de lado 3D">Buscar 3D / side sleeper</AmazonLink></p>
+<Base title="Dormir de lado con antifaz" description="Dormir de lado con antifaz: presión en el ojo, luz por el borde y una prueba casera con la linterna del móvil.">
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Cuaderno de Descanso // Guía de Campo 05</span>
+      <span class="badge">[Sin claims médicos]</span>
+    </div>
+    <h1>Dormir de lado con antifaz</h1>
+    <p class="lede">De lado el antifaz se aplasta contra la almohada. Si no hay copa 3D, el ojo recibe presión y entra luz por el borde. La correa se desliza hacia arriba o abajo.</p>
+  </section>
+
+  <h2>La prueba de la linterna</h2>
+  <p class="section-desc">Gratis, en casa, y en diez segundos.</p>
+  <div class="card g-test">
+    <div class="card-header-mono">Prueba de Campo // 0 €</div>
+    <p>Linterna del móvil a 10 cm, de lado, 10 segundos.</p>
+  </div>
+
+  <blockquote class="g-pull">Si ves el flash, ese antifaz no es «blackout» para ti.</blockquote>
+
+  <div class="btn-group">
+    <AmazonLink query="antifaz dormir de lado 3D">Buscar 3D / side sleeper</AmazonLink>
+  </div>
+
+  <div class="g-next">
+    <span class="g-next-label">Siguiente rumbo</span>
+    <div class="g-next-links">
+      <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Antifaz para dormir <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('guias/errores-al-comprar-antifaz/')}>Errores al comprar un antifaz <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </Base>
+
+<style>
+  .g-hero h1 {
+    margin-bottom: 0.75rem;
+  }
+  .g-hero .lede {
+    margin-bottom: 0;
+  }
+  .g-test {
+    max-width: 30rem;
+  }
+  .g-pull {
+    margin: 2.25rem 0;
+    padding: 1.1rem 1.4rem;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    background: var(--card-alt);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .g-next {
+    margin-top: 3.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .g-next-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .g-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
+</style>

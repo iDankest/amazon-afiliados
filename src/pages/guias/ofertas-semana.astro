@@ -13,12 +13,22 @@ const deals = products
 ---
 
 <Base title="Ofertas de la semana — Orza" description="Ofertas de la semana en descanso y teclados. Aún no hay fuente de descuentos verificada: no se inventan ofertas.">
-  <h1>Ofertas de la semana</h1>
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Registro de Precios // Estado Semanal</span>
+      <span class="badge">[Sin fuente no hay lista]</span>
+    </div>
+    <h1>Ofertas de la semana</h1>
+    <p class="lede">Descuentos reales de descanso y teclados en Amazon.es, cada uno con su fuente: un snapshot reciente del propio registro que marque un mínimo.</p>
+  </section>
+
   {deals.length === 0 ? (
     <>
-      <p class="lede">Ahora mismo, <strong>no hay ninguna oferta publicada</strong>.</p>
-      <p>Esta página existe para publicar descuentos reales de descanso y teclados en Amazon.es, cada uno con su fuente: un snapshot reciente del propio registro que marque un mínimo.</p>
-      <p><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
+      <div class="card g-empty">
+        <div class="card-header-mono">Estado del Registro</div>
+        <h2 class="g-empty-title">Ahora mismo, no hay ninguna oferta publicada</h2>
+        <p><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
+      </div>
     </>
   ) : (
     <div class="grid">
@@ -32,5 +42,55 @@ const deals = products
       ))}
     </div>
   )}
-  <p class="note">Cada oferta llevará su fecha y su enlace con la etiqueta correspondiente. Mientras no haya snapshot reciente en mínimo, esta página se queda así de corta.</p>
+
+  <div class="note">
+    <span class="note-badge">Regla de Bitácora</span>
+    Cada oferta llevará su fecha y su enlace con la etiqueta correspondiente. Mientras no haya snapshot reciente en mínimo, esta página se queda así de corta.
+  </div>
+
+  <div class="g-next">
+    <span class="g-next-label">Siguiente rumbo</span>
+    <div class="g-next-links">
+      <a class="card-link" href={u('registro/')}>Registro de precios <span aria-hidden="true">&rarr;</span></a>
+      <a class="card-link" href={u('guias/')}>Índice de guías <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
 </Base>
+
+<style>
+  .g-hero h1 {
+    margin-bottom: 0.75rem;
+  }
+  .g-hero .lede {
+    margin-bottom: 0;
+  }
+  .g-empty {
+    margin: 1.5rem 0;
+  }
+  .g-empty-title {
+    margin: 0.25rem 0 0.85rem;
+  }
+  .g-empty-title::before {
+    content: none;
+  }
+  .g-next {
+    margin-top: 3.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .g-next-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .g-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
+</style>

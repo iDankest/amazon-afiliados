@@ -6,24 +6,90 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : import.meta.env.BASE_URL + '/';
 const u = (p: string) => base + p.replace(/^\//, '');
 
-const guias: Array<[string, string]> = [
-  ['antifaz-para-dormir', 'Antifaz para dormir'],
-  ['tapones-para-dormir', 'Tapones para dormir'],
-  ['kit-antifaz-y-tapones', 'Kit antifaz + tapones'],
-  ['errores-al-comprar-antifaz', 'Errores al comprar un antifaz'],
-  ['dormir-de-lado', 'Dormir de lado con antifaz'],
-  ['espuma-vs-silicona', 'Tapones: espuma vs silicona'],
-  ['barato-vs-caro', 'Barato de Amazon vs caro de marca'],
-  ['teclados', 'Teclados mecánicos (guía de compra honesta)'],
-  ['ofertas-semana', 'Ofertas de la semana (aún sin fuente de descuentos)'],
+interface Guia {
+  slug: string;
+  num: string;
+  title: string;
+  desc: string;
+}
+
+const descanso: Guia[] = [
+  { slug: 'antifaz-para-dormir', num: '01', title: 'Antifaz para dormir', desc: '3D vs plano, velcro, luz por la nariz, dormir de lado.' },
+  { slug: 'tapones-para-dormir', num: '02', title: 'Tapones para dormir', desc: 'Espuma, silicona, reutilizables. Lo que suele fallar.' },
+  { slug: 'kit-antifaz-y-tapones', num: '03', title: 'Kit antifaz + tapones', desc: 'Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.' },
+  { slug: 'errores-al-comprar-antifaz', num: '04', title: 'Errores al comprar un antifaz', desc: 'Cinco comprobaciones antes de pagar por oscuridad.' },
+  { slug: 'dormir-de-lado', num: '05', title: 'Dormir de lado con antifaz', desc: 'Presión en el ojo, luz por el borde y la prueba de la linterna.' },
+  { slug: 'espuma-vs-silicona', num: '06', title: 'Tapones: espuma vs silicona', desc: 'Más aislamiento o más comodidad: qué pierde cada material.' },
+  { slug: 'barato-vs-caro', num: '07', title: 'Barato de Amazon vs caro de marca', desc: 'Packs baratos contra marcas «sleep»: qué pagas en cada caso.' },
+];
+
+const teclados: Guia[] = [
+  { slug: 'teclados', num: '01', title: 'Teclados mecánicos', desc: 'Guía de compra honesta: switch, tamaño, conexión, layout. Lo no probado se etiqueta.' },
+];
+
+const registro: Guia[] = [
+  { slug: 'ofertas-semana', num: '01', title: 'Ofertas de la semana', desc: 'Aún sin fuente de descuentos: si no hay snapshot que lo respalde, no hay lista.' },
 ];
 ---
 
-<Base title="Guías — Orza">
-  <h1>Guías</h1>
-  <ul class="plain">
-    {guias.map(([slug, title]) => (
-      <li><a href={u(`guias/${slug}/`)}>{title}</a></li>
+<Base title="Guías — Orza" description="Índice de guías de campo de Orza: descanso (antifaces, tapones, kits) y teclados. Criterio de compra antes del clic; lo no probado se etiqueta.">
+  <section class="helm-hero g-hero">
+    <div class="helm-header">
+      <span class="helm-kicker">Mesa de Cartas // Índice</span>
+      <span class="badge">[Guías de campo]</span>
+    </div>
+    <h1>Guías</h1>
+    <p class="lede">Criterio de compra antes del clic: descanso y teclados. Si un producto no se ha probado, se dice en la propia guía.</p>
+  </section>
+
+  <h2>Cuaderno de descanso</h2>
+  <p class="section-desc">Dormir a oscuras y en silencio, sin inventar milagros.</p>
+  <div class="grid">
+    {descanso.map((g) => (
+      <article class="card">
+        <div>
+          <div class="card-header-mono">Guía de campo // {g.num}</div>
+          <h3>{g.title}</h3>
+          <p>{g.desc}</p>
+        </div>
+        <div class="card-actions">
+          <a class="card-link" href={u(`guias/${g.slug}/`)}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
     ))}
-  </ul>
+  </div>
+
+  <h2>Cuaderno de teclados</h2>
+  <p class="section-desc">Criterio táctil para el escritorio; aún sin reviews propias.</p>
+  <div class="grid">
+    {teclados.map((g) => (
+      <article class="card">
+        <div>
+          <div class="card-header-mono">Guía de compra // {g.num}</div>
+          <h3>{g.title}</h3>
+          <p>{g.desc}</p>
+        </div>
+        <div class="card-actions">
+          <a class="card-link" href={u(`guias/${g.slug}/`)}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <h2>Desde el registro</h2>
+  <p class="section-desc">Páginas que dependen del registro de precios anotado a mano.</p>
+  <div class="grid">
+    {registro.map((g) => (
+      <article class="card">
+        <div>
+          <div class="card-header-mono">Registro // {g.num}</div>
+          <h3>{g.title}</h3>
+          <p>{g.desc}</p>
+        </div>
+        <div class="card-actions">
+          <a class="card-link" href={u(`guias/${g.slug}/`)}>Leer guía <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
+    ))}
+  </div>
 </Base>
