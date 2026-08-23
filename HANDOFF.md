@@ -19,7 +19,7 @@ Dominio `orza.es` / `orzar.es`: **no comprar**. Tag: `dankest-21` en `js/config.
 
 **Associates:** URL de la web `https://idankest.github.io/orza/` (ya listada). La caja de apps va vacía. Pulsa Confirmar. Sin auto-clic. 3 ventas cualificadas / 180 días.
 
-**Aparcado:** plataforma tipo ClaveCD/Chollometro/Idealo + Telegram. No es Orza. No abrir repo nuevo.
+**Futuro (apagado, no condenado):** ClaveCD-shaped pero solo Amazon.es — gráfica, chollo si el snapshot toca mínimo, avisos a precio X, Telegram primero a ti, anuncios en página (nunca en el salto a Amazon). Mismo `data/catalog.json` + snapshots. No scrape. No repo nuevo. No esta noche.
 
 Añadir un precio **solo si lo has visto** en Amazon.es:
 
