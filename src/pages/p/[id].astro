@@ -174,7 +174,7 @@ const deltaLabel = (d: number | null) =>
         ctx.clearRect(0, 0, w, h);
         var line = cssVar('color', '#b45309');
         var muted = cssVar('--muted', '#8493a8');
-        var font = '600 10px "Overpass Mono", ui-monospace, monospace';
+        var font = '600 10px ui-monospace, "SF Mono", Menlo, monospace';
         var pts = chartPoints;
         var min = Infinity, max = -Infinity;
         for (var i = 0; i < pts.length; i++) {
@@ -261,7 +261,7 @@ const deltaLabel = (d: number | null) =>
   .sheet {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 14px;
     box-shadow: var(--shadow-subtle);
     padding: 1.6rem 1.6rem 1.75rem;
     position: relative;
@@ -291,7 +291,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-kicker {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -327,7 +327,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-last {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: clamp(1.9rem, 6vw, 2.6rem);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -344,7 +344,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-last-date {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.8rem;
     color: var(--muted);
     margin: 0 0 1rem;
@@ -354,7 +354,7 @@ const deltaLabel = (d: number | null) =>
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 12px;
     background: var(--card-alt);
     margin: 0.25rem 0 0;
   }
@@ -371,7 +371,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-stat-label {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.09em;
@@ -380,7 +380,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-stat-value {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 1.05rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -388,7 +388,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-axis {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.7rem;
     letter-spacing: 0.05em;
     color: var(--muted);
@@ -397,7 +397,7 @@ const deltaLabel = (d: number | null) =>
 
   .sheet-empty {
     border: 1px dashed var(--line);
-    border-radius: 4px;
+    border-radius: 12px;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -410,7 +410,7 @@ const deltaLabel = (d: number | null) =>
   }
 
   .sheet-empty-title {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.1em;

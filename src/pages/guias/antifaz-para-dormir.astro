@@ -55,7 +55,7 @@ const u = (p: string) => base + p.replace(/^\//, '');
 <style>
   .g-hero {
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 14px;
     background: var(--card);
     padding: 1.75rem;
     margin-bottom: 2.5rem;
@@ -70,7 +70,7 @@ const u = (p: string) => base + p.replace(/^\//, '');
     margin-bottom: 1rem;
   }
   .g-kicker {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -87,9 +87,9 @@ const u = (p: string) => base + p.replace(/^\//, '');
     margin: 2.25rem 0;
     padding: 1.1rem 1.4rem;
     border-left: 3px solid var(--accent);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 12px 12px 0;
     background: var(--card-alt);
-    font-family: 'Cinzel', Georgia, serif;
+    font-family: 'Outfit', system-ui, sans-serif;
     font-size: clamp(1.1rem, 2.5vw, 1.35rem);
     font-weight: 600;
     line-height: 1.45;
@@ -120,7 +120,7 @@ const u = (p: string) => base + p.replace(/^\//, '');
     border-top: 1px dashed var(--line);
   }
   .g-next-label {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.1em;

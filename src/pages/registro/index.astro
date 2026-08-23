@@ -108,7 +108,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 
 <style>
   .reg-kicker {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -122,13 +122,13 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     flex-wrap: wrap;
     align-items: center;
     gap: 0.6rem;
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.78rem;
     letter-spacing: 0.05em;
     color: var(--muted);
     background: var(--card-alt);
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 12px;
     padding: 0.55rem 0.9rem;
     margin: 0 0 1.25rem;
   }
@@ -140,7 +140,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   .reg-sheet {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 14px;
     box-shadow: var(--shadow-subtle);
     padding: 0.25rem 0.9rem 0.9rem;
     position: relative;
@@ -184,7 +184,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   table.reg {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-variant-numeric: tabular-nums;
     font-size: 0.85rem;
     margin: 0.75rem 0 0;
@@ -226,7 +226,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   }
 
   .reg-product {
-    font-family: 'Albert Sans', system-ui, sans-serif;
+    font-family: inherit;
   }
 
   .reg-title {
@@ -291,7 +291,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   }
 
   .reg-colophon {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.7rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -303,7 +303,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 
   .reg-blank {
     border: 1px dashed var(--line);
-    border-radius: 4px;
+    border-radius: 12px;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -317,7 +317,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   }
 
   .reg-blank-title {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -353,7 +353,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 
     table.reg tbody tr {
       border: 1px solid var(--line);
-      border-radius: 4px;
+      border-radius: 12px;
       background: var(--card);
       padding: 0.35rem 0.75rem;
       margin: 0.75rem 0;
