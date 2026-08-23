@@ -18,6 +18,7 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const snaps = sortedSnapshots(product.id);
 const st = priceStats(product.id);
+const isChollo = st.count >= 2 && st.lastIsMin;
 const chartPoints = snaps.map((s) => ({ date: s.date, price: s.price }));
 const chartLabels =
   chartPoints.length >= 2
@@ -83,8 +84,11 @@ const deltaLabel = (d: number | null) =>
               </div>
             </div>
           )}
-          {st.isRecent && st.count >= 2 && st.lastIsMin && (
-            <p class="sheet-flag">El último snapshot coincide con el mínimo del historial.</p>
+          {isChollo && (
+            <p class="chollo" data-stale={st.isRecent ? undefined : true}>
+              <span class="chollo-tag">Chollo del registro</span>
+              El último precio visto ({fmtDate(st.last!.date)}) es el mínimo del historial. No significa que siga así hoy.
+            </p>
           )}
         </>
       )}
@@ -97,7 +101,7 @@ const deltaLabel = (d: number | null) =>
           id="spark"
           class="spark-canvas"
           role="img"
-          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}`}
+          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}${isChollo ? '. El último precio visto coincide con el mínimo del historial' : ''}`}
         ></canvas>
         <p class="sheet-axis">{chartLabels!.first} — {chartLabels!.last}</p>
       </section>
@@ -151,7 +155,7 @@ const deltaLabel = (d: number | null) =>
 
   <p><a class="card-link" href={u('registro/')}>← Volver al libro de registro</a></p>
 
-  <script is:inline define:vars={{ chartPoints, chartLabels }}>
+  <script is:inline define:vars={{ chartPoints, chartLabels, isChollo }}>
     (function () {
       var canvas = document.getElementById('spark');
       if (!canvas) return;
@@ -214,6 +218,20 @@ const deltaLabel = (d: number | null) =>
           ctx.beginPath();
           ctx.arc(x(k), y(pts[k].price), 3, 0, Math.PI * 2);
           ctx.fill();
+        }
+        if (isChollo && pts.length > 0) {
+          var lx = x(pts.length - 1);
+          var ly = y(pts[pts.length - 1].price);
+          ctx.beginPath();
+          ctx.arc(lx, ly, 6.5, 0, Math.PI * 2);
+          ctx.strokeStyle = line;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(lx, ly, 9.5, 0, Math.PI * 2);
+          ctx.globalAlpha = 0.45;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
         }
         ctx.fillStyle = muted;
         ctx.textBaseline = 'alphabetic';
@@ -367,16 +385,6 @@ const deltaLabel = (d: number | null) =>
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
-  }
-
-  .sheet-flag {
-    font-family: 'Overpass Mono', ui-monospace, monospace;
-    font-size: 0.78rem;
-    color: var(--accent);
-    border: 1px dashed var(--accent);
-    border-radius: 4px;
-    padding: 0.55rem 0.8rem;
-    margin: 1rem 0 0;
   }
 
   .sheet-axis {

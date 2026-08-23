@@ -449,6 +449,38 @@ ul.plain {
   margin-bottom: 0.35rem;
 }
 
+/* Marca de chollo: último snapshot = mínimo del historial (2+ anotaciones) */
+.chollo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  background: var(--banner-bg);
+  color: var(--banner-ink);
+  border: 1px solid var(--banner-line);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 1rem 0 0;
+}
+
+.chollo-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--banner-ink);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+
+.chollo[data-stale='true'] {
+  opacity: 0.85;
+}
+
 /* Registro de precios */
 .badge {
   display: inline-flex;
