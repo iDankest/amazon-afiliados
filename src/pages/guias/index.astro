@@ -8,36 +8,31 @@ const u = (p: string) => base + p.replace(/^\//, '');
 
 interface Guia {
   slug: string;
-  num: string;
   title: string;
   desc: string;
 }
 
 const descanso: Guia[] = [
-  { slug: 'antifaz-para-dormir', num: '01', title: 'Antifaz para dormir', desc: '3D vs plano, velcro, luz por la nariz, dormir de lado.' },
-  { slug: 'tapones-para-dormir', num: '02', title: 'Tapones para dormir', desc: 'Espuma, silicona, reutilizables. Lo que suele fallar.' },
-  { slug: 'kit-antifaz-y-tapones', num: '03', title: 'Kit antifaz + tapones', desc: 'Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.' },
-  { slug: 'errores-al-comprar-antifaz', num: '04', title: 'Errores al comprar un antifaz', desc: 'Cinco comprobaciones antes de pagar por oscuridad.' },
-  { slug: 'dormir-de-lado', num: '05', title: 'Dormir de lado con antifaz', desc: 'Presión en el ojo, luz por el borde y la prueba de la linterna.' },
-  { slug: 'espuma-vs-silicona', num: '06', title: 'Tapones: espuma vs silicona', desc: 'Más aislamiento o más comodidad: qué pierde cada material.' },
-  { slug: 'barato-vs-caro', num: '07', title: 'Barato de Amazon vs caro de marca', desc: 'Packs baratos contra marcas «sleep»: qué pagas en cada caso.' },
+  { slug: 'antifaz-para-dormir', title: 'Antifaz para dormir', desc: '3D vs plano, velcro, luz por la nariz, dormir de lado.' },
+  { slug: 'tapones-para-dormir', title: 'Tapones para dormir', desc: 'Espuma, silicona, reutilizables. Lo que suele fallar.' },
+  { slug: 'kit-antifaz-y-tapones', title: 'Kit antifaz + tapones', desc: 'Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.' },
+  { slug: 'errores-al-comprar-antifaz', title: 'Errores al comprar un antifaz', desc: 'Cinco comprobaciones antes de pagar por oscuridad.' },
+  { slug: 'dormir-de-lado', title: 'Dormir de lado con antifaz', desc: 'Presión en el ojo, luz por el borde y la prueba de la linterna.' },
+  { slug: 'espuma-vs-silicona', title: 'Tapones: espuma vs silicona', desc: 'Más aislamiento o más comodidad: qué pierde cada material.' },
+  { slug: 'barato-vs-caro', title: 'Barato de Amazon vs caro de marca', desc: 'Packs baratos contra marcas «sleep»: qué pagas en cada caso.' },
 ];
 
 const teclados: Guia[] = [
-  { slug: 'teclados', num: '01', title: 'Teclados mecánicos', desc: 'Guía de compra honesta: switch, tamaño, conexión, layout. Lo no probado se etiqueta.' },
+  { slug: 'teclados', title: 'Teclados mecánicos', desc: 'Guía de compra honesta: switch, tamaño, conexión, layout. Lo no probado se etiqueta.' },
 ];
 
 const registro: Guia[] = [
-  { slug: 'ofertas-semana', num: '01', title: 'Ofertas de la semana', desc: 'Aún sin fuente de descuentos: si no hay snapshot que lo respalde, no hay lista.' },
+  { slug: 'ofertas-semana', title: 'Ofertas de la semana', desc: 'Aún sin fuente de descuentos: si no hay snapshot que lo respalde, no hay lista.' },
 ];
 ---
 
 <Base title="Guías — Orza" description="Índice de guías de Orza: descanso (antifaces, tapones, kits) y teclados. Criterio de compra antes del clic; lo no probado se etiqueta.">
   <section class="g-hero">
-    <div class="g-hero-head">
-      <span class="g-kicker">Guías // Índice</span>
-      <span class="badge">[Guías]</span>
-    </div>
     <h1>Guías</h1>
     <p class="lede">Criterio de compra antes del clic: descanso y teclados. Si un producto no se ha probado, se dice en la propia guía.</p>
   </section>
@@ -48,7 +43,7 @@ const registro: Guia[] = [
     {descanso.map((g) => (
       <article class="card">
         <div>
-          <div class="card-header-mono">Guía // {g.num}</div>
+          <div class="card-header-mono">Guía</div>
           <h3>{g.title}</h3>
           <p>{g.desc}</p>
         </div>
@@ -65,7 +60,7 @@ const registro: Guia[] = [
     {teclados.map((g) => (
       <article class="card">
         <div>
-          <div class="card-header-mono">Guía de compra // {g.num}</div>
+          <div class="card-header-mono">Guía de compra</div>
           <h3>{g.title}</h3>
           <p>{g.desc}</p>
         </div>
@@ -82,12 +77,12 @@ const registro: Guia[] = [
     {registro.map((g) => (
       <article class="card">
         <div>
-          <div class="card-header-mono">Registro // {g.num}</div>
+          <div class="card-header-mono">Registro</div>
           <h3>{g.title}</h3>
           <p>{g.desc}</p>
         </div>
         <div class="card-actions">
-          <a class="card-link" href={u(`guias/${g.slug}/`)}>Leer página <span aria-hidden="true">&rarr;</span></a>
+          <a class="card-link" href={u(`guias/${g.slug}/`)}>Ver ofertas <span aria-hidden="true">&rarr;</span></a>
         </div>
       </article>
     ))}
@@ -102,22 +97,6 @@ const registro: Guia[] = [
     padding: 1.75rem;
     margin-bottom: 2.5rem;
     box-shadow: var(--shadow-subtle);
-  }
-  .g-hero-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  .g-kicker {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    text-transform: uppercase;
   }
   .g-hero h1 {
     margin-bottom: 0.75rem;

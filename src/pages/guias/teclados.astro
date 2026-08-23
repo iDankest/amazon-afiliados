@@ -25,8 +25,8 @@ const noencontraras = [
 <Base title="Teclados mecánicos — guía honesta" description="Qué mirar en un teclado mecánico antes de comprar en Amazon.es. Aún no hay reviews propias: lo no probado se etiqueta.">
   <section class="g-hero">
     <div class="g-hero-head">
-      <span class="g-kicker">Teclados // Guía de compra 01</span>
-      <span class="badge no">[No lo he probado]</span>
+      <span class="g-kicker">Teclados</span>
+      <span class="badge no">No lo he probado</span>
     </div>
     <h1>Teclados mecánicos</h1>
     <p class="lede">Guía de compra honesta. En este sitio todavía <strong>no hay reviews propias de teclados</strong>: aquí solo hay criterio general de compra. Cuando haya un teclado probado de verdad, se dirá; mientras tanto, la etiqueta es <strong>no lo he probado</strong>.</p>
@@ -38,7 +38,7 @@ const noencontraras = [
     {mirar.map((m, i) => (
       <article class="card">
         <div>
-          <div class="card-header-mono">Criterio // {String(i + 1).padStart(2, '0')}</div>
+          <div class="card-header-mono">Criterio</div>
           <h3>{m.k}</h3>
           <p>{m.t}</p>
           {m.d && <p class="g-disclaimer"><em>{m.d}</em></p>}
@@ -120,7 +120,7 @@ const noencontraras = [
     margin: 0;
   }
   .g-list li::before {
-    content: '▸';
+    content: '–';
     position: absolute;
     left: 0.2rem;
     color: var(--accent);
