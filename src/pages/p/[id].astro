@@ -273,9 +273,9 @@ const deltaLabel = (d: number | null) =>
 
   .sheet-kicker {
     font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--accent);
     margin: -0.6rem 0 0.4rem;
@@ -376,57 +376,16 @@ const deltaLabel = (d: number | null) =>
     margin: 0.5rem 0 0;
   }
 
-  .empty-state {
-    border: 1px dashed var(--line);
-    border-radius: 12px;
-    background: var(--card-alt);
-    padding: 1.5rem 1.4rem;
-  }
-
-  .empty-state-title {
-    font-family: 'Outfit', system-ui, sans-serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0 0 0.4rem;
-  }
-
-  .empty-state-text {
-    font-size: 0.95rem;
-    color: var(--muted);
-    margin: 0 0 0.9rem;
-  }
-
-  .empty-state-steps {
-    margin: 0;
-    padding-left: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-    font-size: 0.92rem;
-    color: var(--muted);
-  }
-
-  .empty-state-steps code {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.82rem;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.15rem 0.45rem;
-    word-break: break-all;
-  }
-
   .sheet-tablewrap {
     overflow-x: auto;
   }
 
   table.sheet-lines th {
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line);
   }
 
   table.sheet-lines tbody tr:last-child td {
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line-subtle);
   }
 
   .lines-no {

@@ -39,22 +39,20 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   </div>
 
   {totalSnaps === 0 ? (
-    <section class="reg-empty" aria-label="Registro sin anotaciones">
-      <div class="reg-empty-head">
-        <h2 class="reg-empty-title">El registro empieza en blanco</h2>
-        <p class="reg-empty-text">
-          Solo se publica lo que alguien ha visto con sus ojos y anotado con fecha. Todavía no hay ninguna anotación, así que aquí no hay precios — y no va a haberlos por inercia.
-        </p>
-      </div>
-      <ol class="reg-empty-steps">
+    <section class="empty-state" aria-label="Registro sin anotaciones">
+      <h2 class="empty-state-title">El registro empieza en blanco</h2>
+      <p class="empty-state-text">
+        Solo se publica lo que alguien ha visto con sus ojos y anotado con fecha. Todavía no hay ninguna anotación, así que aquí no hay precios — y no va a haberlos por inercia.
+      </p>
+      <ol class="empty-state-steps">
         <li><strong>Ver</strong> un precio real en Amazon.es, a mano.</li>
         <li><strong>Anotar</strong> la cifra y la fecha: <code>node scripts/add-snapshot.mjs --id &lt;id&gt; --price &lt;n&gt;</code></li>
         <li><strong>Publicar</strong> con <code>npm run validate:data</code>: la cifra aparece con su fecha, nunca como «precio actual».</li>
       </ol>
       {rows.length > 0 && (
-        <div class="reg-empty-waiting">
-          <p class="reg-empty-waiting-label">A la espera de su primera anotación</p>
-          <ul class="reg-empty-waiting-list">
+        <div class="empty-state-waiting">
+          <p class="empty-state-waiting-label">A la espera de su primera anotación</p>
+          <ul class="empty-state-waiting-list">
             {rows.map(({ p }) => (
               <li><a href={u(`p/${p.id}/`)}>{p.title}</a></li>
             ))}
@@ -124,9 +122,9 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 <style>
   .reg-kicker {
     font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--accent);
     margin: -0.5rem 0 0.6rem;
@@ -189,7 +187,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     text-transform: uppercase;
     color: var(--muted);
     padding: 0.6rem 0.6rem;
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line);
   }
 
   .reg-num-head {
@@ -203,7 +201,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   }
 
   table.reg tbody tr:last-child td {
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line-subtle);
   }
 
   table.reg tbody tr:hover {

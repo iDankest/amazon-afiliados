@@ -23,13 +23,11 @@ const deals = products
   </section>
 
   {deals.length === 0 ? (
-    <>
-      <div class="card g-empty">
-        <div class="card-header-mono">Estado del registro</div>
-        <h2 class="g-empty-title">Ahora mismo, no hay ninguna oferta publicada</h2>
-        <p><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
-      </div>
-    </>
+    <div class="empty-state">
+      <span class="kicker">Estado del registro</span>
+      <h2 class="empty-state-title">Ahora mismo, no hay ninguna oferta publicada</h2>
+      <p class="empty-state-text"><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
+    </div>
   ) : (
     <div class="grid">
       {deals.map(({ p, st }) => (

@@ -2,28 +2,28 @@
 name: Orza
 description: Sitio de producto calmo y legible para guías y registro de precios honesto de Amazon.es. Claro y oscuro reales, mobile-first.
 colors:
-  accent: "#0e7490"
-  accent-dark: "#39c2dd"
-  link: "#0e7490"
-  link-dark: "#4cc3de"
+  accent: "#09637c"
+  accent-dark: "#38c2de"
+  link: "#09637c"
+  link-dark: "#4dc9e3"
   bg: "#f7f7f5"
-  bg-dark: "#0f141a"
+  bg-dark: "#0d1217"
   card: "#ffffff"
-  card-dark: "#161c24"
+  card-dark: "#151b22"
   card-alt: "#f0efec"
-  card-alt-dark: "#1c242e"
+  card-alt-dark: "#1c232c"
   ink: "#191c1f"
-  ink-dark: "#e8ebee"
-  muted: "#5f6b74"
-  muted-dark: "#94a1ad"
-  line: "#e3e1dc"
-  line-dark: "#273039"
-  banner-bg: "#ecf5f8"
-  banner-bg-dark: "#10242e"
-  banner-ink: "#0c4a5e"
-  banner-ink-dark: "#9fdceb"
-  banner-line: "#d3e7ec"
-  banner-line-dark: "#1e4756"
+  ink-dark: "#e6edf3"
+  muted: "#52606d"
+  muted-dark: "#9da7b3"
+  line: "#dedbd5"
+  line-dark: "#2a3441"
+  banner-bg: "#eaf4f7"
+  banner-bg-dark: "#0e222c"
+  banner-ink: "#084252"
+  banner-ink-dark: "#a5e3f1"
+  banner-line: "#cde5ec"
+  banner-line-dark: "#1b4354"
 typography:
   display:
     fontFamily: "Outfit, system-ui, sans-serif"
@@ -37,7 +37,16 @@ typography:
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.01em"
+  title-lg:
+    fontFamily: "Outfit, system-ui, sans-serif"
+    fontSize: "1.35rem"
+    fontWeight: 700
   title:
+    fontFamily: "Outfit, system-ui, sans-serif"
+    fontSize: "1.15rem"
+    fontWeight: 600
+    lineHeight: 1.35
+  title-sm:
     fontFamily: "Outfit, system-ui, sans-serif"
     fontSize: "1.08rem"
     fontWeight: 600
@@ -47,25 +56,72 @@ typography:
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.65
+  body-sm:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.95rem"
+    fontWeight: 400
   lede:
     fontFamily: "Figtree, system-ui, sans-serif"
     fontSize: "1.1rem"
     fontWeight: 400
     lineHeight: 1.65
+  nav:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.92rem"
+    fontWeight: 500
   note:
     fontFamily: "Figtree, system-ui, sans-serif"
     fontSize: "0.9rem"
     fontWeight: 400
     lineHeight: 1.55
+  tag:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.88rem"
+  banner:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.85rem"
+    lineHeight: 1.5
+  fine:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.84rem"
+    lineHeight: 1.6
+  control:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.82rem"
+    fontWeight: 600
+  meta:
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "0.78rem"
+  kicker:
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "0.75rem"
+    fontWeight: 700
+    letterSpacing: "0.08em"
+  stamp:
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "0.72rem"
+    fontWeight: 700
+  caption:
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "0.7rem"
+    fontWeight: 700
+  price-hero:
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "clamp(1.9rem, 6vw, 2.6rem)"
+    fontWeight: 700
+    fontVariantNumeric: tabular-nums
   price:
     fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
     fontWeight: 700
     fontVariantNumeric: tabular-nums
 rounded:
+  xs: "4px"
+  sm: "6px"
+  md: "8px"
+  lg: "10px"
+  xl: "12px"
+  "2xl": "14px"
   pill: "999px"
-  md: "10px"
-  lg: "12px"
-  xl: "14px"
 ---
 
 # Design System: Orza
@@ -83,8 +139,8 @@ Un sitio de producto calmo y honesto para España, mobile-first: guías de desca
 
 Dos temas reales, sin mezclas:
 
-- **Claro:** fondo `#f7f7f5`, tarjetas blancas, tinta `#191c1f`, acento cian `#0e7490`.
-- **Oscuro:** fondo `#0f141a`, tarjetas `#161c24`, tinta `#e8ebee`, acento cian `#39c2dd` con texto de botón oscuro (`#062730`).
+- **Claro:** fondo `#f7f7f5`, tarjetas blancas, tinta `#191c1f`, acento cian `#09637c`.
+- **Oscuro:** fondo `#0d1217`, tarjetas `#151b22`, tinta `#e6edf3`, acento cian `#38c2de` con texto de botón oscuro (`#041c24`).
 
 El acento se usa con moderación: enlaces, botones primarios, etiquetas y estados activos. Nunca como fondo de página. El banner de afiliación usa la familia cian en tono suave, siempre visible en ambos temas.
 

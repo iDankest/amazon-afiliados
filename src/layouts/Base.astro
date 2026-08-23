@@ -67,12 +67,32 @@ const isCurrent = (href: string) => {
   <body>
     <header>
       <div class="wrap header-inner">
-        <a class="logo" href={u('')} aria-label="Orza — inicio">Orza</a>
+        <div class="header-bar">
+          <a class="logo" href={u('')} aria-label="Orza — inicio">Orza</a>
+          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro" aria-pressed="false">
+            <span class="theme-toggle-icon" aria-hidden="true">
+              <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </span>
+            <span id="theme-label" class="theme-toggle-label">Oscuro</span>
+          </button>
+        </div>
         <nav aria-label="Principal">
           {nav.map(([label, href]) => (
             <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
           ))}
-          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro" aria-pressed="false">Tema</button>
         </nav>
       </div>
     </header>
@@ -96,13 +116,15 @@ const isCurrent = (href: string) => {
     </footer>
     <script>
       const btn = document.getElementById('theme-toggle');
+      const labelEl = document.getElementById('theme-label');
       const meta = document.getElementById('meta-theme-color');
 
       function syncBtn() {
         if (!btn) return;
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        btn.textContent = isDark ? 'Tema · claro' : 'Tema · oscuro';
+        if (labelEl) labelEl.textContent = isDark ? 'Claro' : 'Oscuro';
         btn.setAttribute('aria-pressed', String(isDark));
+        btn.setAttribute('aria-label', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
       }
 
       btn?.addEventListener('click', () => {
@@ -112,7 +134,7 @@ const isCurrent = (href: string) => {
         try {
           localStorage.setItem('adc-theme', next);
         } catch (e) {}
-        if (meta) meta.setAttribute('content', next === 'dark' ? '#0f141a' : '#f7f7f5');
+        if (meta) meta.setAttribute('content', next === 'dark' ? '#0d1217' : '#f7f7f5');
         syncBtn();
       });
 
