@@ -1,5 +1,7 @@
 # Orza — Amazon afiliados (ES)
 
+**Retomar en otro PC:** lee [HANDOFF.md](HANDOFF.md).
+
 Marca: **Orza**. Dominio previsto: `orza.es` (comprobar en el registrador; no comprado). Nicho: descanso y teclados. Registro de precios anotados a mano. No es una wiki de videojuegos.
 
 - GitHub: https://github.com/iDankest/amazon-afiliados
