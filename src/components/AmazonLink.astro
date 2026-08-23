@@ -1,0 +1,19 @@
+---
+/**
+ * Enlace a Amazon.es con tag solo si PUBLIC_AMAZON_TAG existe.
+ * rel=nofollow sponsored noopener siempre. Sin JS: href final en build.
+ */
+import { amazonSearchUrl, amazonProductUrl, AMAZON_REL } from '../lib/affiliate';
+
+interface Props {
+  query?: string;
+  asin?: string;
+  class?: string;
+}
+const { query, asin, class: cls = 'btn' } = Astro.props;
+
+const href = asin ? amazonProductUrl(asin) : amazonSearchUrl(query ?? asin ?? '');
+if (!asin && !query) throw new Error('AmazonLink necesita query o asin');
+---
+
+<a href={href} rel={AMAZON_REL} target="_blank" class={cls}><slot /></a>

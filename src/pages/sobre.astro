@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+---
+
+<Base title="Sobre este sitio — Antes del clic">
+  <h1>Sobre este sitio</h1>
+  <p>Proyecto de afiliados Amazon.es, 0€ de hosting (GitHub Pages). Nicho: descanso (luz y ruido) y teclados, no videojuegos.</p>
+  <p>Por qué no una wiki tipo Tarkov: WARDOGS y similares ya tienen wikis EN y al menos una guía ES. Amazon no paga el juego de Steam. El contenido que sí se puede afiliar está en Amazon.es: antifaces, tapones, kits baratos y marcas tipo Loop.</p>
+  <p>Regla: si no se ha probado un producto, no se finge. Las primeras piezas de vídeo usan el antifaz personal del autor, no un SKU de tienda propia.</p>
+  <p>Los precios de este sitio salen de un <a href={base + 'registro/'}>registro propio de snapshots</a> anotados a mano: sin snapshot no hay cifra.</p>
+</Base>

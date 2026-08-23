@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import { products, isRecentMinimum, priceStats, fmtEur, fmtDate } from '../../lib/catalog';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const deals = products
+  .filter((p) => isRecentMinimum(p.id))
+  .map((p) => ({ p, st: priceStats(p.id) }));
+---
+
+<Base title="Ofertas de la semana — Antes del clic" description="Ofertas de la semana en descanso y teclados. Aún no hay fuente de descuentos verificada: no se inventan ofertas.">
+  <h1>Ofertas de la semana</h1>
+  {deals.length === 0 ? (
+    <>
+      <p class="lede">Ahora mismo, <strong>no hay ninguna oferta publicada</strong>.</p>
+      <p>Esta página existe para publicar descuentos reales de descanso y teclados en Amazon.es, cada uno con su fuente: un snapshot reciente del propio registro que marque un mínimo.</p>
+      <p><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
+    </>
+  ) : (
+    <div class="grid">
+      {deals.map(({ p, st }) => (
+        <article class="card">
+          <h2><a href={u(`p/${p.id}/`)}>{p.title}</a></h2>
+          <p class="price-now">{fmtEur(st.last!.price)} — visto {fmtDate(st.last!.date)}</p>
+          <p class="stats"><span>Mínimo del historial: <strong>{fmtEur(st.min!)}</strong></span></p>
+          <p><a href={u(`p/${p.id}/`)}>Ver historial</a></p>
+        </article>
+      ))}
+    </div>
+  )}
+  <p class="note">Cada oferta llevará su fecha y su enlace con la etiqueta correspondiente. Mientras no haya snapshot reciente en mínimo, esta página se queda así de corta.</p>
+</Base>

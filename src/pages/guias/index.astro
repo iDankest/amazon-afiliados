@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const guias: Array<[string, string]> = [
+  ['antifaz-para-dormir', 'Antifaz para dormir'],
+  ['tapones-para-dormir', 'Tapones para dormir'],
+  ['kit-antifaz-y-tapones', 'Kit antifaz + tapones'],
+  ['errores-al-comprar-antifaz', 'Errores al comprar un antifaz'],
+  ['dormir-de-lado', 'Dormir de lado con antifaz'],
+  ['espuma-vs-silicona', 'Tapones: espuma vs silicona'],
+  ['barato-vs-caro', 'Barato de Amazon vs caro de marca'],
+  ['teclados', 'Teclados mecánicos (guía de compra honesta)'],
+  ['ofertas-semana', 'Ofertas de la semana (aún sin fuente de descuentos)'],
+];
+---
+
+<Base title="Guías — Antes del clic">
+  <h1>Guías</h1>
+  <ul class="plain">
+    {guias.map(([slug, title]) => (
+      <li><a href={u(`guias/${slug}/`)}>{title}</a></li>
+    ))}
+  </ul>
+</Base>

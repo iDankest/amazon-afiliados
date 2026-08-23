@@ -1,0 +1,152 @@
+---
+import Base from '../../layouts/Base.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import {
+  products,
+  sortedSnapshots,
+  priceStats,
+  fmtEur,
+  fmtDate,
+  testedLabel,
+  categoryLabel,
+} from '../../lib/catalog';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { id: p.id }, props: { product: p } }));
+}
+
+const { product } = Astro.props;
+const snaps = sortedSnapshots(product.id);
+const st = priceStats(product.id);
+const chartPoints = snaps.map((s) => ({ date: s.date, price: s.price }));
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+---
+
+<Base title={`${product.title} — registro de precios`} description={`${product.title}: historial de precios vistos a mano en Amazon.es. ${testedLabel[product.tested]}.`}>
+  <h1>{product.title}</h1>
+  <p>
+    <span class={`badge ${product.tested}`}>{testedLabel[product.tested]}</span>
+    <span class="badge">{categoryLabel[product.category]}</span>
+  </p>
+  <p>{product.notes}</p>
+
+  {st.count === 0 ? (
+    <div class="card">
+      <h2>Precio</h2>
+      <p><strong>Sin snapshots todavía.</strong> Este producto no muestra ninguna cifra hasta que alguien anote un precio visto a mano (ni mínimo, ni «precio actual», ni ofertas).</p>
+    </div>
+  ) : (
+    <div class="card">
+      <h2>{st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
+      <p class={st.isRecent ? 'price-now' : 'price-seen'}>{st.lastSeenLabel}</p>
+      {st.count >= 2 && (
+        <p class="stats">
+          <span>Mínimo: <strong>{fmtEur(st.min!)}</strong></span>
+          <span>Máximo: <strong>{fmtEur(st.max!)}</strong></span>
+          <span>{st.count} snapshots</span>
+        </p>
+      )}
+      {st.isRecent && st.count >= 2 && st.lastIsMin && (
+        <p class="note">El último snapshot coincide con el mínimo del historial.</p>
+      )}
+    </div>
+  )}
+
+  {chartPoints.length >= 2 && (
+    <div class="card">
+      <h2>Gráfica del historial</h2>
+      <canvas id="spark" class="spark-canvas" role="img" aria-label={`Gráfica del precio de ${product.title} entre ${fmtDate(snaps[0].date)} y ${fmtDate(snaps[snaps.length - 1].date)}: mínimo ${fmtEur(st.min!)}, máximo ${fmtEur(st.max!)}`}></canvas>
+    </div>
+  )}
+
+  <div class="card">
+    <h2>Historial</h2>
+    {snaps.length === 0 ? (
+      <p class="lede">Vacío a propósito. Se añade con <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code> cuando se ve un precio real.</p>
+    ) : (
+      <table class="history">
+        <thead>
+          <tr><th scope="col">Fecha</th><th scope="col">Precio</th><th scope="col">Fuente</th></tr>
+        </thead>
+        <tbody>
+          {snaps.map((s) => (
+            <tr>
+              <td>{fmtDate(s.date)}</td>
+              <td>{fmtEur(s.price)}</td>
+              <td>{s.source === 'manual' ? 'Visto a mano' : s.source}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+
+  <div class="card">
+    <h2>Amazon.es</h2>
+    {product.asin ? (
+      <p><AmazonLink asin={product.asin}>Ver el producto en Amazon.es</AmazonLink></p>
+    ) : (
+      <p>
+        <AmazonLink query={product.amazonQuery}>Buscar «{product.amazonQuery}» en Amazon.es</AmazonLink>
+      </p>
+    )}
+    <p class="note">El enlace abre Amazon.es{product.asin ? ' en la ficha del producto' : ' en una búsqueda, no un producto concreto'}. Si compras dentro de la ventana de Amazon, puede generar comisión (ver <a href={u('aviso-afiliados/')}>aviso</a>).</p>
+  </div>
+
+  <p><a href={u('registro/')}>← Volver al registro</a></p>
+
+  <script is:inline define:vars={{ chartPoints }}>
+    (function () {
+      var canvas = document.getElementById('spark');
+      if (!canvas) return;
+      function draw() {
+        var dpr = window.devicePixelRatio || 1;
+        var w = canvas.clientWidth || 600;
+        var h = canvas.clientHeight || 160;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        var ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        var color = getComputedStyle(canvas).color;
+        var pts = chartPoints;
+        var min = Infinity, max = -Infinity;
+        for (var i = 0; i < pts.length; i++) {
+          if (pts[i].price < min) min = pts[i].price;
+          if (pts[i].price > max) max = pts[i].price;
+        }
+        var pad = 14;
+        var span = max - min || 1;
+        function x(i) { return pts.length === 1 ? w / 2 : pad + (i * (w - 2 * pad)) / (pts.length - 1); }
+        function y(v) { return h - pad - ((v - min) / span) * (h - 2 * pad); }
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        for (var j = 0; j < pts.length; j++) {
+          if (j === 0) ctx.moveTo(x(j), y(pts[j].price));
+          else ctx.lineTo(x(j), y(pts[j].price));
+        }
+        ctx.stroke();
+        ctx.fillStyle = color;
+        for (var k = 0; k < pts.length; k++) {
+          ctx.beginPath();
+          ctx.arc(x(k), y(pts[k].price), 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      draw();
+      if (typeof MutationObserver !== 'undefined') {
+        new MutationObserver(draw).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme'],
+        });
+      }
+    })();
+  </script>
+</Base>

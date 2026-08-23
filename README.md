@@ -21,7 +21,21 @@ No comprar stock. No claims médicos. No auto-clics en tus enlaces.
 
 ## Local
 
-Abre `index.html` o un static server. Los enlaces `data-amazon` salen a búsquedas de Amazon.es.
+Dos sitios conviven hasta que el HTML suelto se tuelle:
+
+- **Astro (nuevo, con registro de precios):** `npm install`, `npm run dev` (preview en localhost), `npm run build` → `dist/`.
+- **HTML suelto (viejo):** abre `index.html` o un static server.
+
+Tag de afiliado (Astro): variable `PUBLIC_AMAZON_TAG` (ver `.env.example`). Vacío = enlaces sin `tag=`.
+
+## Registro de precios
+
+- `data/catalog.json` — productos (`id`, `title`, `category`, `asin?`, `amazonQuery`, `tested`, `notes`).
+- `data/snapshots/{id}.json` — array `{ date, price, currency: "EUR", source: "manual" }`, append-only.
+- Añadir snapshot: `node scripts/add-snapshot.mjs --id <id> --price <n> [--date YYYY-MM-DD]`.
+- Validar datos: `node scripts/validate-json.mjs` (lo que corre el worker del Día 1).
+
+Regla: sin snapshot no hay cifra. Si el último es de hace 7+ días se muestra «visto el {fecha}», nunca «precio actual». Worker (esqueleto, sin scrape): `worker/`.
 
 ## Relacionado
 

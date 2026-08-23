@@ -4,3 +4,8 @@ Thumbs.db
 .env
 .idea/
 .vscode/
+
+# Astro
+node_modules/
+dist/
+.astro/

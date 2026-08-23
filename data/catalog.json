@@ -1,0 +1,18 @@
+[
+  {
+    "id": "loop-quiet-2",
+    "title": "Loop Quiet 2 (tapones para dormir)",
+    "category": "descanso",
+    "amazonQuery": "loop quiet 2",
+    "tested": "no",
+    "notes": "Marca de tapones muy citada. Sin snapshots propios todavía: este sitio no publica ninguna cifra hasta anotar un precio visto a mano."
+  },
+  {
+    "id": "teclado-mecanico-60",
+    "title": "Teclado mecánico 60% (genérico de búsqueda)",
+    "category": "teclados",
+    "amazonQuery": "teclado mecanico 60%",
+    "tested": "no",
+    "notes": "Stub de la categoría teclados. Aún no hay reviews propias: todo queda etiquetado como no probado."
+  }
+]

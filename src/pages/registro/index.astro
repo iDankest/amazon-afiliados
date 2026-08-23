@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sparkline from '../../components/Sparkline.astro';
+import {
+  products,
+  sortedSnapshots,
+  priceStats,
+  fmtEur,
+  fmtDate,
+  testedLabel,
+  categoryLabel,
+} from '../../lib/catalog';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const rows = products.map((p) => ({
+  p,
+  snaps: sortedSnapshots(p.id),
+  st: priceStats(p.id),
+}));
+---
+
+<Base title="Registro de precios — Antes del clic" description="Registro propio de precios vistos a mano en Amazon.es: descanso y teclados. Sin scrape, sin precios inventados.">
+  <h1>Registro de precios</h1>
+  <p class="lede">Precios que alguien anotó a mano, con fecha. Nada de scrape ni de cifras inventadas: si un producto no tiene snapshots, no tiene precio aquí.</p>
+  <p class="note">Regla del sitio: una cifra solo aparece si hay un snapshot con fecha. Si el último es de hace más de 7 días, se lee «visto el {'{fecha}'}», nunca «precio actual». Min/max y gráfica solo con 2+ puntos.</p>
+
+  {rows.length === 0 && <p>El catálogo está vacío a propósito. Cuando entre un producto real, aparecerá aquí.</p>}
+
+  <div class="grid">
+    {rows.map(({ p, snaps, st }) => (
+      <article class="card">
+        <h2><a href={u(`p/${p.id}/`)}>{p.title}</a></h2>
+        <p>
+          <span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span>
+          <span class="badge">{categoryLabel[p.category]}</span>
+        </p>
+        {st.count === 0 ? (
+          <p class="price-seen">Sin snapshots todavía. Sin precio publicado.</p>
+        ) : (
+          <p class={st.isRecent ? 'price-now' : 'price-seen'}>{st.lastSeenLabel}</p>
+        )}
+        {st.count >= 2 && snaps.length >= 2 && (
+          <Sparkline values={snaps.map((s) => s.price)} label={`Histórico de ${p.title}: mínimo ${fmtEur(st.min!)}, máximo ${fmtEur(st.max!)}`} />
+        )}
+        {st.count >= 2 && (
+          <p class="stats">
+            <span>Mínimo: <strong>{fmtEur(st.min!)}</strong></span>
+            <span>Máximo: <strong>{fmtEur(st.max!)}</strong></span>
+            <span>{st.count} snapshots</span>
+          </p>
+        )}
+        {st.count === 1 && <p class="stats"><span>1 snapshot (min/max y gráfica llegan con 2+)</span></p>}
+        <p><a href={u(`p/${p.id}/`)}>Historial completo</a></p>
+      </article>
+    ))}
+  </div>
+</Base>

@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import AmazonLink from '../components/AmazonLink.astro';
+import { products, testedLabel, type Category } from '../lib/catalog';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const byCat = (c: Category) => products.filter((p) => p.category === c);
+const descanso = byCat('descanso');
+const teclados = byCat('teclados');
+---
+
+<Base title="Antes del clic — guías de descanso y teclados" description="Guías honestas de descanso (antifaz, tapones) y teclados antes de comprar en Amazon.es. Si no se ha probado, se dice. Sin claims médicos.">
+  <h1>Antes del clic: leer, luego comprar</h1>
+  <p class="lede">Guías cortas de descanso y teclados para comprar en Amazon.es sin humo. Experiencia real cuando la hay; si no se ha probado, se dice. Nada de tops inventados ni testimonios falsos.</p>
+
+  <h2 id="descanso">Descanso</h2>
+  <p>Dormir a oscuras, sin inventar milagros: antifaces, tapones y kits.</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Antifaz para dormir</h3>
+      <p>3D vs plano, velcro, luz por la nariz, dormir de lado.</p>
+      <a href={u('guias/antifaz-para-dormir/')}>Leer guía</a>
+    </article>
+    <article class="card">
+      <h3>Tapones para dormir</h3>
+      <p>Espuma, silicona, reutilizables. Lo que suele fallar.</p>
+      <a href={u('guias/tapones-para-dormir/')}>Leer guía</a>
+    </article>
+    <article class="card">
+      <h3>¿Kit o por separado?</h3>
+      <p>Amazon vende el pack barato. Loop vende tapones caros. El precio no es lo mismo que calidad.</p>
+      <a href={u('guias/kit-antifaz-y-tapones/')}>Comparar</a>
+    </article>
+  </div>
+
+  {descanso.length > 0 && (
+    <>
+      <h2>Productos seguidos (descanso)</h2>
+      <p class="note">Sin snapshots anotados no se publica ningún precio: lo que ves aquí es solo el registro, no una oferta.</p>
+      <div class="grid">
+        {descanso.map((p) => (
+          <article class="card">
+            <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
+            <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+            <p>{p.notes}</p>
+            <p><a href={u(`p/${p.id}/`)}>Ver ficha y registro</a></p>
+          </article>
+        ))}
+      </div>
+    </>
+  )}
+
+  <h2 id="teclados">Teclados</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Teclados mecánicos</h3>
+      <p>Guía de compra honesta: switch, tamaño, conexión, layout. Aún no hay reviews propias; lo no probado se etiqueta.</p>
+      <a href={u('guias/teclados/')}>Leer guía</a>
+    </article>
+    {teclados.map((p) => (
+      <article class="card">
+        <h3><a href={u(`p/${p.id}/`)}>{p.title}</a></h3>
+        <p><span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span></p>
+        <p>{p.notes}</p>
+        <p><a href={u(`p/${p.id}/`)}>Ver ficha y registro</a></p>
+      </article>
+    ))}
+  </div>
+
+  <h2>Buscar en Amazon.es</h2>
+  <p>
+    <AmazonLink query="antifaz para dormir 3D">Antifaces 3D</AmazonLink>
+    <AmazonLink query="tapones oidos para dormir">Tapones para dormir</AmazonLink>
+    <AmazonLink query="loop quiet 2">Loop Quiet 2</AmazonLink>
+    <AmazonLink query="teclado mecanico">Teclado mecánico</AmazonLink>
+  </p>
+  <p class="note">Los botones abren búsquedas de Amazon.es, no un producto concreto. Cuando haya tag de afiliado, esas visitas pueden generar comisión si compras en 24 h.</p>
+</Base>

@@ -1,0 +1,100 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+
+import '../styles/site.css';
+import { DISCLOSURE, hasTag } from '../lib/affiliate';
+
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const u = (p: string) => base + p.replace(/^\//, '');
+
+const bannerText = hasTag
+  ? DISCLOSURE
+  : 'Enlaces a Amazon.es. Aún no hay tag de afiliado configurado: las compras no generan comisión. Aviso legal en ' +
+    u('aviso-afiliados/');
+
+const nav: Array<[string, string]> = [
+  ['Inicio', u('')],
+  ['Registro', u('registro/')],
+  ['Descanso', u('') + '#descanso'],
+  ['Teclados', u('guias/teclados/')],
+  ['Guías', u('guias/')],
+  ['Afiliados', u('aviso-afiliados/')],
+];
+---
+
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <script is:inline>
+      (function () {
+        var t = 'light';
+        try {
+          var saved = localStorage.getItem('adc-theme');
+          if (saved === 'dark' || saved === 'light') t = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+        } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+    <script>
+      const btn = document.getElementById('theme-toggle');
+      function labelFor(t) {
+        return t === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
+      }
+      function syncBtn() {
+        if (!btn) return;
+        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        btn.textContent = labelFor(cur);
+        btn.setAttribute('aria-pressed', String(cur === 'dark'));
+      }
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('adc-theme', next);
+        } catch (e) {}
+        syncBtn();
+      });
+      syncBtn();
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="wrap header-inner">
+        <a class="logo" href={u('')}>Antes del clic</a>
+        <nav aria-label="Principal">
+          {nav.map(([label, href]) => <a href={href}>{label}</a>)}
+          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
+        </nav>
+      </div>
+    </header>
+    <div class="banner">{bannerText}</div>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer>
+      <div class="wrap">
+        <p class="fine">
+          {DISCLOSURE}
+          Amazon y el logotipo de Amazon son marcas de Amazon.com, Inc. o de sus afiliados. Este sitio no es Amazon
+          ni está afiliado a Bulkhead/Team17 ni a ningún estudio de videojuegos.
+        </p>
+        <p class="fine">
+          <a href={u('aviso-afiliados/')}>Aviso de afiliados</a> · <a href={u('privacidad/')}>Privacidad</a> ·
+          <a href={u('cookies/')}>Cookies</a> · <a href={u('sobre/')}>Sobre</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
