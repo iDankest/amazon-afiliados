@@ -1,13 +1,13 @@
 ---
-import Base from '../layouts/Base.astro';
-import AmazonLink from '../components/AmazonLink.astro';
-import Sparkline from '../components/Sparkline.astro';
-import { products, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from '../lib/catalog';
+import Base from "../layouts/Base.astro";
+import AmazonLink from "../components/AmazonLink.astro";
+import Sparkline from "../components/Sparkline.astro";
+import { products, priceStats, fmtEur, categoryLabel, sortedSnapshots } from "../lib/catalog";
 
-const base = import.meta.env.BASE_URL.endsWith('/')
+const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
-  : import.meta.env.BASE_URL + '/';
-const u = (p: string) => base + p.replace(/^\//, '');
+  : import.meta.env.BASE_URL + "/";
+const u = (p: string) => base + p.replace(/^\//, "");
 
 // Precalcular estadísticas de todos los productos
 const allProductsWithStats = products.map((p) => {
@@ -26,61 +26,69 @@ const totalDeals = deals.length;
 ---
 
 <Base
-  title="ORZA — Rastreador de Precios, Chollos y Tops de Amazon.es"
-  description="Rastreador inteligente de precios en Amazon.es. Históricos reales, detección de mínimos históricos, alertas de descuento y compras inteligentes."
+  title="ORZA — Inteligencia de Precios, Chollos y Tops en Amazon.es"
+  description="Rastreador inteligente de precios en Amazon.es. Históricos reales, alertas de mínimos comprobados, cálculo de ahorro y compras directas."
 >
   <!-- Hero Tracker -->
-  <section class="hero-tracker" aria-label="Buscador y Monitor de Precios">
+  <section class="hero-tracker" aria-label="Monitor e Inteligencia de Precios">
     <div class="hero-kicker">
       <span class="telemetry-dot" aria-hidden="true"></span>
-      <span>Monitor de Precios en Directo · Amazon.es</span>
+      <span>Monitor Activo · Amazon.es</span>
     </div>
-    <h1 class="hero-title">Compra de forma inteligente al mejor precio registrado</h1>
+    <h1 class="hero-title">Compra con criterio técnico al menor precio registrado</h1>
     <p class="hero-desc">
-      Monitoreamos el historial real de precios de productos clave en Amazon.es para detectar cuándo están en mínimo histórico o con un descuento real.
+      Seguimiento continuo de precios y detección de mínimos históricos reales en Amazon.es. Compara la cotización actual con su histórico verificado antes de comprar.
     </p>
 
-    <!-- Buscador interactivo -->
-    <div class="search-box">
-      <input
-        type="search"
-        id="product-search"
-        class="search-input"
-        placeholder="Buscar producto (ej. teclado, auriculares, ratón, loop)..."
-        aria-label="Buscar en el catálogo de productos"
-      />
-      <button type="button" id="search-action-btn" class="search-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <!-- Command Bar de Búsqueda -->
+    <div class="search-box" role="search">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <span>Buscar</span>
+        <input
+          type="search"
+          id="product-search"
+          class="search-input"
+          placeholder="Buscar producto o categoría (ej. MX Master, Teclado, ANC, Loop)..."
+          aria-label="Buscar en el catálogo de productos"
+        />
+        <kbd class="search-kbd" title="Presiona / para enfocar">/</kbd>
+      </div>
+      <button type="button" id="search-action-btn" class="search-btn">
+        <span>Filtrar</span>
       </button>
     </div>
 
-    <!-- Telemetría en vivo -->
+    <!-- Telemetría de estado -->
     <div class="telemetry-chips">
       <span class="telemetry-chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         <strong>{totalTracked}</strong> productos monitoreados
       </span>
       <span class="telemetry-chip">
-        <strong>{totalDeals}</strong> chollos & bajadas detectadas
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+        <strong>{totalDeals}</strong> bajadas detectadas
       </span>
       <span class="telemetry-chip">
         <span class="telemetry-dot" style="background: var(--accent);" aria-hidden="true"></span>
-        Precios con fecha real
+        Datos con fecha real
       </span>
     </div>
   </section>
 
   <!-- Sección Chollos y Bajadas de Precio -->
-  <section id="chollos" aria-label="Chollos del Día">
+  <section id="chollos" aria-label="Chollos y Mínimos">
     <div class="section-header">
       <h2>
-        <span>🔥</span>
-        <span>Chollos & Mínimos Históricos</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+          <polyline points="17 18 23 18 23 12"></polyline>
+        </svg>
+        <span>Chollos y Mínimos Registrados</span>
       </h2>
-      <a class="section-link" href={u('registro/')}>Ver tabla completa →</a>
+      <a class="section-link" href={u("registro/")}>Ver registro completo →</a>
     </div>
 
     <div class="products-grid" id="deals-grid">
@@ -88,8 +96,8 @@ const totalDeals = deals.length;
         <article class="product-card" data-category={p.category} data-title={p.title.toLowerCase()}>
           <div class="product-card-top">
             <span class="product-cat">{categoryLabel[p.category]}</span>
-            <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
-              {st.lastIsMin ? '🔥 Mínimo Histórico' : `-${st.discountPercent}% Descuento`}
+            <span class={`deal-badge ${st.lastIsMin ? "historic" : ""}`}>
+              {st.lastIsMin ? "MÍNIMO HISTÓRICO" : `-${st.discountPercent}% DESCUENTO`}
             </span>
           </div>
 
@@ -110,7 +118,7 @@ const totalDeals = deals.length;
               <span>{st.lastSeenLabel}</span>
               {st.max && st.max > st.last!.price && (
                 <span style="color: var(--emerald); font-weight: 700;">
-                  Ahorras {fmtEur(st.max - st.last!.price)}
+                  Ahorro: {fmtEur(st.max - st.last!.price)}
                 </span>
               )}
             </div>
@@ -134,7 +142,7 @@ const totalDeals = deals.length;
               </svg>
             </AmazonLink>
             <a href={u(`p/${p.id}/`)} class="btn-details">
-              Ver histórico detallado ({st.count} registros)
+              Análisis completo ({st.count} registros)
             </a>
           </div>
         </article>
@@ -148,20 +156,22 @@ const totalDeals = deals.length;
       <div class="ad-spotlight-kicker">Destacado // Top Selección</div>
       <h3 class="ad-spotlight-title">Logitech MX Master 3S en Mínimo Registrado</h3>
       <p class="ad-spotlight-text">
-        El ratón ergonómico de referencia ha registrado una bajada de más de 35 € frente a su precio habitual en Amazon.es.
+        El ratón de productividad de referencia para desarrolladores y diseñadores ha alcanzado su cotización más baja en Amazon.es.
       </p>
     </div>
     <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="btn">
-      <span>Ver oferta en Amazon.es →</span>
+      <span>Ver cotización en Amazon.es →</span>
     </AmazonLink>
   </section>
 
   <!-- Sección Tops & Catálogo por Categoría -->
-  <section id="tops" aria-label="Top Productos por Categoría">
+  <section id="tops" aria-label="Top Productos Monitoreados">
     <div class="section-header">
       <h2>
-        <span>⭐</span>
-        <span>Top Productos Monitoreados</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Productos Monitoreados</span>
       </h2>
     </div>
 
@@ -190,7 +200,7 @@ const totalDeals = deals.length;
 
           <div class="price-block">
             <div class="price-row">
-              <span class="price-current">{st.count > 0 ? fmtEur(st.last!.price) : '—'}</span>
+              <span class="price-current">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
               {st.count >= 2 && (
                 <span class="price-prev">{fmtEur(st.max!)}</span>
               )}
@@ -224,7 +234,11 @@ const totalDeals = deals.length;
   <section id="buscador" aria-label="Búsqueda Directa en Amazon.es" style="margin-top: 3.5rem;">
     <div class="section-header">
       <h2>
-        <span>🎯</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="6"></circle>
+          <circle cx="12" cy="12" r="2"></circle>
+        </svg>
         <span>Accesos Directos a Amazon.es</span>
       </h2>
     </div>
@@ -267,51 +281,59 @@ const totalDeals = deals.length;
   <!-- Script interactivo de filtrado y búsqueda client-side -->
   <script is:inline>
     (function () {
-      const searchInput = document.getElementById('product-search');
-      const searchBtn = document.getElementById('search-action-btn');
-      const catBtns = document.querySelectorAll('.cat-btn');
-      const cards = document.querySelectorAll('#catalog-grid .product-card, #deals-grid .product-card');
+      const searchInput = document.getElementById("product-search");
+      const searchBtn = document.getElementById("search-action-btn");
+      const catBtns = document.querySelectorAll(".cat-btn");
+      const cards = document.querySelectorAll("#catalog-grid .product-card, #deals-grid .product-card");
 
-      let currentCat = 'all';
-      let searchQuery = '';
+      let currentCat = "all";
+      let searchQuery = "";
 
       function filterCards() {
         cards.forEach((card) => {
-          const cardCat = card.getAttribute('data-category') || '';
-          const cardTitle = card.getAttribute('data-title') || '';
+          const cardCat = card.getAttribute("data-category") || "";
+          const cardTitle = card.getAttribute("data-title") || "";
 
-          const matchesCat = currentCat === 'all' || cardCat === currentCat;
-          const matchesSearch = searchQuery === '' || cardTitle.includes(searchQuery);
+          const matchesCat = currentCat === "all" || cardCat === currentCat;
+          const matchesSearch = searchQuery === "" || cardTitle.includes(searchQuery);
 
           if (matchesCat && matchesSearch) {
-            card.style.display = 'flex';
+            card.style.display = "flex";
           } else {
-            card.style.display = 'none';
+            card.style.display = "none";
           }
         });
       }
 
       if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          searchQuery = (e.target.value || '').trim().toLowerCase();
+        searchInput.addEventListener("input", (e) => {
+          searchQuery = (e.target.value || "").trim().toLowerCase();
           filterCards();
+        });
+
+        // Atajo de teclado "/"
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "/" && document.activeElement !== searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+          }
         });
       }
 
       if (searchBtn && searchInput) {
-        searchBtn.addEventListener('click', () => {
+        searchBtn.addEventListener("click", () => {
           const val = searchInput.value.trim();
           if (val) {
-            location.href = '#tops';
+            location.href = "#tops";
           }
         });
       }
 
       catBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          catBtns.forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentCat = btn.getAttribute('data-cat') || 'all';
+        btn.addEventListener("click", () => {
+          catBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCat = btn.getAttribute("data-cat") || "all";
           filterCards();
         });
       });

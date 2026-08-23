@@ -6,6 +6,7 @@ interface Props {
 const { title, description } = Astro.props;
 
 import '../styles/site.css';
+import Logo from '../components/Logo.astro';
 import { DISCLOSURE, hasTag } from '../lib/affiliate';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -22,10 +23,10 @@ const bannerText = hasTag
 
 const nav: Array<[string, string]> = [
   ['Tracker', u('')],
-  ['🔥 Chollos', u('') + '#chollos'],
-  ['⭐ Tops', u('') + '#tops'],
-  ['📊 Histórico', u('registro/')],
-  ['🎯 Buscador', u('') + '#buscador'],
+  ['Chollos', u('') + '#chollos'],
+  ['Tops', u('') + '#tops'],
+  ['Histórico', u('registro/')],
+  ['Buscador', u('') + '#buscador'],
 ];
 
 const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
@@ -68,8 +69,7 @@ const isCurrent = (href: string) => {
       <div class="wrap header-inner">
         <div class="header-bar">
           <a class="brand-link" href={u('')} aria-label="Orza — Inicio">
-            <span class="logo">ORZA</span>
-            <span class="logo-tag">PRICE TRACKER</span>
+            <Logo size="md" />
           </a>
           <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre tema claro y oscuro" aria-pressed="false">
             <span class="theme-toggle-icon" aria-hidden="true">
@@ -109,18 +109,18 @@ const isCurrent = (href: string) => {
       <div class="wrap">
         <div class="footer-grid">
           <div class="footer-brand">
-            <span class="logo">ORZA</span>
-            <p class="fine">
-              Rastreador inteligente de precios, mínimos históricos y chollos en Amazon.es. Diseñado para ayudarte a comprar con criterio y al mejor precio registrado.
+            <Logo size="md" />
+            <p class="fine" style="margin-top: 0.85rem;">
+              Plataforma de inteligencia y seguimiento de precios en Amazon.es. Diseñada para comprar con criterio técnico y al menor coste registrado.
             </p>
           </div>
           <div class="footer-col">
             <span class="footer-heading">Categorías</span>
             <ul class="footer-links">
-              <li><a href={u('') + '#chollos'}>🔥 Chollos & Descuentos</a></li>
-              <li><a href={u('registro/')}>📊 Registro Histórico</a></li>
-              <li><a href={u('') + '#tops'}>⭐ Tops por Categoría</a></li>
-              <li><a href={u('') + '#buscador'}>🎯 Buscador Amazon</a></li>
+              <li><a href={u('') + '#chollos'}>Chollos & Descuentos</a></li>
+              <li><a href={u('registro/')}>Registro Histórico</a></li>
+              <li><a href={u('') + '#tops'}>Tops por Categoría</a></li>
+              <li><a href={u('') + '#buscador'}>Buscador Amazon</a></li>
             </ul>
           </div>
           <div class="footer-col">

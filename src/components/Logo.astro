@@ -1,0 +1,122 @@
+---
+interface Props {
+  size?: "sm" | "md" | "lg";
+  showTagline?: boolean;
+}
+
+const { size = "md", showTagline = true } = Astro.props;
+const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
+---
+
+<div class={`brand-logo size-${size}`}>
+  <svg
+    class="brand-icon"
+    width={iconSize}
+    height={iconSize}
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <!-- Outer Precision Geometry Ring -->
+    <rect x="2" y="2" width="28" height="28" rx="8" class="logo-bg" />
+    <path
+      d="M16 6V11"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      class="logo-accent"
+    />
+    <!-- Precision Chevron / Downward Value Vector -->
+    <path
+      d="M10 13L16 19L22 13"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="logo-primary"
+    />
+    <path
+      d="M12 21L16 25L20 21"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="logo-accent"
+    />
+  </svg>
+  <div class="brand-text">
+    <span class="brand-name">ORZA</span>
+    {showTagline && <span class="brand-tag">PRICE TRACKER</span>}
+  </div>
+</div>
+
+<style>
+  .brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  .brand-icon {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .brand-logo:hover .brand-icon {
+    transform: translateY(-1px);
+  }
+
+  .logo-bg {
+    fill: var(--card-alt);
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+
+  .logo-primary {
+    stroke: var(--ink);
+  }
+
+  .logo-accent {
+    stroke: var(--accent);
+  }
+
+  .brand-text {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+  }
+
+  .brand-name {
+    font-family: "Outfit", system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .brand-tag {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    color: var(--accent);
+    background: var(--card-alt);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.12rem 0.4rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .size-sm .brand-name {
+    font-size: 1.15rem;
+  }
+
+  .size-lg .brand-name {
+    font-size: 1.55rem;
+  }
+</style>

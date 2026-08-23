@@ -52,7 +52,7 @@ const deltaLabel = (d: number | null) =>
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
         <span class="product-cat">{categoryLabel[product.category]}</span>
         <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
-          {st.lastIsMin ? '🔥 Mínimo Histórico' : st.statusBadge}
+          {st.lastIsMin ? 'MÍNIMO HISTÓRICO' : st.statusBadge}
         </span>
       </div>
       <h1 style="margin: 0 0 0.65rem;">{product.title}</h1>
