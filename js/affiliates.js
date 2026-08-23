@@ -12,15 +12,19 @@
     if (!el) return
     el.innerHTML =
       '<div class="wrap header-inner">' +
-      '<a class="logo" href="ROOT">Oscuro y quieto</a>' +
+      '<a class="logo" href="ROOT">Antes del clic</a>' +
       '<nav>' +
       '<a href="ROOT">Inicio</a>' +
+      '<a href="DESCANSO">Descanso</a>' +
+      '<a href="TECLADOS">Teclados</a>' +
       '<a href="GUIAS">Guías</a>' +
       '<a href="AVISO">Afiliados</a>' +
       '</nav></div>'
     var root = el.dataset.root || ''
     el.innerHTML = el.innerHTML
       .replace(/ROOT/g, root + 'index.html')
+      .replace(/DESCANSO/g, root + 'index.html#descanso')
+      .replace(/TECLADOS/g, root + 'guias/teclados.html')
       .replace(/GUIAS/g, root + 'guias/index.html')
       .replace(/AVISO/g, root + 'aviso-afiliados.html')
   }

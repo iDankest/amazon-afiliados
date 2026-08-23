@@ -1,6 +1,6 @@
-# Oscuro y quieto — Amazon afiliados (ES)
+# Antes del clic — Amazon afiliados (ES)
 
-Sitio estático, **0€**. Nicho: descanso (antifaz, tapones). No es una wiki de videojuegos.
+Sitio estático, **0€**. Nicho: descanso (antifaz, tapones) y teclados. No es una wiki de videojuegos.
 
 - GitHub: https://github.com/iDankest/amazon-afiliados
 - Registro afiliados: https://afiliados.amazon.es/
