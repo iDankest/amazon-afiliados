@@ -3,14 +3,115 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base title="Privacidad — Orza">
-  <h1>Privacidad</h1>
-  <p>Sitio estático. No hay cuentas de usuario ni boletín propio en esta versión.</p>
-  <h2>Qué se recoge</h2>
-  <p>Este hosting (GitHub Pages) registra lo habitual de un servidor web (IP, user-agent, páginas pedidas) en logs de infraestructura que no controlamos más allá de usar el servicio.</p>
-  <h2>Amazon</h2>
-  <p>Si haces clic en un enlace a Amazon.es, Amazon pone sus propias cookies y trata datos según <a href="https://www.amazon.es/gp/help/customer/display.html?nodeId=201909010" rel="noopener" target="_blank">su aviso de privacidad</a>. Este sitio no ve lo que compras.</p>
-  <h2>Preferencia de tema</h2>
-  <p>La elección de tema claro/oscuro se guarda en <code>localStorage</code> de tu navegador (<code>adc-theme</code>). No sale de tu dispositivo.</p>
-  <h2>Contacto</h2>
-  <p>Proyecto de Kilian. Issues en el repositorio de GitHub <code>iDankest/orza</code>.</p>
+  <article class="doc">
+    <p class="doc-kicker">Documento operativo // privacidad</p>
+    <h1>Privacidad</h1>
+
+    <section class="doc-section">
+      <p>Sitio estático. No hay cuentas de usuario ni boletín propio en esta versión.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Qué se recoge</h2>
+      <p>Este hosting (GitHub Pages) registra lo habitual de un servidor web (IP, user-agent, páginas pedidas) en logs de infraestructura que no controlamos más allá de usar el servicio.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Amazon</h2>
+      <p>Si haces clic en un enlace a Amazon.es, Amazon pone sus propias cookies y trata datos según <a href="https://www.amazon.es/gp/help/customer/display.html?nodeId=201909010" rel="noopener" target="_blank">su aviso de privacidad</a>. Este sitio no ve lo que compras.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Preferencia de tema</h2>
+      <p>La elección de tema claro/oscuro se guarda en <code>localStorage</code> de tu navegador (<code>adc-theme</code>). No sale de tu dispositivo.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Contacto</h2>
+      <p>Proyecto de Kilian. Issues en el repositorio de GitHub <code>iDankest/orza</code>.</p>
+    </section>
+
+    <p class="doc-colophon">Orza · sitio estático en GitHub Pages · sin cuentas ni boletín</p>
+  </article>
 </Base>
+
+<style>
+  .doc-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: -0.5rem 0 0.6rem;
+  }
+
+  .doc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    padding: 1.6rem 1.6rem 1.75rem;
+    position: relative;
+  }
+
+  .doc::before,
+  .doc::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+  }
+
+  .doc::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+
+  .doc::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  .doc h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .doc-section {
+    border-top: 1px solid var(--line-subtle);
+    padding-top: 1.1rem;
+    margin-top: 1.35rem;
+  }
+
+  .doc-section:first-of-type {
+    border-top: 0;
+    margin-top: 1rem;
+    padding-top: 0;
+  }
+
+  .doc-section h2 {
+    margin: 0 0 0.6rem;
+  }
+
+  .doc-colophon {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px dashed var(--line);
+    margin: 1.5rem 0 0;
+    padding-top: 0.9rem;
+  }
+
+  @media (max-width: 560px) {
+    .doc {
+      padding: 1.25rem 1.1rem 1.4rem;
+    }
+  }
+</style>

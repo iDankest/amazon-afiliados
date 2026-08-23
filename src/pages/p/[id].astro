@@ -19,90 +19,146 @@ const { product } = Astro.props;
 const snaps = sortedSnapshots(product.id);
 const st = priceStats(product.id);
 const chartPoints = snaps.map((s) => ({ date: s.date, price: s.price }));
+const chartLabels =
+  chartPoints.length >= 2
+    ? {
+        min: fmtEur(st.min!),
+        max: fmtEur(st.max!),
+        first: fmtDate(snaps[0].date),
+        last: fmtDate(snaps[snaps.length - 1].date),
+      }
+    : null;
+
+const history = snaps.map((s, i) => ({
+  no: String(i + 1).padStart(3, '0'),
+  s,
+  delta: i === 0 ? null : s.price - snaps[i - 1].price,
+}));
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : import.meta.env.BASE_URL + '/';
 const u = (p: string) => base + p.replace(/^\//, '');
+
+const deltaLabel = (d: number | null) =>
+  d === null ? '—' : (d > 0 ? '+' : d < 0 ? '−' : '±') + fmtEur(Math.abs(d));
 ---
 
 <Base title={`${product.title} — registro de precios`} description={`${product.title}: historial de precios vistos a mano en Amazon.es. ${testedLabel[product.tested]}.`}>
-  <h1>{product.title}</h1>
-  <p>
-    <span class={`badge ${product.tested}`}>{testedLabel[product.tested]}</span>
-    <span class="badge">{categoryLabel[product.category]}</span>
-  </p>
-  <p>{product.notes}</p>
-
-  {st.count === 0 ? (
-    <div class="card">
-      <h2>Precio</h2>
-      <p><strong>Sin snapshots todavía.</strong> Este producto no muestra ninguna cifra hasta que alguien anote un precio visto a mano (ni mínimo, ni «precio actual», ni ofertas).</p>
-    </div>
-  ) : (
-    <div class="card">
-      <h2>{st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
-      <p class={st.isRecent ? 'price-now' : 'price-seen'}>{st.lastSeenLabel}</p>
-      {st.count >= 2 && (
-        <p class="stats">
-          <span>Mínimo: <strong>{fmtEur(st.min!)}</strong></span>
-          <span>Máximo: <strong>{fmtEur(st.max!)}</strong></span>
-          <span>{st.count} snapshots</span>
-        </p>
-      )}
-      {st.isRecent && st.count >= 2 && st.lastIsMin && (
-        <p class="note">El último snapshot coincide con el mínimo del historial.</p>
-      )}
-    </div>
-  )}
-
-  {chartPoints.length >= 2 && (
-    <div class="card">
-      <h2>Gráfica del historial</h2>
-      <canvas id="spark" class="spark-canvas" role="img" aria-label={`Gráfica del precio de ${product.title} entre ${fmtDate(snaps[0].date)} y ${fmtDate(snaps[snaps.length - 1].date)}: mínimo ${fmtEur(st.min!)}, máximo ${fmtEur(st.max!)}`}></canvas>
-    </div>
-  )}
-
-  <div class="card">
-    <h2>Historial</h2>
-    {snaps.length === 0 ? (
-      <p class="lede">Vacío a propósito. Se añade con <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code> cuando se ve un precio real.</p>
-    ) : (
-      <table class="history">
-        <thead>
-          <tr><th scope="col">Fecha</th><th scope="col">Precio</th><th scope="col">Fuente</th></tr>
-        </thead>
-        <tbody>
-          {snaps.map((s) => (
-            <tr>
-              <td>{fmtDate(s.date)}</td>
-              <td>{fmtEur(s.price)}</td>
-              <td>{s.source === 'manual' ? 'Visto a mano' : s.source}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    )}
-  </div>
-
-  <div class="card">
-    <h2>Amazon.es</h2>
-    {product.asin ? (
-      <p><AmazonLink asin={product.asin}>Ver el producto en Amazon.es</AmazonLink></p>
-    ) : (
-      <p>
-        <AmazonLink query={product.amazonQuery}>Buscar «{product.amazonQuery}» en Amazon.es</AmazonLink>
+  <article class="sheet">
+    <header class="sheet-head">
+      <p class="sheet-kicker">Ficha de registro // {product.id}</p>
+      <h1>{product.title}</h1>
+      <p class="sheet-badges">
+        <span class={`badge ${product.tested}`}>{testedLabel[product.tested]}</span>
+        <span class="badge">{categoryLabel[product.category]}</span>
       </p>
+      <p class="sheet-notes">{product.notes}</p>
+    </header>
+
+    <section class="sheet-block" aria-label="Precio registrado">
+      <h2>{st.count === 0 ? 'Celda de precio' : st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
+      {st.count === 0 ? (
+        <div class="ledger-blank">
+          <p class="ledger-blank-title">Sin anotaciones</p>
+          <p class="ledger-blank-sub">Este producto no publica ninguna cifra hasta que alguien anote un precio visto a mano: ni mínimo, ni «precio actual», ni ofertas.</p>
+        </div>
+      ) : (
+        <>
+          <p class={`sheet-last ${st.isRecent ? 'is-recent' : 'is-stale'}`}>{fmtEur(st.last!.price)}</p>
+          <p class="sheet-last-date">{st.lastSeenLabel}</p>
+          {st.count >= 2 && (
+            <div class="sheet-stats" role="group" aria-label="Estadísticas del historial">
+              <div class="sheet-stat">
+                <span class="sheet-stat-label">Mínimo</span>
+                <span class="sheet-stat-value">{fmtEur(st.min!)}</span>
+              </div>
+              <div class="sheet-stat">
+                <span class="sheet-stat-label">Máximo</span>
+                <span class="sheet-stat-value">{fmtEur(st.max!)}</span>
+              </div>
+              <div class="sheet-stat">
+                <span class="sheet-stat-label">Anotaciones</span>
+                <span class="sheet-stat-value">{st.count}</span>
+              </div>
+            </div>
+          )}
+          {st.isRecent && st.count >= 2 && st.lastIsMin && (
+            <p class="sheet-flag">El último snapshot coincide con el mínimo del historial.</p>
+          )}
+        </>
+      )}
+    </section>
+
+    {chartPoints.length >= 2 && (
+      <section class="sheet-block" aria-label="Gráfica del historial">
+        <h2>Deriva del precio</h2>
+        <canvas
+          id="spark"
+          class="spark-canvas"
+          role="img"
+          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}`}
+        ></canvas>
+        <p class="sheet-axis">{chartLabels!.first} — {chartLabels!.last}</p>
+      </section>
     )}
-    <p class="note">El enlace abre Amazon.es{product.asin ? ' en la ficha del producto' : ' en una búsqueda, no un producto concreto'}. Si compras dentro de la ventana de Amazon, puede generar comisión (ver <a href={u('aviso-afiliados/')}>aviso</a>).</p>
-  </div>
 
-  <p><a href={u('registro/')}>← Volver al registro</a></p>
+    <section class="sheet-block" aria-label="Historial de anotaciones">
+      <h2>Historial</h2>
+      {history.length === 0 ? (
+        <div class="ledger-blank">
+          <p class="ledger-blank-title">Página en blanco a propósito</p>
+          <p class="ledger-blank-sub">Se anota con <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code> cuando se ve un precio real.</p>
+        </div>
+      ) : (
+        <div class="sheet-tablewrap">
+          <table class="history ledger-lines">
+            <thead>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Δ</th>
+                <th scope="col">Fuente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map(({ no, s, delta }) => (
+                <tr>
+                  <td class="lines-no">{no}</td>
+                  <td>{fmtDate(s.date)}</td>
+                  <td>{fmtEur(s.price)}</td>
+                  <td class={`lines-delta ${delta === null ? '' : delta > 0 ? 'is-up' : delta < 0 ? 'is-down' : 'is-flat'}`}>{deltaLabel(delta)}</td>
+                  <td>{s.source === 'manual' ? 'Visto a mano' : s.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
 
-  <script is:inline define:vars={{ chartPoints }}>
+    <section class="sheet-block" aria-label="Salida a Amazon">
+      <h2>Amazon.es</h2>
+      {product.asin ? (
+        <p><AmazonLink asin={product.asin}>Ver el producto en Amazon.es</AmazonLink></p>
+      ) : (
+        <p><AmazonLink query={product.amazonQuery}>Buscar «{product.amazonQuery}» en Amazon.es</AmazonLink></p>
+      )}
+      <p class="sheet-note">El enlace abre Amazon.es{product.asin ? ' en la ficha del producto' : ' en una búsqueda, no un producto concreto'}. Si compras dentro de la ventana de Amazon, puede generar comisión (ver <a href={u('aviso-afiliados/')}>aviso</a>).</p>
+    </section>
+  </article>
+
+  <p><a class="card-link" href={u('registro/')}>← Volver al libro de registro</a></p>
+
+  <script is:inline define:vars={{ chartPoints, chartLabels }}>
     (function () {
       var canvas = document.getElementById('spark');
       if (!canvas) return;
+      function cssVar(name, fallback) {
+        var v = getComputedStyle(canvas).getPropertyValue(name).trim();
+        return v || fallback;
+      }
       function draw() {
         var dpr = window.devicePixelRatio || 1;
         var w = canvas.clientWidth || 600;
@@ -112,18 +168,38 @@ const u = (p: string) => base + p.replace(/^\//, '');
         var ctx = canvas.getContext('2d');
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, w, h);
-        var color = getComputedStyle(canvas).color;
+        var line = cssVar('color', '#b45309');
+        var muted = cssVar('--muted', '#8493a8');
+        var font = '600 10px "Overpass Mono", ui-monospace, monospace';
         var pts = chartPoints;
         var min = Infinity, max = -Infinity;
         for (var i = 0; i < pts.length; i++) {
           if (pts[i].price < min) min = pts[i].price;
           if (pts[i].price > max) max = pts[i].price;
         }
-        var pad = 14;
-        var span = max - min || 1;
-        function x(i) { return pts.length === 1 ? w / 2 : pad + (i * (w - 2 * pad)) / (pts.length - 1); }
-        function y(v) { return h - pad - ((v - min) / span) * (h - 2 * pad); }
-        ctx.strokeStyle = color;
+        var flat = max === min;
+        var span = flat ? 1 : max - min;
+        var pad = 18, padL = 48, padR = 14;
+        function x(i) { return pts.length === 1 ? w / 2 : padL + (i * (w - padL - padR)) / (pts.length - 1); }
+        function y(v) { return flat ? h / 2 : h - pad - ((v - min) / span) * (h - 2 * pad); }
+        ctx.strokeStyle = muted;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 4]);
+        ctx.font = font;
+        ctx.fillStyle = muted;
+        var levels = flat ? [min] : [min, max];
+        for (var li = 0; li < levels.length; li++) {
+          var ly = y(levels[li]);
+          ctx.beginPath();
+          ctx.moveTo(padL - 6, ly);
+          ctx.lineTo(w - padR + 6, ly);
+          ctx.stroke();
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(flat ? chartLabels.min : levels[li] === min ? chartLabels.min : chartLabels.max, padL - 10, ly);
+        }
+        ctx.setLineDash([]);
+        ctx.strokeStyle = line;
         ctx.lineWidth = 2;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -133,12 +209,19 @@ const u = (p: string) => base + p.replace(/^\//, '');
           else ctx.lineTo(x(j), y(pts[j].price));
         }
         ctx.stroke();
-        ctx.fillStyle = color;
+        ctx.fillStyle = line;
         for (var k = 0; k < pts.length; k++) {
           ctx.beginPath();
           ctx.arc(x(k), y(pts[k].price), 3, 0, Math.PI * 2);
           ctx.fill();
         }
+        ctx.fillStyle = muted;
+        ctx.textBaseline = 'alphabetic';
+        ctx.font = font;
+        ctx.textAlign = 'left';
+        ctx.fillText(chartLabels.first, padL, h - 4);
+        ctx.textAlign = 'right';
+        ctx.fillText(chartLabels.last, w - padR, h - 4);
       }
       draw();
       if (typeof MutationObserver !== 'undefined') {
@@ -147,6 +230,239 @@ const u = (p: string) => base + p.replace(/^\//, '');
           attributeFilter: ['data-theme'],
         });
       }
+      var rt;
+      window.addEventListener('resize', function () {
+        clearTimeout(rt);
+        rt = setTimeout(draw, 100);
+      });
     })();
   </script>
 </Base>
+
+<style>
+  .sheet {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    padding: 1.6rem 1.6rem 1.75rem;
+    position: relative;
+  }
+
+  .sheet::before,
+  .sheet::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+  }
+
+  .sheet::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+
+  .sheet::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  .sheet-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: -0.6rem 0 0.4rem;
+  }
+
+  .sheet-head h1 {
+    margin-bottom: 0.6rem;
+  }
+
+  .sheet-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0 0 0.75rem;
+  }
+
+  .sheet-notes {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .sheet-block {
+    border-top: 1px solid var(--line-subtle);
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+  }
+
+  .sheet-block h2 {
+    margin: 0 0 0.75rem;
+  }
+
+  .sheet-last {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: clamp(1.9rem, 6vw, 2.6rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin: 0 0 0.3rem;
+  }
+
+  .sheet-last.is-recent {
+    color: var(--ink);
+  }
+
+  .sheet-last.is-stale {
+    color: var(--muted);
+  }
+
+  .sheet-last-date {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 1rem;
+  }
+
+  .sheet-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card-alt);
+    margin: 0.25rem 0 0;
+  }
+
+  .sheet-stat {
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .sheet-stat + .sheet-stat {
+    border-left: 1px solid var(--line);
+  }
+
+  .sheet-stat-label {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sheet-stat-value {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .sheet-flag {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: 1px dashed var(--accent);
+    border-radius: 4px;
+    padding: 0.55rem 0.8rem;
+    margin: 1rem 0 0;
+  }
+
+  .sheet-axis {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0.5rem 0 0;
+  }
+
+  .ledger-blank {
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--line-subtle) 27px,
+      var(--line-subtle) 28px
+    );
+    padding: 2.5rem 1.25rem;
+    text-align: center;
+  }
+
+  .ledger-blank-title {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 0.35rem;
+  }
+
+  .ledger-blank-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .sheet-tablewrap {
+    overflow-x: auto;
+  }
+
+  table.ledger-lines th {
+    border-bottom: 2px solid var(--ink);
+  }
+
+  table.ledger-lines tbody tr:last-child td {
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .lines-no {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .lines-delta.is-up {
+    color: var(--accent);
+  }
+
+  .lines-delta.is-down {
+    color: var(--beacon);
+  }
+
+  .lines-delta.is-flat {
+    color: var(--muted);
+  }
+
+  .sheet-note {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 560px) {
+    .sheet {
+      padding: 1.25rem 1.1rem 1.4rem;
+    }
+
+    .sheet-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .sheet-stat + .sheet-stat {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

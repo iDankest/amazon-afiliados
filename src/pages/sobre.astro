@@ -7,10 +7,129 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 ---
 
 <Base title="Sobre Orza">
-  <h1>Orza</h1>
-  <p>Marca del sitio. En náutica, orzar es aguantar el rumbo. Aquí: parar a mirar el precio y la guía antes de ir a Amazon.es. Dominio previsto: orza.es (por confirmar).</p>
-  <p>Proyecto de afiliados Amazon.es, 0€ de hosting (GitHub Pages). Nicho: descanso (luz y ruido) y teclados, no videojuegos.</p>
-  <p>Por qué no una wiki tipo Tarkov: WARDOGS y similares ya tienen wikis EN y al menos una guía ES. Amazon no paga el juego de Steam. El contenido que sí se puede afiliar está en Amazon.es: antifaces, tapones, kits baratos y marcas tipo Loop.</p>
-  <p>Regla: si no se ha probado un producto, no se finge. Las primeras piezas de vídeo usan el antifaz personal del autor, no un SKU de tienda propia.</p>
-  <p>Los precios de este sitio salen de un <a href={base + 'registro/'}>registro propio de snapshots</a> anotados a mano: sin snapshot no hay cifra.</p>
+  <article class="doc">
+    <p class="doc-kicker">Bitácora // sobre la marca</p>
+    <h1>Orza</h1>
+
+    <div class="brandplate">
+      <svg class="brandplate-mark" viewBox="0 0 64 64" role="img" aria-label="Insignia de Orza: aguja vertical que aguanta el rumbo entre dos marcas de deriva">
+        <rect width="64" height="64" rx="13" fill="var(--card-alt)" stroke="var(--accent)" stroke-width="1.5"/>
+        <path d="M10 32h9" stroke="var(--beacon)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M54 32h-9" stroke="var(--beacon)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M32 7.5 40 32l-8 24.5L24 32Z" fill="var(--accent)"/>
+        <path d="M32 7.5 40 32H24Z" fill="var(--accent-hover)"/>
+        <circle cx="32" cy="32" r="3.2" fill="var(--card-alt)"/>
+      </svg>
+      <p class="brandplate-text">La insignia: una aguja que apunta al viento mientras la deriva empuja desde los lados. No cede.</p>
+    </div>
+
+    <section class="doc-section">
+      <p>Marca del sitio. En náutica, orzar es aguantar el rumbo. Aquí: parar a mirar el precio y la guía antes de ir a Amazon.es. Dominio previsto: orza.es (por confirmar).</p>
+      <p>Proyecto de afiliados Amazon.es, 0€ de hosting (GitHub Pages). Nicho: descanso (luz y ruido) y teclados, no videojuegos.</p>
+      <p>Por qué no una wiki tipo Tarkov: WARDOGS y similares ya tienen wikis EN y al menos una guía ES. Amazon no paga el juego de Steam. El contenido que sí se puede afiliar está en Amazon.es: antifaces, tapones, kits baratos y marcas tipo Loop.</p>
+      <p>Regla: si no se ha probado un producto, no se finge. Las primeras piezas de vídeo usan el antifaz personal del autor, no un SKU de tienda propia.</p>
+      <p>Los precios de este sitio salen de un <a href={base + 'registro/'}>registro propio de snapshots</a> anotados a mano: sin snapshot no hay cifra.</p>
+    </section>
+
+    <p class="doc-colophon">Orza · cuaderno de navegación · criterio propio antes del clic</p>
+  </article>
 </Base>
+
+<style>
+  .doc-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: -0.5rem 0 0.6rem;
+  }
+
+  .doc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    padding: 1.6rem 1.6rem 1.75rem;
+    position: relative;
+  }
+
+  .doc::before,
+  .doc::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+  }
+
+  .doc::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+
+  .doc::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  .doc h1 {
+    margin-bottom: 1rem;
+  }
+
+  .brandplate {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem;
+    margin: 0 0 1.25rem;
+    background: var(--card-alt);
+  }
+
+  .brandplate-mark {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  .brandplate-text {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .doc-section {
+    border-top: 1px solid var(--line-subtle);
+    padding-top: 1.1rem;
+  }
+
+  .doc-colophon {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px dashed var(--line);
+    margin: 1.5rem 0 0;
+    padding-top: 0.9rem;
+  }
+
+  @media (max-width: 560px) {
+    .doc {
+      padding: 1.25rem 1.1rem 1.4rem;
+    }
+
+    .brandplate {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+  }
+</style>

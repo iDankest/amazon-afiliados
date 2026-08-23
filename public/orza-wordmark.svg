@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" role="img" aria-label="Orza — cuaderno de navegación">
+  <rect width="640" height="160" fill="#f4f0e6"/>
+  <g transform="translate(34,44)">
+    <rect width="72" height="72" rx="14" fill="#0e151e" stroke="#1c2734" stroke-width="1.5"/>
+    <path d="M12 36h10" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60 36h-10" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M36 9 44.5 36 36 63 27.5 36Z" fill="#f59e0b"/>
+    <path d="M36 9 44.5 36h-17Z" fill="#fbbf24"/>
+    <circle cx="36" cy="36" r="3.5" fill="#0e151e"/>
+  </g>
+  <text x="132" y="94" font-family="Cinzel, Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" letter-spacing="10" fill="#0f1923">ORZA</text>
+  <text x="134" y="126" font-family="'Overpass Mono', ui-monospace, monospace" font-size="16" font-weight="600" letter-spacing="6" fill="#475569">CUADERNO DE NAVEGACIÓN</text>
+</svg>
