@@ -9,9 +9,9 @@ const u = (p: string) => base + p.replace(/^\//, '');
 ---
 
 <Base title="Tapones espuma vs silicona" description="Espuma vs silicona en tapones para dormir: aislamiento, comodidad de lado y qué pierde cada material.">
-  <section class="helm-hero g-hero">
-    <div class="helm-header">
-      <span class="helm-kicker">Cuaderno de Descanso // Comparativa 06</span>
+  <section class="g-hero">
+    <div class="g-hero-head">
+      <span class="g-kicker">Descanso // Comparativa 06</span>
       <span class="badge">[Sin claims médicos]</span>
     </div>
     <h1>Espuma vs silicona</h1>
@@ -21,14 +21,14 @@ const u = (p: string) => base + p.replace(/^\//, '');
   <div class="grid">
     <article class="card">
       <div>
-        <div class="card-header-mono">Bando // Espuma</div>
+        <div class="card-header-mono">Opción // Espuma</div>
         <h3>Más aislamiento, peor de lado</h3>
         <p>Más aislamiento si ruedas bien el tapón y esperas a que expanda. Incómodo de lado y de un solo uso si se sucia.</p>
       </div>
     </article>
     <article class="card">
       <div>
-        <div class="card-header-mono">Bando // Silicona</div>
+        <div class="card-header-mono">Opción // Silicona</div>
         <h3>Más comodidad, menos dB</h3>
         <p>Silicona / Loop-like: se lava, se nota menos, a menudo deja pasar más ruido.</p>
       </div>
@@ -43,7 +43,7 @@ const u = (p: string) => base + p.replace(/^\//, '');
   </div>
 
   <div class="g-next">
-    <span class="g-next-label">Siguiente rumbo</span>
+    <span class="g-next-label">Siguientes guías</span>
     <div class="g-next-links">
       <a class="card-link" href={u('guias/tapones-para-dormir/')}>Tapones para dormir <span aria-hidden="true">&rarr;</span></a>
       <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Kit antifaz + tapones <span aria-hidden="true">&rarr;</span></a>
@@ -52,6 +52,30 @@ const u = (p: string) => base + p.replace(/^\//, '');
 </Base>
 
 <style>
+  .g-hero {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .g-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -90,5 +114,10 @@ const u = (p: string) => base + p.replace(/^\//, '');
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 1.75rem;
+  }
+  @media (max-width: 600px) {
+    .g-hero {
+      padding: 1.25rem;
+    }
   }
 </style>

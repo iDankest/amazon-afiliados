@@ -57,11 +57,11 @@ const deltaLabel = (d: number | null) =>
     </header>
 
     <section class="sheet-block" aria-label="Precio registrado">
-      <h2>{st.count === 0 ? 'Celda de precio' : st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
+      <h2>{st.count === 0 ? 'Precio' : st.isRecent ? 'Último precio visto' : 'Última vez visto'}</h2>
       {st.count === 0 ? (
-        <div class="ledger-blank">
-          <p class="ledger-blank-title">Sin anotaciones</p>
-          <p class="ledger-blank-sub">Este producto no publica ninguna cifra hasta que alguien anote un precio visto a mano: ni mínimo, ni «precio actual», ni ofertas.</p>
+        <div class="sheet-empty">
+          <p class="sheet-empty-title">Sin anotaciones</p>
+          <p class="sheet-empty-sub">Este producto no publica ninguna cifra hasta que alguien anote un precio visto a mano: ni mínimo, ni «precio actual», ni ofertas.</p>
         </div>
       ) : (
         <>
@@ -92,7 +92,7 @@ const deltaLabel = (d: number | null) =>
 
     {chartPoints.length >= 2 && (
       <section class="sheet-block" aria-label="Gráfica del historial">
-        <h2>Deriva del precio</h2>
+        <h2>Evolución del precio</h2>
         <canvas
           id="spark"
           class="spark-canvas"
@@ -106,13 +106,13 @@ const deltaLabel = (d: number | null) =>
     <section class="sheet-block" aria-label="Historial de anotaciones">
       <h2>Historial</h2>
       {history.length === 0 ? (
-        <div class="ledger-blank">
-          <p class="ledger-blank-title">Página en blanco a propósito</p>
-          <p class="ledger-blank-sub">Se anota con <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code> cuando se ve un precio real.</p>
+        <div class="sheet-empty">
+          <p class="sheet-empty-title">Página en blanco a propósito</p>
+          <p class="sheet-empty-sub">Se anota con <code>node scripts/add-snapshot.mjs --id {product.id} --price &lt;n&gt;</code> cuando se ve un precio real.</p>
         </div>
       ) : (
         <div class="sheet-tablewrap">
-          <table class="history ledger-lines">
+          <table class="history sheet-lines">
             <thead>
               <tr>
                 <th scope="col">Nº</th>
@@ -387,7 +387,7 @@ const deltaLabel = (d: number | null) =>
     margin: 0.5rem 0 0;
   }
 
-  .ledger-blank {
+  .sheet-empty {
     border: 1px dashed var(--line);
     border-radius: 4px;
     background-image: repeating-linear-gradient(
@@ -401,7 +401,7 @@ const deltaLabel = (d: number | null) =>
     text-align: center;
   }
 
-  .ledger-blank-title {
+  .sheet-empty-title {
     font-family: 'Overpass Mono', ui-monospace, monospace;
     font-size: 0.85rem;
     font-weight: 700;
@@ -411,7 +411,7 @@ const deltaLabel = (d: number | null) =>
     margin: 0 0 0.35rem;
   }
 
-  .ledger-blank-sub {
+  .sheet-empty-sub {
     font-size: 0.9rem;
     color: var(--muted);
     margin: 0;
@@ -421,11 +421,11 @@ const deltaLabel = (d: number | null) =>
     overflow-x: auto;
   }
 
-  table.ledger-lines th {
+  table.sheet-lines th {
     border-bottom: 2px solid var(--ink);
   }
 
-  table.ledger-lines tbody tr:last-child td {
+  table.sheet-lines tbody tr:last-child td {
     border-bottom: 2px solid var(--ink);
   }
 

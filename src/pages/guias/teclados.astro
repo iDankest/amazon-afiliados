@@ -23,9 +23,9 @@ const noencontraras = [
 ---
 
 <Base title="Teclados mecánicos — guía honesta" description="Qué mirar en un teclado mecánico antes de comprar en Amazon.es. Aún no hay reviews propias: lo no probado se etiqueta.">
-  <section class="helm-hero g-hero">
-    <div class="helm-header">
-      <span class="helm-kicker">Cuaderno de Teclados // Guía de Compra 01</span>
+  <section class="g-hero">
+    <div class="g-hero-head">
+      <span class="g-kicker">Teclados // Guía de compra 01</span>
       <span class="badge no">[No lo he probado]</span>
     </div>
     <h1>Teclados mecánicos</h1>
@@ -58,12 +58,12 @@ const noencontraras = [
   </div>
 
   <div class="note">
-    <span class="note-badge">Nota de Campo</span>
+    <span class="note-badge">Nota</span>
     El botón abre una búsqueda de Amazon.es, no un producto recomendado. Cuando haya reviews propias, se enlazarán desde esta página.
   </div>
 
   <div class="g-next">
-    <span class="g-next-label">Siguiente rumbo</span>
+    <span class="g-next-label">Siguientes guías</span>
     <div class="g-next-links">
       <a class="card-link" href={u('registro/')}>Registro de precios <span aria-hidden="true">&rarr;</span></a>
       <a class="card-link" href={u('guias/ofertas-semana/')}>Ofertas de la semana <span aria-hidden="true">&rarr;</span></a>
@@ -72,6 +72,30 @@ const noencontraras = [
 </Base>
 
 <style>
+  .g-hero {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .g-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -120,5 +144,10 @@ const noencontraras = [
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 1.75rem;
+  }
+  @media (max-width: 600px) {
+    .g-hero {
+      padding: 1.25rem;
+    }
   }
 </style>

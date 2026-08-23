@@ -17,9 +17,9 @@ const errores = [
 ---
 
 <Base title="Errores al comprar un antifaz" description="Cinco errores al comprar un antifaz: oscuridad prometida, velcro, forma 3D y títulos de Amazon que prometen de más.">
-  <section class="helm-hero g-hero">
-    <div class="helm-header">
-      <span class="helm-kicker">Cuaderno de Descanso // Lista de Guardia 04</span>
+  <section class="g-hero">
+    <div class="g-hero-head">
+      <span class="g-kicker">Descanso // Lista 04</span>
       <span class="badge">[Sin claims médicos]</span>
     </div>
     <h1>Errores al comprar un antifaz</h1>
@@ -35,7 +35,7 @@ const errores = [
   </div>
 
   <div class="g-next">
-    <span class="g-next-label">Siguiente rumbo</span>
+    <span class="g-next-label">Siguientes guías</span>
     <div class="g-next-links">
       <a class="card-link" href={u('guias/antifaz-para-dormir/')}>Antifaz para dormir <span aria-hidden="true">&rarr;</span></a>
       <a class="card-link" href={u('guias/dormir-de-lado/')}>Dormir de lado con antifaz <span aria-hidden="true">&rarr;</span></a>
@@ -44,6 +44,30 @@ const errores = [
 </Base>
 
 <style>
+  .g-hero {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .g-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -97,5 +121,10 @@ const errores = [
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 1.75rem;
+  }
+  @media (max-width: 600px) {
+    .g-hero {
+      padding: 1.25rem;
+    }
   }
 </style>

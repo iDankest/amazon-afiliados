@@ -9,9 +9,9 @@ const u = (p: string) => base + p.replace(/^\//, '');
 ---
 
 <Base title="Tapones para dormir — guía" description="Tapones para dormir: espuma, silicona y reutilizables. Lo que suele fallar y por qué el SNR de la caja no es tu noche real.">
-  <section class="helm-hero g-hero">
-    <div class="helm-header">
-      <span class="helm-kicker">Cuaderno de Descanso // Guía de Campo 02</span>
+  <section class="g-hero">
+    <div class="g-hero-head">
+      <span class="g-kicker">Descanso // Guía 02</span>
       <span class="badge">[Sin claims médicos]</span>
     </div>
     <h1>Tapones para dormir</h1>
@@ -52,12 +52,12 @@ const u = (p: string) => base + p.replace(/^\//, '');
   </div>
 
   <div class="note">
-    <span class="note-badge">Regla de Bitácora</span>
+    <span class="note-badge">Regla del sitio</span>
     SNR en la caja no es tu noche real. Prueba de lado y con el ruido que tú tienes (vecino, calle), no con un vídeo de marketing.
   </div>
 
   <div class="g-next">
-    <span class="g-next-label">Siguiente rumbo</span>
+    <span class="g-next-label">Siguientes guías</span>
     <div class="g-next-links">
       <a class="card-link" href={u('guias/espuma-vs-silicona/')}>Tapones: espuma vs silicona <span aria-hidden="true">&rarr;</span></a>
       <a class="card-link" href={u('guias/kit-antifaz-y-tapones/')}>Kit antifaz + tapones <span aria-hidden="true">&rarr;</span></a>
@@ -66,6 +66,30 @@ const u = (p: string) => base + p.replace(/^\//, '');
 </Base>
 
 <style>
+  .g-hero {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .g-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -104,5 +128,10 @@ const u = (p: string) => base + p.replace(/^\//, '');
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 1.75rem;
+  }
+  @media (max-width: 600px) {
+    .g-hero {
+      padding: 1.25rem;
+    }
   }
 </style>

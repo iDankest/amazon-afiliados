@@ -26,88 +26,88 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 ---
 
 <Base title="Registro de precios — Orza" description="Registro propio de precios vistos a mano en Amazon.es: descanso y teclados. Sin scrape, sin precios inventados.">
-  <p class="ledger-kicker">Libro de registro // precios vistos a mano</p>
+  <p class="reg-kicker">Registro // precios vistos a mano</p>
   <h1>Registro de precios</h1>
   <p class="lede">Precios que alguien anotó a mano, con fecha. Nada de scrape ni de cifras inventadas: si un producto no tiene snapshots, no tiene precio aquí.</p>
 
-  <div class="ledger-meta" role="group" aria-label="Resumen del registro">
-    <span class="ledger-meta-item">{rows.length} productos en catálogo</span>
-    <span class="ledger-meta-sep" aria-hidden="true">·</span>
-    <span class="ledger-meta-item">{totalSnaps} anotaciones fechadas</span>
-    <span class="ledger-meta-sep" aria-hidden="true">·</span>
-    <span class="ledger-meta-item">regla del sitio: sin snapshot no hay cifra</span>
+  <div class="reg-meta" role="group" aria-label="Resumen del registro">
+    <span class="reg-meta-item">{rows.length} productos en catálogo</span>
+    <span class="reg-meta-sep" aria-hidden="true">·</span>
+    <span class="reg-meta-item">{totalSnaps} anotaciones fechadas</span>
+    <span class="reg-meta-sep" aria-hidden="true">·</span>
+    <span class="reg-meta-item">regla del sitio: sin snapshot no hay cifra</span>
   </div>
 
   {rows.length === 0 ? (
-    <section class="ledger-sheet">
-      <div class="ledger-blank">
-        <p class="ledger-blank-title">Página en blanco a propósito</p>
-        <p class="ledger-blank-sub">El catálogo está vacío. Cuando entre un producto real, aparecerá aquí con su fila y sus anotaciones.</p>
+    <section class="reg-sheet">
+      <div class="reg-blank">
+        <p class="reg-blank-title">Página en blanco a propósito</p>
+        <p class="reg-blank-sub">El catálogo está vacío. Cuando entre un producto real, aparecerá aquí con su fila y sus anotaciones.</p>
       </div>
     </section>
   ) : (
-    <section class="ledger-sheet" aria-label="Libro de registro de precios">
-      <table class="ledger">
-        <caption class="ledger-caption">Libro de registro: un producto por fila, una anotación por precio visto a mano.</caption>
+    <section class="reg-sheet" aria-label="Registro de precios">
+      <table class="reg">
+        <caption class="reg-caption">Registro: un producto por fila, una anotación por precio visto a mano.</caption>
         <thead>
           <tr>
-            <th scope="col" class="ledger-no-head">Nº</th>
+            <th scope="col" class="reg-no-head">Nº</th>
             <th scope="col">Producto</th>
-            <th scope="col" class="ledger-num-head">Última anotación</th>
-            <th scope="col" class="ledger-num-head">Mín / Máx</th>
+            <th scope="col" class="reg-num-head">Última anotación</th>
+            <th scope="col" class="reg-num-head">Mín / Máx</th>
             <th scope="col">Histórico</th>
           </tr>
         </thead>
         <tbody>
           {rows.map(({ no, p, snaps, st }) => (
             <tr class={st.count === 0 ? 'is-empty' : undefined}>
-              <td data-label="Nº" class="ledger-no">{no}</td>
-              <td data-label="Producto" class="ledger-product">
-                <a class="ledger-title" href={u(`p/${p.id}/`)}>{p.title}</a>
-                <span class="ledger-badges">
+              <td data-label="Nº" class="reg-no">{no}</td>
+              <td data-label="Producto" class="reg-product">
+                <a class="reg-title" href={u(`p/${p.id}/`)}>{p.title}</a>
+                <span class="reg-badges">
                   <span class={`badge ${p.tested}`}>{testedLabel[p.tested]}</span>
                   <span class="badge">{categoryLabel[p.category]}</span>
                 </span>
               </td>
-              <td data-label="Última anotación" class="ledger-num">
+              <td data-label="Última anotación" class="reg-num">
                 {st.count === 0 ? (
-                  <span class="ledger-nil">—</span>
+                  <span class="reg-nil">—</span>
                 ) : (
                   <>
-                    <span class={st.isRecent ? 'ledger-price price-now' : 'ledger-price price-seen'}>{fmtEur(st.last!.price)}</span>
-                    <span class="ledger-date">visto el {fmtDate(st.last!.date)}</span>
+                    <span class={st.isRecent ? 'reg-price price-now' : 'reg-price price-seen'}>{fmtEur(st.last!.price)}</span>
+                    <span class="reg-date">visto el {fmtDate(st.last!.date)}</span>
                   </>
                 )}
               </td>
-              <td data-label="Mín / Máx" class="ledger-num">
+              <td data-label="Mín / Máx" class="reg-num">
                 {st.count >= 2 ? (
-                  <span class="ledger-range">{fmtEur(st.min!)} / {fmtEur(st.max!)}</span>
+                  <span class="reg-range">{fmtEur(st.min!)} / {fmtEur(st.max!)}</span>
                 ) : (
-                  <span class="ledger-nil">{st.count === 1 ? 'con 2+' : '—'}</span>
+                  <span class="reg-nil">{st.count === 1 ? 'con 2+' : '—'}</span>
                 )}
               </td>
-              <td data-label="Histórico" class="ledger-spark-cell">
+              <td data-label="Histórico" class="reg-spark-cell">
                 {st.count >= 2 && snaps.length >= 2 ? (
-                  <div class="ledger-spark">
+                  <div class="reg-spark">
                     <Sparkline values={snaps.map((s) => s.price)} label={`Histórico de ${p.title}: mínimo ${fmtEur(st.min!)}, máximo ${fmtEur(st.max!)}`} />
                   </div>
                 ) : (
-                  <span class="ledger-nil">{st.count === 1 ? '1 anotación' : 'sin gráfica'}</span>
+                  <span class="reg-nil">{st.count === 1 ? '1 anotación' : 'sin gráfica'}</span>
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p class="ledger-colophon">Mín/Máx y gráfica solo con 2+ anotaciones · si la última tiene 7+ días se lee «visto el {'{fecha}'}», nunca «precio actual»</p>
+      <p class="reg-colophon">Mín/Máx y gráfica solo con 2+ anotaciones · si la última tiene 7+ días se lee «visto el {'{fecha}'}», nunca «precio actual»</p>
     </section>
   )}
 
-  <p class="ledger-how">¿Cómo entra una cifra aquí? A mano: alguien ve un precio real en Amazon.es y lo anota con fecha en <code>data/snapshots/</code>. Nada se rellena solo.</p>
+  <p class="reg-how">¿Cómo entra una cifra aquí? A mano: alguien ve un precio real en Amazon.es y lo anota con fecha en <code>data/snapshots/</code>. Nada se rellena solo.</p>
 </Base>
 
 <style>
-  .ledger-kicker {
+  .reg-kicker {
     font-family: 'Overpass Mono', ui-monospace, monospace;
     font-size: 0.72rem;
     font-weight: 700;
@@ -117,7 +117,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     margin: -0.5rem 0 0.6rem;
   }
 
-  .ledger-meta {
+  .reg-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -133,11 +133,11 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     margin: 0 0 1.25rem;
   }
 
-  .ledger-meta-sep {
+  .reg-meta-sep {
     color: var(--accent);
   }
 
-  .ledger-sheet {
+  .reg-sheet {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 4px;
@@ -146,8 +146,8 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     position: relative;
   }
 
-  .ledger-sheet::before,
-  .ledger-sheet::after {
+  .reg-sheet::before,
+  .reg-sheet::after {
     content: '';
     position: absolute;
     width: 14px;
@@ -155,21 +155,21 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     pointer-events: none;
   }
 
-  .ledger-sheet::before {
+  .reg-sheet::before {
     top: -1px;
     left: -1px;
     border-top: 2px solid var(--accent);
     border-left: 2px solid var(--accent);
   }
 
-  .ledger-sheet::after {
+  .reg-sheet::after {
     bottom: -1px;
     right: -1px;
     border-bottom: 2px solid var(--accent);
     border-right: 2px solid var(--accent);
   }
 
-  .ledger-caption {
+  .reg-caption {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -181,7 +181,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     border: 0;
   }
 
-  table.ledger {
+  table.reg {
     width: 100%;
     border-collapse: collapse;
     font-family: 'Overpass Mono', ui-monospace, monospace;
@@ -190,7 +190,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     margin: 0.75rem 0 0;
   }
 
-  table.ledger th {
+  table.reg th {
     text-align: left;
     font-size: 0.7rem;
     font-weight: 700;
@@ -201,35 +201,35 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     border-bottom: 2px solid var(--ink);
   }
 
-  .ledger-num-head {
+  .reg-num-head {
     text-align: right;
   }
 
-  table.ledger td {
+  table.reg td {
     padding: 0.75rem 0.6rem;
     border-bottom: 1px solid var(--line-subtle);
     vertical-align: middle;
   }
 
-  table.ledger tbody tr:last-child td {
+  table.reg tbody tr:last-child td {
     border-bottom: 2px solid var(--ink);
   }
 
-  table.ledger tbody tr:hover {
+  table.reg tbody tr:hover {
     background: var(--card-alt);
   }
 
-  .ledger-no {
+  .reg-no {
     color: var(--muted);
     font-size: 0.78rem;
     width: 3rem;
   }
 
-  .ledger-product {
+  .reg-product {
     font-family: 'Albert Sans', system-ui, sans-serif;
   }
 
-  .ledger-title {
+  .reg-title {
     display: block;
     font-weight: 600;
     color: var(--ink);
@@ -237,60 +237,60 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     line-height: 1.35;
   }
 
-  .ledger-title:hover {
+  .reg-title:hover {
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  .ledger-badges {
+  .reg-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
     margin-top: 0.4rem;
   }
 
-  .ledger-num {
+  .reg-num {
     text-align: right;
   }
 
-  .ledger-price {
+  .reg-price {
     display: block;
     font-size: 1rem;
   }
 
-  .ledger-date {
+  .reg-date {
     display: block;
     font-size: 0.7rem;
     color: var(--muted);
     margin-top: 0.15rem;
   }
 
-  .ledger-range {
+  .reg-range {
     white-space: nowrap;
     color: var(--ink);
   }
 
-  .ledger-nil {
+  .reg-nil {
     color: var(--muted);
   }
 
-  tr.is-empty .ledger-nil {
+  tr.is-empty .reg-nil {
     font-style: normal;
     opacity: 0.75;
   }
 
-  .ledger-spark-cell {
+  .reg-spark-cell {
     width: 8.5rem;
   }
 
-  .ledger-spark {
+  .reg-spark {
     width: 8.5rem;
     color: var(--accent);
     margin-left: auto;
   }
 
-  .ledger-colophon {
+  .reg-colophon {
     font-family: 'Overpass Mono', ui-monospace, monospace;
     font-size: 0.7rem;
     letter-spacing: 0.05em;
@@ -301,7 +301,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     padding-top: 0.7rem;
   }
 
-  .ledger-blank {
+  .reg-blank {
     border: 1px dashed var(--line);
     border-radius: 4px;
     background-image: repeating-linear-gradient(
@@ -316,7 +316,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     margin: 0.75rem 0 0;
   }
 
-  .ledger-blank-title {
+  .reg-blank-title {
     font-family: 'Overpass Mono', ui-monospace, monospace;
     font-size: 0.85rem;
     font-weight: 700;
@@ -326,32 +326,32 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     margin: 0 0 0.35rem;
   }
 
-  .ledger-blank-sub {
+  .reg-blank-sub {
     font-size: 0.9rem;
     color: var(--muted);
     margin: 0;
   }
 
-  .ledger-how {
+  .reg-how {
     font-size: 0.9rem;
     color: var(--muted);
     margin-top: 1.5rem;
   }
 
   @media (max-width: 640px) {
-    table.ledger thead {
+    table.reg thead {
       display: none;
     }
 
-    table.ledger,
-    table.ledger tbody,
-    table.ledger tr,
-    table.ledger td {
+    table.reg,
+    table.reg tbody,
+    table.reg tr,
+    table.reg td {
       display: block;
       width: 100%;
     }
 
-    table.ledger tbody tr {
+    table.reg tbody tr {
       border: 1px solid var(--line);
       border-radius: 4px;
       background: var(--card);
@@ -359,15 +359,15 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
       margin: 0.75rem 0;
     }
 
-    table.ledger tbody tr:hover {
+    table.reg tbody tr:hover {
       background: var(--card);
     }
 
-    table.ledger tbody tr:last-child td {
+    table.reg tbody tr:last-child td {
       border-bottom: 1px solid var(--line-subtle);
     }
 
-    table.ledger td {
+    table.reg td {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -377,7 +377,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
       text-align: right;
     }
 
-    table.ledger td::before {
+    table.reg td::before {
       content: attr(data-label);
       font-size: 0.68rem;
       font-weight: 600;
@@ -388,27 +388,27 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
       flex-shrink: 0;
     }
 
-    .ledger-no {
+    .reg-no {
       display: none;
     }
 
-    .ledger-product {
+    .reg-product {
       display: block;
     }
 
-    .ledger-product::before {
+    .reg-product::before {
       content: none;
     }
 
-    .ledger-title {
+    .reg-title {
       text-align: right;
     }
 
-    .ledger-badges {
+    .reg-badges {
       justify-content: flex-end;
     }
 
-    .ledger-spark-cell .ledger-spark {
+    .reg-spark-cell .reg-spark {
       margin-left: 0;
     }
   }

@@ -13,9 +13,9 @@ const deals = products
 ---
 
 <Base title="Ofertas de la semana — Orza" description="Ofertas de la semana en descanso y teclados. Aún no hay fuente de descuentos verificada: no se inventan ofertas.">
-  <section class="helm-hero g-hero">
-    <div class="helm-header">
-      <span class="helm-kicker">Registro de Precios // Estado Semanal</span>
+  <section class="g-hero">
+    <div class="g-hero-head">
+      <span class="g-kicker">Registro de precios // Estado semanal</span>
       <span class="badge">[Sin fuente no hay lista]</span>
     </div>
     <h1>Ofertas de la semana</h1>
@@ -25,7 +25,7 @@ const deals = products
   {deals.length === 0 ? (
     <>
       <div class="card g-empty">
-        <div class="card-header-mono">Estado del Registro</div>
+        <div class="card-header-mono">Estado del registro</div>
         <h2 class="g-empty-title">Ahora mismo, no hay ninguna oferta publicada</h2>
         <p><strong>Aún no hay snapshots recientes en mínimos</strong>, así que la lista está vacía a propósito. Aquí no se inventan ofertas ni porcentajes de rebaja: si no hay snapshot que lo respalde, no hay lista.</p>
       </div>
@@ -44,12 +44,12 @@ const deals = products
   )}
 
   <div class="note">
-    <span class="note-badge">Regla de Bitácora</span>
+    <span class="note-badge">Regla del sitio</span>
     Cada oferta llevará su fecha y su enlace con la etiqueta correspondiente. Mientras no haya snapshot reciente en mínimo, esta página se queda así de corta.
   </div>
 
   <div class="g-next">
-    <span class="g-next-label">Siguiente rumbo</span>
+    <span class="g-next-label">Siguientes guías</span>
     <div class="g-next-links">
       <a class="card-link" href={u('registro/')}>Registro de precios <span aria-hidden="true">&rarr;</span></a>
       <a class="card-link" href={u('guias/')}>Índice de guías <span aria-hidden="true">&rarr;</span></a>
@@ -58,6 +58,30 @@ const deals = products
 </Base>
 
 <style>
+  .g-hero {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-subtle);
+  }
+  .g-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .g-kicker {
+    font-family: 'Overpass Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
   .g-hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -92,5 +116,10 @@ const deals = products
     display: flex;
     flex-wrap: wrap;
     gap: 1rem 1.75rem;
+  }
+  @media (max-width: 600px) {
+    .g-hero {
+      padding: 1.25rem;
+    }
   }
 </style>
