@@ -44,24 +44,24 @@ const deltaLabel = (d: number | null) =>
 ---
 
 <Base
-  title={`${product.title} — Análisis de Precio e Histórico`}
-  description={`${product.title}: evolución histórica de precios, alertas de mínimos y enlace directo de compra en Amazon.es.`}
+  title={`${product.title} — Análisis de Precio e Histórico en Amazon.es`}
+  description={`${product.title}: evolución de precios en Amazon.es, alertas de mínimos comprobados y enlace directo de compra.`}
 >
   <article class="sheet">
     <header class="sheet-head">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
-        <span class="cat-tag">{categoryLabel[product.category]}</span>
-        <span class={`status-badge ${st.lastIsMin ? 'historic' : ''}`}>
-          {st.lastIsMin ? 'MÍNIMO HISTÓRICO' : st.statusBadge}
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
+        <span class="category-pill">{categoryLabel[product.category]}</span>
+        <span class={`discount-tag ${st.lastIsMin ? 'historic' : ''}`}>
+          {st.lastIsMin ? '🔥 MÍNIMO HISTÓRICO' : st.statusBadge}
         </span>
       </div>
       <h1 class="sheet-title">{product.title}</h1>
       <p class="sheet-notes">{product.notes}</p>
     </header>
 
-    <!-- Bloque de Métricas y Precio -->
-    <section aria-label="Análisis de precio actual">
-      <h2>Métricas de Cotización</h2>
+    <!-- Métricas de Cotización -->
+    <section aria-label="Métricas de precio">
+      <h2>Métricas de Precio</h2>
       {st.count === 0 ? (
         <div style="padding: 1.5rem 0; color: var(--muted);">
           <p>A la espera de primeras anotaciones de precio para este producto.</p>
@@ -70,7 +70,7 @@ const deltaLabel = (d: number | null) =>
         <>
           <div class="sheet-metrics" role="group" aria-label="Métricas del precio">
             <div class="sheet-metric-card">
-              <span class="metric-title">Cotización Registrada</span>
+              <span class="metric-title">Precio Registrado</span>
               <span class="metric-num" style="color: var(--ink);">
                 {fmtEur(st.last!.price)}
               </span>
@@ -82,7 +82,7 @@ const deltaLabel = (d: number | null) =>
                 {fmtEur(st.min!)}
               </span>
               <span class="metric-caption">
-                {st.lastIsMin ? 'Mínimo activo' : `Máx: ${fmtEur(st.max!)}`}
+                {st.lastIsMin ? 'En mínimo ahora' : `Pico: ${fmtEur(st.max!)}`}
               </span>
             </div>
             <div class="sheet-metric-card">
@@ -93,23 +93,23 @@ const deltaLabel = (d: number | null) =>
               <span class="metric-caption">Pico registrado</span>
             </div>
             <div class="sheet-metric-card">
-              <span class="metric-title">Ahorro Detectado</span>
+              <span class="metric-title">Ahorro Estimado</span>
               <span class="metric-num" style="color: var(--accent);">
                 {st.max && st.max > st.last!.price ? fmtEur(st.max - st.last!.price) : '0,00 €'}
               </span>
               <span class="metric-caption">
-                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máx` : 'Cotización base'}
+                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máximo` : 'Precio base'}
               </span>
             </div>
           </div>
 
-          <!-- Botón de Compra Directa Primario -->
-          <div style="margin: 1.5rem 0 2rem;">
+          <!-- Botón de Compra Directa -->
+          <div style="margin: 1.75rem 0 2.25rem;">
             <AmazonLink
               asin={product.asin}
               query={product.amazonQuery}
-              class="btn-terminal-buy"
-              style="font-size: 1rem; padding: 0.85rem 1.6rem; width: 100%;"
+              class="btn-buy-amazon"
+              style="font-size: 1.05rem; padding: 0.95rem 1.75rem; width: 100%; border-radius: 10px;"
             >
               <span>Ver Oferta y Comprar en Amazon.es</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -117,8 +117,8 @@ const deltaLabel = (d: number | null) =>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </AmazonLink>
-            <p style="font-size: 0.75rem; color: var(--muted); margin: 0.45rem 0 0; text-align: center;">
-              Enlace con atribución de afiliado a Amazon.es · Sin ningún sobrecoste para ti
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0; text-align: center;">
+              Enlace con atribución de afiliado a Amazon.es · Sin sobrecostes para ti
             </p>
           </div>
         </>
@@ -126,158 +126,167 @@ const deltaLabel = (d: number | null) =>
     </section>
 
     {chartPoints.length >= 2 && (
-      <section class="sheet-block" aria-label="Gráfica de evolución de precio">
-        <h2>Evolución Histórica del Precio</h2>
-        <canvas
-          id="spark"
-          class="spark-canvas"
-          role="img"
-          aria-label={`Gráfica del precio de ${product.title} entre ${chartLabels!.first} y ${chartLabels!.last}: mínimo ${chartLabels!.min}, máximo ${chartLabels!.max}`}
-        ></canvas>
-        <p class="sheet-axis" style="display: flex; justify-content: space-between;">
-          <span>Desde {chartLabels!.first}</span>
-          <span>Hasta {chartLabels!.last}</span>
-        </p>
+      <section style="margin: 2.75rem 0;" aria-label="Gráfica de evolución">
+        <h2>Evolución Histórica de Precios</h2>
+        <div class="chart-container">
+          <div class="chart-header">
+            <span style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
+              Rango: {chartLabels?.min} — {chartLabels?.max}
+            </span>
+            <span style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--muted);">
+              {chartLabels?.first} a {chartLabels?.last}
+            </span>
+          </div>
+          <canvas
+            id="priceChart"
+            class="chart-canvas"
+            width="800"
+            height="220"
+            role="img"
+            aria-label={`Evolución del precio de ${product.title}: mínimo ${chartLabels?.min}, máximo ${chartLabels?.max}`}
+          ></canvas>
+        </div>
       </section>
     )}
 
-    <section class="sheet-block" aria-label="Historial de comprobaciones">
-      <h2>Historial de Registros</h2>
-      {history.length === 0 ? (
-        <div class="empty-state">
-          <p class="empty-state-title">Sin historial todavía</p>
-        </div>
-      ) : (
-        <div class="table-wrap">
-          <table class="reg">
-            <thead>
+    <!-- Historial de Snapshots -->
+    <section style="margin-top: 2.75rem;" aria-label="Historial de comprobaciones">
+      <h2>Historial de Comprobaciones</h2>
+      <div class="table-wrap">
+        <table class="reg">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Variación</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map(({ no, s, delta }) => (
               <tr>
-                <th scope="col">Nº</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Variación</th>
-                <th scope="col">Tipo</th>
+                <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
+                <td style="font-family: ui-monospace, Menlo, monospace;">{fmtDate(s.date)}</td>
+                <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700;">{fmtEur(s.price)}</td>
+                <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: delta && delta < 0 ? 'var(--emerald)' : delta && delta > 0 ? 'var(--coral)' : 'var(--muted)';">
+                  {deltaLabel(delta)}
+                </td>
+                <td>
+                  {s.price === st.min && (
+                    <span class="discount-tag historic">MÍNIMO</span>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {history.map(({ no, s, delta }) => (
-                <tr>
-                  <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
-                  <td>{fmtDate(s.date)}</td>
-                  <td class="table-price">{fmtEur(s.price)}</td>
-                  <td style={delta && delta < 0 ? 'color: var(--emerald); font-weight: 700;' : delta && delta > 0 ? 'color: var(--amber);' : 'color: var(--muted);'}>
-                    {deltaLabel(delta)}
-                  </td>
-                  <td style="color: var(--muted); font-size: 0.8rem;">Verificado</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
+
+    <div style="margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+      <a class="section-link" href={u('')}>← Volver al inicio</a>
+      <a class="section-link" href={u('registro/')}>Ver registro global de precios →</a>
+    </div>
   </article>
 
-  <p style="margin-top: 2rem;"><a class="section-link" href={u('')}>← Volver al Tracker Principal</a></p>
-
-  <script is:inline define:vars={{ chartPoints, chartLabels }}>
-    (function () {
-      var canvas = document.getElementById('spark');
-      if (!canvas) return;
-      function cssVar(name, fallback) {
-        var v = getComputedStyle(canvas).getPropertyValue(name).trim();
-        return v || fallback;
-      }
-      function draw() {
-        var dpr = window.devicePixelRatio || 1;
-        var w = canvas.clientWidth || 600;
-        var h = canvas.clientHeight || 160;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
+  {chartPoints.length >= 2 && (
+    <script is:inline define:vars={{ chartPoints }}>
+      (function () {
+        var canvas = document.getElementById('priceChart');
+        if (!canvas) return;
         var ctx = canvas.getContext('2d');
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-        var line = cssVar('color', '#b45309');
-        var muted = cssVar('--muted', '#8493a8');
-        var font = '600 10px ui-monospace, "SF Mono", Menlo, monospace';
-        var pts = chartPoints;
-        var min = Infinity, max = -Infinity;
-        for (var i = 0; i < pts.length; i++) {
-          if (pts[i].price < min) min = pts[i].price;
-          if (pts[i].price > max) max = pts[i].price;
-        }
-        var flat = max === min;
-        var span = flat ? 1 : max - min;
-        var pad = 18, padL = 48, padR = 14;
-        function x(i) { return pts.length === 1 ? w / 2 : padL + (i * (w - padL - padR)) / (pts.length - 1); }
-        function y(v) { return flat ? h / 2 : h - pad - ((v - min) / span) * (h - 2 * pad); }
-        ctx.strokeStyle = muted;
-        ctx.lineWidth = 1;
-        ctx.setLineDash([2, 4]);
-        ctx.font = font;
-        ctx.fillStyle = muted;
-        var levels = flat ? [min] : [min, max];
-        for (var li = 0; li < levels.length; li++) {
-          var ly = y(levels[li]);
+        if (!ctx) return;
+
+        function render() {
+          var rect = canvas.getBoundingClientRect();
+          var dpr = window.devicePixelRatio || 1;
+          canvas.width = rect.width * dpr;
+          canvas.height = rect.height * dpr;
+          ctx.scale(dpr, dpr);
+
+          var W = rect.width;
+          var H = rect.height;
+          var padL = 60;
+          var padR = 20;
+          var padT = 20;
+          var padB = 30;
+
+          var prices = chartPoints.map(function (p) { return p.price; });
+          var minP = Math.min.apply(null, prices);
+          var maxP = Math.max.apply(null, prices);
+          var range = maxP - minP;
+          if (range === 0) range = 1;
+
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          var lineColor = isDark ? '#38bdf8' : '#2563eb';
+          var gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+          var textColor = isDark ? '#94a3b8' : '#71717a';
+
+          ctx.clearRect(0, 0, W, H);
+
+          // Grid lines
+          ctx.strokeStyle = gridColor;
+          ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(padL - 6, ly);
-          ctx.lineTo(w - padR + 6, ly);
+          for (var i = 0; i <= 3; i++) {
+            var y = padT + (H - padT - padB) * (i / 3);
+            ctx.moveTo(padL, y);
+            ctx.lineTo(W - padR, y);
+          }
           ctx.stroke();
-          ctx.textAlign = 'right';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(flat ? chartLabels.min : levels[li] === min ? chartLabels.min : chartLabels.max, padL - 10, ly);
-        }
-        ctx.setLineDash([]);
-        ctx.strokeStyle = line;
-        ctx.lineWidth = 2;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        for (var j = 0; j < pts.length; j++) {
-          if (j === 0) ctx.moveTo(x(j), y(pts[j].price));
-          else ctx.lineTo(x(j), y(pts[j].price));
-        }
-        ctx.stroke();
-        ctx.fillStyle = line;
-        for (var k = 0; k < pts.length; k++) {
+
+          // Price points
+          var coords = chartPoints.map(function (p, idx) {
+            var x = padL + (W - padL - padR) * (idx / (chartPoints.length - 1));
+            var y = padT + (H - padT - padB) * (1 - (p.price - minP) / range);
+            return { x: x, y: y, price: p.price, date: p.date };
+          });
+
+          // Draw curve
+          ctx.strokeStyle = lineColor;
+          ctx.lineWidth = 2.5;
+          ctx.lineJoin = 'round';
           ctx.beginPath();
-          ctx.arc(x(k), y(pts[k].price), 3, 0, Math.PI * 2);
+          coords.forEach(function (pt, idx) {
+            if (idx === 0) ctx.moveTo(pt.x, pt.y);
+            else ctx.lineTo(pt.x, pt.y);
+          });
+          ctx.stroke();
+
+          // Fill area
+          ctx.lineTo(coords[coords.length - 1].x, H - padB);
+          ctx.lineTo(coords[0].x, H - padB);
+          ctx.closePath();
+          var grad = ctx.createLinearGradient(0, padT, 0, H - padB);
+          grad.addColorStop(0, isDark ? 'rgba(56,189,248,0.22)' : 'rgba(37,99,235,0.14)');
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = grad;
           ctx.fill();
+
+          // Draw points
+          coords.forEach(function (pt) {
+            ctx.fillStyle = lineColor;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = isDark ? '#131a2c' : '#ffffff';
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          // Text labels
+          ctx.fillStyle = textColor;
+          ctx.font = '600 11px system-ui';
+          ctx.textAlign = 'right';
+          ctx.fillText(maxP.toFixed(2) + ' €', padL - 8, padT + 4);
+          ctx.fillText(minP.toFixed(2) + ' €', padL - 8, H - padB);
         }
-        if (isChollo && pts.length > 0) {
-          var lx = x(pts.length - 1);
-          var ly = y(pts[pts.length - 1].price);
-          ctx.beginPath();
-          ctx.arc(lx, ly, 6.5, 0, Math.PI * 2);
-          ctx.strokeStyle = line;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(lx, ly, 9.5, 0, Math.PI * 2);
-          ctx.globalAlpha = 0.45;
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
-        ctx.fillStyle = muted;
-        ctx.textBaseline = 'alphabetic';
-        ctx.font = font;
-        ctx.textAlign = 'left';
-        ctx.fillText(chartLabels.first, padL, h - 4);
-        ctx.textAlign = 'right';
-        ctx.fillText(chartLabels.last, w - padR, h - 4);
-      }
-      draw();
-      if (typeof MutationObserver !== 'undefined') {
-        new MutationObserver(draw).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme'],
-        });
-      }
-      var rt;
-      window.addEventListener('resize', function () {
-        clearTimeout(rt);
-        rt = setTimeout(draw, 100);
-      });
-    })();
-  </script>
+
+        render();
+        window.addEventListener('resize', render);
+      })();
+    </script>
+  )}
 </Base>

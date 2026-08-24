@@ -20,35 +20,35 @@ web
 
 ## Product Purpose
 
-**ORZA** es una terminal de inteligencia y seguimiento de precios para Amazon.es. Ofrece análisis cuantitativo de precios, registro histórico fechado, cálculo automático de mínimos históricos, alertas de chollos y redirección con afiliación para comprar al mejor precio posible.
+**ORZA** es una plataforma moderna de compras inteligentes, cazador de chollos y seguimiento de precios para Amazon.es. Permite encontrar el momento óptimo de compra en periféricos, teclados mecánicos, audio y descanso mediante seguimiento de precios reales, detección de mínimos históricos y redirección honesta de afiliados.
 
 ## Positioning
 
-Frente a blogs genéricos de afiliados y granjas de reseñas falsas, ORZA se posiciona como una **Terminal de Datos & Precisión**:
-1. **Datos Reales y Fechados**: Sin inventar precios ni descuentos; cada cotización proviene de un snapshot temporal registrado.
-2. **Cero Reseñas Falsas ni Relleno**: La interfaz presenta métricas duras (mínimo, máximo, media, delta de ahorro, evolución temporal).
-3. **Alta Utilidad y Velocidad**: Búsqueda instantánea en cliente, filtrado por categorías y acceso directo a las mejores cotizaciones de Amazon.es.
+Frente a blogs genéricos de afiliados con relleno y reseñas inventadas, ORZA se posiciona como una **Guía de Compras Inteligentes & Cazador de Chollos Reales**:
+1. **Datos Reales y Fechados**: Sin inventar precios ni rebajas ficticias; cada precio registrado proviene de un snapshot temporal real.
+2. **Criterio Técnico y Curación**: Selección cuidada de productos de alta demanda (teclados hot-swap, ratones ergonómicos, auriculares ANC, descanso).
+3. **Experiencia Visual Cuidada**: Diseño moderno, cálido, ágil y visualmente atractivo, pensado para invitar a la exploración y al ahorro.
 
 ## Operating Context
 
-- Mobile-first y desktop de alta densidad.
+- Mobile-first y desktop optimizado.
 - Mercado: Amazon.es (España).
 - Sin backend pesado ni base de datos de pago: datos versionados en JSON (`data/catalog.json` y `data/snapshots/`).
 - Avisos legales y de afiliación siempre presentes y conformes con la normativa de Amazon Associates.
 
 ## Capabilities and Constraints
 
-- **Seguimiento de Precios**: Cotizaciones históricas por producto con cálculo de mínimos, máximos, medias y variaciones porcentuales.
+- **Seguimiento de Precios**: Cotizaciones históricas por producto con cálculo de mínimos, máximos y variaciones porcentuales.
 - **Detección de Chollos**: Identificación automática de productos en mínimo histórico o con descuentos relevantes.
 - **Gráficas de Evolución**: Sparklines y curvas canvas con cotas numéricas y fechas de control.
-- **Buscador y Filtros**: Command palette rápida con atajos de teclado (`/`) y filtrado en vivo.
-- **Modo Claro y Oscuro Real**: Dos paletas contrastadas, sin tintes lavados.
+- **Buscador y Filtros**: Filtrado instantáneo por texto y por categorías en tiempo real.
+- **Modo Claro y Oscuro**: Dos temas cuidados y contrastados.
 
 ## Brand Commitments
 
-- **Nombre**: ORZA (firmeza de rumbo + corte a través del ruido del mercado hacia el mínimo de precio).
-- **Identidad**: Isotipo geométrico vectorial en SVG (monograma "O" con vector descendente de valor).
-- **Estilo Visual**: Terminal de Datos & Precisión (alta densidad, tipografía técnica, tablas con cotizaciones, estética moderna inspirada en Linear/Keepa).
+- **Nombre**: ORZA (rumbo firme hacia la mejor compra en Amazon.es).
+- **Identidad**: Isotipo geométrico en SVG combinando dirección y vector de ahorro en azul cobalto y ámbar cálido.
+- **Estilo Visual**: Tech Magazine & Curated Deal Hub (estética moderna, acogedora, con tarjetas visuales ricas, tipografía Outfit/Figtree y cero artificios vacíos).
 
 ## Evidence on Hand
 

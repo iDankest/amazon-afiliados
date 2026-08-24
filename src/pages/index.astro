@@ -9,100 +9,64 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : import.meta.env.BASE_URL + "/";
 const u = (p: string) => base + p.replace(/^\//, "");
 
-// Precalcular estadísticas
 const allProductsWithStats = products.map((p) => {
   const st = priceStats(p.id);
   const snaps = sortedSnapshots(p.id);
   return { p, st, snaps };
 });
 
-// Chollos y mínimos
 const deals = [...allProductsWithStats]
   .filter(({ st }) => st.count > 0 && (st.lastIsMin || st.discountPercent > 0))
   .sort((a, b) => b.st.discountPercent - a.st.discountPercent);
 
 const totalTracked = products.length;
 const totalDeals = deals.length;
-const maxSavings = deals.reduce((max, d) => {
-  if (d.st.max && d.st.last) {
-    const diff = d.st.max - d.st.last.price;
-    return diff > max ? diff : max;
-  }
-  return max;
-}, 0);
 ---
 
 <Base
-  title="ORZA // Terminal de Inteligencia de Precios en Amazon.es"
-  description="Terminal de datos y seguimiento de precios en Amazon.es. Detección cuantitativa de mínimos históricos, cálculo de ahorro y compras directas."
+  title="ORZA — Cazador de Precios, Chollos y Tops en Amazon.es"
+  description="Encuentra el momento óptimo de compra en Amazon.es. Seguimiento de precios reales en teclados, audio, periféricos y descanso."
 >
-  <!-- Terminal Hero -->
-  <section class="terminal-hero" aria-label="Terminal de Precios">
-    <div class="terminal-head">
-      <div class="terminal-status-beacon">
-        <span class="beacon-dot" aria-hidden="true"></span>
-        <span>EN VIVO · AMAZON.ES FEED</span>
-      </div>
-      <div class="terminal-time">ACTUALIZACIÓN CONTINUA</div>
+  <!-- Hero Showcase -->
+  <section class="hero-showcase" aria-label="Portal de Ofertas y Precios">
+    <div class="hero-tagline-wrap">
+      <span>Rastreador de Precios Amazon.es</span>
+      <span>·</span>
+      <span>{totalDeals} Chollos Detectados</span>
     </div>
 
-    <h1 class="terminal-title">Terminal de Precios y Cotizaciones en Amazon.es</h1>
-    <p class="terminal-desc">
-      Análisis cuantitativo de precios sin opiniones ficticias. Monitorizamos el historial de cotizaciones para que compres en el punto más bajo del mercado.
+    <h1 class="hero-headline">Las mejores compras de Amazon.es, cazadas a su precio real</h1>
+    <p class="hero-description">
+      Seguimos el historial de periféricos, teclados mecánicos, audio y descanso. Sin ofertas falsas ni porcentajes inflados: solo precios que de verdad merecen la pena.
     </p>
 
-    <!-- Ticker de Métricas de Mercado -->
-    <div class="ticker-grid">
-      <div class="ticker-cell">
-        <span class="ticker-label">En Mínimo Histórico</span>
-        <span class="ticker-val" style="color: var(--emerald);">{totalDeals}</span>
-        <span class="ticker-sub">Oportunidades activas</span>
-      </div>
-      <div class="ticker-cell">
-        <span class="ticker-label">Referencias Activas</span>
-        <span class="ticker-val">{totalTracked}</span>
-        <span class="ticker-sub">Catálogo verificado</span>
-      </div>
-      <div class="ticker-cell">
-        <span class="ticker-label">Ahorro Máximo</span>
-        <span class="ticker-val" style="color: var(--accent);">{fmtEur(maxSavings)}</span>
-        <span class="ticker-sub">Frente a picos históricos</span>
-      </div>
-      <div class="ticker-cell">
-        <span class="ticker-label">Tipo de Cotización</span>
-        <span class="ticker-val" style="font-size: 0.95rem; font-weight: 700; color: var(--ink-secondary);">SNAPSHOTS</span>
-        <span class="ticker-sub">Con fecha y ASIN</span>
-      </div>
-    </div>
-
-    <!-- Command Palette de Búsqueda -->
-    <div class="command-box" role="search">
-      <div class="command-input-wrap">
-        <svg class="command-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <!-- Search Box -->
+    <div class="search-container" role="search">
+      <div class="search-input-inner">
+        <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
         <input
           type="search"
           id="product-search"
-          class="command-input"
-          placeholder="Filtrar por producto, modelo o categoría (MX Master, Epomaker, ANC, Loop)..."
-          aria-label="Buscar en la terminal de precios"
+          class="search-field"
+          placeholder="Buscar producto, marca o categoría (MX Master, Epomaker, ANC, Loop, Antifaz)..."
+          aria-label="Buscar en el catálogo de ofertas"
         />
-        <kbd class="command-kbd" title="Presiona / para enfocar">/</kbd>
       </div>
-      <button type="button" id="search-action-btn" class="command-btn">
-        <span>Buscar</span>
+      <button type="button" id="search-action-btn" class="search-action-btn">
+        <span>Buscar Chollo</span>
       </button>
     </div>
 
-    <!-- Filtro de Categorías -->
-    <div class="filter-tabs" role="tablist" aria-label="Filtrar por categoría">
-      <button type="button" class="filter-tab active" data-cat="all">Todos ({totalTracked})</button>
-      <button type="button" class="filter-tab" data-cat="teclados">Teclados</button>
-      <button type="button" class="filter-tab" data-cat="perifericos">Periféricos & Setup</button>
-      <button type="button" class="filter-tab" data-cat="audio">Audio & ANC</button>
-      <button type="button" class="filter-tab" data-cat="descanso">Descanso & Salud</button>
+    <!-- Category Filter Tabs -->
+    <div class="quick-badges" role="tablist" aria-label="Filtrar por categoría">
+      <button type="button" class="quick-badge-btn active" data-cat="all">Todos ({totalTracked})</button>
+      <button type="button" class="quick-badge-btn" data-cat="teclados">Teclados Mecánicos</button>
+      <button type="button" class="quick-badge-btn" data-cat="perifericos">Periféricos & Setup</button>
+      <button type="button" class="quick-badge-btn" data-cat="audio">Audio & Auriculares</button>
+      <button type="button" class="quick-badge-btn" data-cat="descanso">Descanso & Salud</button>
     </div>
   </section>
 
@@ -110,51 +74,54 @@ const maxSavings = deals.reduce((max, d) => {
   <section id="chollos" aria-label="Chollos y Mínimos">
     <div class="section-header">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
           <polyline points="17 18 23 18 23 12"></polyline>
         </svg>
-        <span>Mínimos Históricos y Bajadas de Precio</span>
+        <span>Chollos y Mínimos Comprobados</span>
       </h2>
-      <a class="section-link" href={u("registro/")}>Base de datos completa →</a>
+      <a class="section-link" href={u("registro/")}>
+        <span>Ver base completa de precios</span>
+        <span aria-hidden="true">→</span>
+      </a>
     </div>
 
-    <div class="terminal-grid" id="deals-grid">
+    <div class="cards-grid" id="deals-grid">
       {deals.map(({ p, st, snaps }) => (
-        <article class="terminal-card" data-category={p.category} data-title={p.title.toLowerCase()}>
+        <article class="deal-card" data-category={p.category} data-title={p.title.toLowerCase()}>
           <div>
-            <div class="card-meta-row">
-              <span class="cat-tag">{categoryLabel[p.category]}</span>
-              <span class={`status-badge ${st.lastIsMin ? "historic" : ""}`}>
-                {st.lastIsMin ? "MÍNIMO HISTÓRICO" : `-${st.discountPercent}% DESCUENTO`}
+            <div class="card-top-row">
+              <span class="category-pill">{categoryLabel[p.category]}</span>
+              <span class={`discount-tag ${st.lastIsMin ? "historic" : ""}`}>
+                {st.lastIsMin ? "MÍNIMO HISTÓRICO" : `-${st.discountPercent}% REBAJA`}
               </span>
             </div>
 
-            <h3 class="card-title">
+            <h3 class="product-name">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>
             </h3>
 
-            <p class="card-notes">{p.notes}</p>
+            <p class="product-snippet">{p.notes}</p>
           </div>
 
           <div>
-            <div class="price-display">
-              <div class="price-main-line">
-                <span class="price-now">{fmtEur(st.last!.price)}</span>
+            <div class="price-box">
+              <div class="price-top-line">
+                <span class="price-main">{fmtEur(st.last!.price)}</span>
                 {st.max && st.max > st.last!.price && (
-                  <span class="price-was">{fmtEur(st.max)}</span>
+                  <span class="price-crossed">{fmtEur(st.max)}</span>
                 )}
               </div>
-              <div class="price-sub-line">
+              <div class="price-bottom-line">
                 <span>{st.lastSeenLabel}</span>
                 {st.max && st.max > st.last!.price && (
-                  <span class="price-delta">Ahorras {fmtEur(st.max - st.last!.price)}</span>
+                  <span class="savings-highlight">Ahorras {fmtEur(st.max - st.last!.price)}</span>
                 )}
               </div>
             </div>
 
             {snaps.length >= 2 && (
-              <div style="margin-bottom: 0.85rem;">
+              <div style="margin-bottom: 1rem;">
                 <Sparkline
                   values={snaps.map((s) => s.price)}
                   label={`Evolución de ${p.title}`}
@@ -162,16 +129,16 @@ const maxSavings = deals.reduce((max, d) => {
               </div>
             )}
 
-            <div class="card-actions">
-              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-terminal-buy">
+            <div class="card-buttons">
+              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy-amazon">
                 <span>Comprar en Amazon.es</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
               </AmazonLink>
-              <a href={u(`p/${p.id}/`)} class="btn-terminal-details">
-                Análisis de precio ({st.count} snapshots) →
+              <a href={u(`p/${p.id}/`)} class="btn-view-analysis">
+                Ver historial de precios ({st.count} comprobaciones) →
               </a>
             </div>
           </div>
@@ -180,16 +147,17 @@ const maxSavings = deals.reduce((max, d) => {
     </div>
   </section>
 
-  <!-- Spotlight Callout -->
-  <section class="spotlight-box" aria-label="Cotización Destacada">
-    <div class="spotlight-info">
-      <h3 class="spotlight-heading">Logitech MX Master 3S en Cotización Mínima</h3>
-      <p class="spotlight-text">
-        El estándar en ergonomía y precisión de Logitech se encuentra actualmente en su cotización más baja registrada.
+  <!-- Chollo Destacado Spotlight -->
+  <section class="spotlight-banner" aria-label="Chollo Destacado">
+    <div class="spotlight-text-col">
+      <span class="discount-tag historic" style="margin-bottom: 0.5rem; display: inline-block;">DESTACADO DE LA SEMANA</span>
+      <h3 class="spotlight-title">Logitech MX Master 3S en Mínimo Registrado</h3>
+      <p class="spotlight-desc">
+        El ratón de productividad de referencia para programadores y creadores ha tocado su cotización más baja en Amazon.es. Silencioso, rueda MagSpeed electromagnética y batería de hasta 70 días.
       </p>
     </div>
-    <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="btn-terminal-buy" style="padding: 0.65rem 1.25rem;">
-      <span>Ver cotización en Amazon.es →</span>
+    <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="btn-buy-amazon" style="padding: 0.75rem 1.5rem; font-size: 0.9rem;">
+      <span>Ver en Amazon.es →</span>
     </AmazonLink>
   </section>
 
@@ -197,41 +165,38 @@ const maxSavings = deals.reduce((max, d) => {
   <section id="tops" aria-label="Catálogo Monitoreado">
     <div class="section-header">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="3" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-          <rect x="3" y="14" width="7" height="7"></rect>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
-        <span>Todos los Productos en Seguimiento</span>
+        <span>Todos los Productos Recomendados</span>
       </h2>
     </div>
 
-    <div class="terminal-grid" id="catalog-grid">
+    <div class="cards-grid" id="catalog-grid">
       {allProductsWithStats.map(({ p, st }) => (
-        <article class="terminal-card" data-category={p.category} data-title={p.title.toLowerCase()}>
+        <article class="deal-card" data-category={p.category} data-title={p.title.toLowerCase()}>
           <div>
-            <div class="card-meta-row">
-              <span class="cat-tag">{categoryLabel[p.category]}</span>
-              {p.badge && <span class="status-badge">{p.badge}</span>}
+            <div class="card-top-row">
+              <span class="category-pill">{categoryLabel[p.category]}</span>
+              {p.badge && <span class="discount-tag">{p.badge}</span>}
             </div>
 
-            <h3 class="card-title">
+            <h3 class="product-name">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>
             </h3>
 
-            <p class="card-notes">{p.notes}</p>
+            <p class="product-snippet">{p.notes}</p>
           </div>
 
           <div>
-            <div class="price-display">
-              <div class="price-main-line">
-                <span class="price-now">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
+            <div class="price-box">
+              <div class="price-top-line">
+                <span class="price-main">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
                 {st.count >= 2 && (
-                  <span class="price-was">{fmtEur(st.max!)}</span>
+                  <span class="price-crossed">{fmtEur(st.max!)}</span>
                 )}
               </div>
-              <div class="price-sub-line">
+              <div class="price-bottom-line">
                 <span>{st.lastSeenLabel}</span>
                 {st.count >= 2 && (
                   <span>Rango: {fmtEur(st.min!)} – {fmtEur(st.max!)}</span>
@@ -239,16 +204,16 @@ const maxSavings = deals.reduce((max, d) => {
               </div>
             </div>
 
-            <div class="card-actions">
-              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-terminal-buy">
+            <div class="card-buttons">
+              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy-amazon">
                 <span>Comprar en Amazon.es</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
               </AmazonLink>
-              <a href={u(`p/${p.id}/`)} class="btn-terminal-details">
-                Ver gráfica e histórico ({st.count} registros) →
+              <a href={u(`p/${p.id}/`)} class="btn-view-analysis">
+                Analizar gráfica e histórico ({st.count} comprobaciones) →
               </a>
             </div>
           </div>
@@ -257,49 +222,74 @@ const maxSavings = deals.reduce((max, d) => {
     </div>
   </section>
 
-  <!-- Buscador Directo de Categorías en Amazon -->
-  <section id="buscador" aria-label="Búsqueda Directa" style="margin-top: 3rem;">
+  <!-- Franja de Confianza / Por qué Orza -->
+  <section class="trust-grid" aria-label="Por qué comprar con Orza">
+    <div class="trust-card">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 class="trust-title">Datos Reales y Fechados</h3>
+      <p class="trust-desc">No inventamos descuentos ni reseñas. Cada precio registrado proviene de un snapshot temporal con fecha y ASIN comprobado.</p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+      </div>
+      <h3 class="trust-title">Alertas de Mínimos Reales</h3>
+      <p class="trust-desc">Calculamos cuándo un producto está verdaderamente barato frente a su historial para que compres en el mejor momento.</p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h3 class="trust-title">Compra Directa y Transparente</h3>
+      <p class="trust-desc">Enlaces directos a Amazon.es bajo el Programa de Afiliados oficial, sin sobrecostes ni suscripciones para ti.</p>
+    </div>
+  </section>
+
+  <!-- Accesos Directos a Amazon.es -->
+  <section id="buscador" aria-label="Búsqueda Directa" style="margin-top: 3.5rem;">
     <div class="section-header">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <span>Accesos Directos a Amazon.es</span>
+        <span>Lanzador de Búsquedas en Amazon.es</span>
       </h2>
     </div>
 
-    <div class="terminal-grid" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));">
-      <div class="terminal-card" style="gap: 0.5rem;">
-        <span class="cat-tag">Categoría</span>
-        <h3 class="card-title">Teclados Mecánicos Hot-Swap</h3>
-        <p class="card-notes">Switches mecánicos, formatos 60%, 75% y TKL.</p>
-        <AmazonLink query="teclados mecanicos hot swap espana" class="btn-terminal-buy">
-          <span>Buscar en Amazon →</span>
+    <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="deal-card" style="gap: 0.65rem;">
+        <span class="category-pill">Explorar</span>
+        <h3 class="product-name">Teclados Mecánicos Hot-Swap</h3>
+        <p class="product-snippet">Switches lineales, táctiles o clicky en formato 60%, 75% y TKL.</p>
+        <AmazonLink query="teclados mecanicos hot swap espana" class="btn-buy-amazon">
+          <span>Ver Teclados en Amazon →</span>
         </AmazonLink>
       </div>
-      <div class="terminal-card" style="gap: 0.5rem;">
-        <span class="cat-tag">Categoría</span>
-        <h3 class="card-title">Auriculares Cancelación Ruido</h3>
-        <p class="card-notes">Modelos inalámbricos con tecnología ANC.</p>
-        <AmazonLink query="auriculares cancelacion ruido anc" class="btn-terminal-buy">
-          <span>Buscar en Amazon →</span>
+      <div class="deal-card" style="gap: 0.65rem;">
+        <span class="category-pill">Explorar</span>
+        <h3 class="product-name">Auriculares Inalámbricos ANC</h3>
+        <p class="product-snippet">Aislamiento acústico activo para trabajar y viajar en silencio.</p>
+        <AmazonLink query="auriculares cancelacion ruido anc" class="btn-buy-amazon">
+          <span>Ver Auriculares en Amazon →</span>
         </AmazonLink>
       </div>
-      <div class="terminal-card" style="gap: 0.5rem;">
-        <span class="cat-tag">Categoría</span>
-        <h3 class="card-title">Ergonomía & Setup</h3>
-        <p class="card-notes">Brazos para monitor y periféricos de productividad.</p>
-        <AmazonLink query="ergonomia setup escritorio brazo monitor" class="btn-terminal-buy">
-          <span>Buscar en Amazon →</span>
+      <div class="deal-card" style="gap: 0.65rem;">
+        <span class="category-pill">Explorar</span>
+        <h3 class="product-name">Ergonomía & Setup de Escritorio</h3>
+        <p class="product-snippet">Brazos de gas para monitor, ratones verticales y alfombrillas deskmat.</p>
+        <AmazonLink query="ergonomia setup escritorio brazo monitor" class="btn-buy-amazon">
+          <span>Ver Ergonomía en Amazon →</span>
         </AmazonLink>
       </div>
-      <div class="terminal-card" style="gap: 0.5rem;">
-        <span class="cat-tag">Categoría</span>
-        <h3 class="card-title">Descanso & Aislamiento</h3>
-        <p class="card-notes">Tapones con filtro acústico y antifaces opacos 3D.</p>
-        <AmazonLink query="tapones oido dormir antifaz 3d" class="btn-terminal-buy">
-          <span>Buscar en Amazon →</span>
+      <div class="deal-card" style="gap: 0.65rem;">
+        <span class="category-pill">Explorar</span>
+        <h3 class="product-name">Descanso & Aislamiento Nocturno</h3>
+        <p class="product-snippet">Antifaces cóncavos 3D de bloqueo total y tapones acústicos para dormir.</p>
+        <AmazonLink query="tapones oido dormir antifaz 3d" class="btn-buy-amazon">
+          <span>Ver Descanso en Amazon →</span>
         </AmazonLink>
       </div>
     </div>
@@ -310,8 +300,8 @@ const maxSavings = deals.reduce((max, d) => {
     (function () {
       const searchInput = document.getElementById("product-search");
       const searchBtn = document.getElementById("search-action-btn");
-      const catBtns = document.querySelectorAll(".filter-tab");
-      const cards = document.querySelectorAll("#catalog-grid .terminal-card, #deals-grid .terminal-card");
+      const catBtns = document.querySelectorAll(".quick-badge-btn");
+      const cards = document.querySelectorAll("#catalog-grid .deal-card, #deals-grid .deal-card");
 
       let currentCat = "all";
       let searchQuery = "";
@@ -336,13 +326,6 @@ const maxSavings = deals.reduce((max, d) => {
         searchInput.addEventListener("input", (e) => {
           searchQuery = (e.target.value || "").trim().toLowerCase();
           filterCards();
-        });
-
-        window.addEventListener("keydown", (e) => {
-          if (e.key === "/" && document.activeElement !== searchInput) {
-            e.preventDefault();
-            searchInput.focus();
-          }
         });
       }
 

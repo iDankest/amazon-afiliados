@@ -5,7 +5,7 @@ interface Props {
 }
 
 const { size = "md", showTagline = true } = Astro.props;
-const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
+const iconSize = size === "sm" ? 24 : size === "lg" ? 36 : 28;
 ---
 
 <div class={`brand-logo size-${size}`}>
@@ -18,36 +18,29 @@ const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <!-- Outer Precision Geometry Ring -->
+    <!-- Geometric Badge Contour -->
     <rect x="2" y="2" width="28" height="28" rx="8" class="logo-bg" />
+    <!-- Dynamic Direction Apex / Price Vector -->
     <path
-      d="M16 6V11"
+      d="M9 13.5L16 20.5L23 13.5"
       stroke="currentColor"
-      stroke-width="2"
+      stroke-width="2.75"
       stroke-linecap="round"
-      class="logo-accent"
+      stroke-linejoin="round"
+      class="logo-vector-main"
     />
-    <!-- Precision Chevron / Downward Value Vector -->
     <path
-      d="M10 13L16 19L22 13"
+      d="M16 6.5V11"
       stroke="currentColor"
       stroke-width="2.5"
       stroke-linecap="round"
-      stroke-linejoin="round"
-      class="logo-primary"
+      class="logo-vector-accent"
     />
-    <path
-      d="M12 21L16 25L20 21"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="logo-accent"
-    />
+    <circle cx="16" cy="24" r="1.5" class="logo-dot" fill="currentColor" />
   </svg>
   <div class="brand-text">
     <span class="brand-name">ORZA</span>
-    {showTagline && <span class="brand-tag">PRICE TRACKER</span>}
+    {showTagline && <span class="brand-tag">OFERTAS & PRECIOS</span>}
   </div>
 </div>
 
@@ -55,18 +48,18 @@ const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
   .brand-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
     text-decoration: none;
     user-select: none;
   }
 
   .brand-icon {
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .brand-logo:hover .brand-icon {
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.04);
   }
 
   .logo-bg {
@@ -75,12 +68,16 @@ const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
     stroke-width: 1.5;
   }
 
-  .logo-primary {
-    stroke: var(--ink);
+  .logo-vector-main {
+    stroke: var(--accent);
   }
 
-  .logo-accent {
-    stroke: var(--accent);
+  .logo-vector-accent {
+    stroke: var(--amber);
+  }
+
+  .logo-dot {
+    color: var(--emerald);
   }
 
   .brand-text {
@@ -92,31 +89,31 @@ const iconSize = size === "sm" ? 22 : size === "lg" ? 34 : 26;
   .brand-name {
     font-family: "Outfit", system-ui, sans-serif;
     font-weight: 800;
-    font-size: 1.35rem;
+    font-size: 1.4rem;
     letter-spacing: -0.03em;
     color: var(--ink);
     line-height: 1;
   }
 
   .brand-tag {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-family: "Outfit", system-ui, sans-serif;
     font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
+    font-weight: 800;
+    letter-spacing: 0.05em;
     color: var(--accent);
-    background: var(--card-alt);
-    border: 1px solid var(--line);
+    background: var(--accent-subtle);
+    border: 1px solid var(--banner-line);
     border-radius: 4px;
-    padding: 0.12rem 0.4rem;
+    padding: 0.15rem 0.45rem;
     line-height: 1;
     text-transform: uppercase;
   }
 
   .size-sm .brand-name {
-    font-size: 1.08rem;
+    font-size: 1.15rem;
   }
 
   .size-lg .brand-name {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
 </style>
