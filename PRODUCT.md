@@ -8,65 +8,63 @@ web
 
 ## Stack
 
-**Astro** (static HTML per ficha, SEO). Not Nuxt (that stays on the Medusa store). Affiliate tag in env/`js` config. Marketplace Amazon.es only.
-
-Small **worker** (not a shop backend): appends price snapshots (manual CLI now; Amazon PA-API later if Associates keys work). Public site stays static. Optional Docker on the existing Ubuntu Minecraft host, **separate** compose, never Medusa/`5433`.
+- **Framework**: Astro (generación estática de alta velocidad, SEO optimizado para Amazon.es).
+- **Hosting**: GitHub Pages (0€ coste de infraestructura).
+- **Monetización**: Amazon Associates EU (tags legales `data-amazon`, `rel="nofollow sponsored"`), espacios publicitarios limpios.
 
 ## Users
 
-Primary: someone in Spain (including Canarias) on a phone, about to buy on Amazon.es. Two jobs:
-
-1. Search arrival (`antifaz para dormir`, `teclado mecánico`, etc.): read a short guide, then leave to Amazon.
-2. Return visitor who trusts Kilian's taste, especially keyboards.
-
-Not a store customer of a first-party shop. Not a gamer looking for a WARDOGS/Tarkov wiki.
+- Compradores en España (y Canarias) que buscan tecnología, periféricos, audio, ergonomía y productos de descanso en Amazon.es.
+- Usuarios que quieren saber el momento óptimo de compra: si un producto está en su mínimo histórico, si tiene una rebaja real o si el precio está inflado.
+- Perfil que valora la densidad de datos, la velocidad y la ausencia de texto de relleno o reseñas falsas.
 
 ## Product Purpose
 
-Amazon Associates site with **categories**, buying **guides**, **featured products**, short **tops**, and **weekly deals**. Success is qualified clicks to Amazon.es that can convert inside Amazon's cookie window, without fake reviews. Operational gate: three qualifying sales in 180 days or Amazon closes the account.
+**ORZA** es una terminal de inteligencia y seguimiento de precios para Amazon.es. Ofrece análisis cuantitativo de precios, registro histórico fechado, cálculo automático de mínimos históricos, alertas de chollos y redirección con afiliación para comprar al mejor precio posible.
 
 ## Positioning
 
-Category SEO **and** honesty in front. Farms can copy tops and “deals of the week”. They cannot copy Kilian's real taste (keyboards he loves, sleep he lives) plus a visible **“no lo he probado”** label. Never a top or discount without a source.
+Frente a blogs genéricos de afiliados y granjas de reseñas falsas, ORZA se posiciona como una **Terminal de Datos & Precisión**:
+1. **Datos Reales y Fechados**: Sin inventar precios ni descuentos; cada cotización proviene de un snapshot temporal registrado.
+2. **Cero Reseñas Falsas ni Relleno**: La interfaz presenta métricas duras (mínimo, máximo, media, delta de ahorro, evolución temporal).
+3. **Alta Utilidad y Velocidad**: Búsqueda instantánea en cliente, filtrado por categorías y acceso directo a las mejores cotizaciones de Amazon.es.
 
 ## Operating Context
 
-- 0€ hosting: GitHub Pages (`iDankest/orza`).
-- Spanish copy. Mobile first.
-- Affiliate disclosure on every page. Tag may be empty; links still go to Amazon.es without commission until Associates issues a tag.
-- Sleep-mask videos (0€) can send traffic here later. No first-party checkout. No Steam/game wiki.
+- Mobile-first y desktop de alta densidad.
+- Mercado: Amazon.es (España).
+- Sin backend pesado ni base de datos de pago: datos versionados en JSON (`data/catalog.json` y `data/snapshots/`).
+- Avisos legales y de afiliación siempre presentes y conformes con la normativa de Amazon Associates.
 
 ## Capabilities and Constraints
 
-- Categories start with **descanso** (antifaz, tapones) and **teclados**; more categories only when there is a reason, not a blank farm.
-- Guides, productos estrella, listas cortas (tops), descuentos de la semana — the last two require a source (Amazon listing, public price). No invented star ratings.
-- **Price registry:** each product has dated snapshots. The page may show a euro amount only from a snapshot. If the last snapshot is older than 7 days, label it “visto el {fecha}”, never “precio actual”. No snapshots → no fake price. Sparkline + min/max when 2+ points exist. Weekly deals only if a snapshot hits a recent minimum. Seed without inventing ASINs.
-- Binding visual constraint (user): **real dark mode and real light mode**, not a tint.
-- No medical claims. No fabricated testimonials. No clicking own affiliate links.
-- Not Medusa, not dropshipping storefront, not WARDOGS wiki.
-
-Undecided: Associates tag (user has an old account — confirm if still open), PA-API eligibility (likely needs recent sales), extra categories beyond sleep and keyboards.
+- **Seguimiento de Precios**: Cotizaciones históricas por producto con cálculo de mínimos, máximos, medias y variaciones porcentuales.
+- **Detección de Chollos**: Identificación automática de productos en mínimo histórico o con descuentos relevantes.
+- **Gráficas de Evolución**: Sparklines y curvas canvas con cotas numéricas y fechas de control.
+- **Buscador y Filtros**: Command palette rápida con atajos de teclado (`/`) y filtrado en vivo.
+- **Modo Claro y Oscuro Real**: Dos paletas contrastadas, sin tintes lavados.
 
 ## Brand Commitments
 
-Site name: **Orza**. Spanish. Target domain: `orza.es` (unconfirmed availability). Dark + light themes are a product constraint, not a later aesthetic whim. Retired titles: “Oscuro y quieto”, “Antes del clic”. “Antes del clic” may remain a line of copy, never the brand.
+- **Nombre**: ORZA (firmeza de rumbo + corte a través del ruido del mercado hacia el mínimo de precio).
+- **Identidad**: Isotipo geométrico vectorial en SVG (monograma "O" con vector descendente de valor).
+- **Estilo Visual**: Terminal de Datos & Precisión (alta densidad, tipografía técnica, tablas con cotizaciones, estética moderna inspirada en Linear/Keepa).
 
 ## Evidence on Hand
 
-- Public Amazon.es price bands for sleep kits (generics ~6–12€, Loop Quiet ~25€). Not lab-tested SKUs.
-- Founder uses a sleep mask daily; that mask is **not** confirmed as a listed Amazon product.
-- No keyboard reviews or photos on hand yet. Do not invent them.
-- No weekly deal feed. Do not invent discounts.
-- Paths: `index.html`, `guias/*.html`, `js/config.js`, `aviso-afiliados.html`.
+- Catálogo estructurado de productos en `data/catalog.json`.
+- Snapshots fechados en `data/snapshots/*.json`.
+- Rutas públicas: `/`, `/p/[id]/`, `/registro/`, `/guias/ofertas-semana/`, `/sobre/`, `/aviso-afiliados/`.
 
 ## Product Principles
 
-1. Honesty before ranking: untested stays labeled.
-2. Short lists beat fake top-50s.
-3. Every top or deal cites a source.
-4. Founder taste is the edge; absence of experience is stated, not filled.
-5. Stay on Amazon.es, 0€ ops, disclosure always on.
+1. **Datos sobre Relleno**: Cada elemento en pantalla informa o ayuda a decidir; cero texto decorativo.
+2. **Precisión sin Falsedades**: Si un producto no tiene histórico en mínimo, no se finge la oferta.
+3. **Velocidad y Densidad**: Interfaz rápida, escaneable y con alta densidad de información útil.
+4. **Transparencia Total**: Enlaces claros a Amazon.es con atribución legal y aviso de comisiones.
 
 ## Accessibility & Inclusion
 
-Mobile-first. Both themes must remain readable. Keyboard navigation and real labels on controls. WCAG AA was not adopted as a formal bar in init.
+- Contraste AA verificado en temas Claro y Oscuro.
+- Navegación completa por teclado con indicadores de foco visibles.
+- Semántica HTML limpia y textos legibles en mobile y desktop.

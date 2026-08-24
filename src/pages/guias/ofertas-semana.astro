@@ -35,59 +35,61 @@ const deals = products
       <p class="empty-state-text">Aquí solo se listan productos con bajadas comprobadas frente a su histórico registrado.</p>
     </div>
   ) : (
-    <div class="products-grid">
+    <div class="terminal-grid">
       {deals.map(({ p, st, snaps }) => (
-        <article class="product-card">
-          <div class="product-card-top">
-            <span class="product-cat">{categoryLabel[p.category]}</span>
-            <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
-              {st.lastIsMin ? 'MÍNIMO HISTÓRICO' : `-${st.discountPercent}% DESCUENTO`}
-            </span>
+        <article class="terminal-card">
+          <div>
+            <div class="card-meta-row">
+              <span class="cat-tag">{categoryLabel[p.category]}</span>
+              <span class={`status-badge ${st.lastIsMin ? 'historic' : ''}`}>
+                {st.lastIsMin ? 'MÍNIMO HISTÓRICO' : `-${st.discountPercent}% DESCUENTO`}
+              </span>
+            </div>
+
+            <h3 class="card-title">
+              <a href={u(`p/${p.id}/`)}>{p.title}</a>
+            </h3>
+
+            <p class="card-notes">{p.notes}</p>
           </div>
 
-          <h3 class="product-title">
-            <a href={u(`p/${p.id}/`)}>{p.title}</a>
-          </h3>
-
-          <p class="product-desc">{p.notes}</p>
-
-          <div class="price-block">
-            <div class="price-row">
-              <span class="price-current">{fmtEur(st.last!.price)}</span>
-              {st.max && st.max > st.last!.price && (
-                <span class="price-prev">{fmtEur(st.max)}</span>
-              )}
+          <div>
+            <div class="price-display">
+              <div class="price-main-line">
+                <span class="price-now">{fmtEur(st.last!.price)}</span>
+                {st.max && st.max > st.last!.price && (
+                  <span class="price-was">{fmtEur(st.max)}</span>
+                )}
+              </div>
+              <div class="price-sub-line">
+                <span>{st.lastSeenLabel}</span>
+                {st.max && st.max > st.last!.price && (
+                  <span class="price-delta">Ahorras {fmtEur(st.max - st.last!.price)}</span>
+                )}
+              </div>
             </div>
-            <div class="price-meta">
-              <span>{st.lastSeenLabel}</span>
-              {st.max && st.max > st.last!.price && (
-                <span style="color: var(--emerald); font-weight: 700;">
-                  Ahorras {fmtEur(st.max - st.last!.price)}
-                </span>
-              )}
-            </div>
-          </div>
 
-          {snaps.length >= 2 && (
-            <div style="margin-bottom: 0.85rem;">
-              <Sparkline
-                values={snaps.map((s) => s.price)}
-                label={`Evolución de ${p.title}`}
-              />
-            </div>
-          )}
+            {snaps.length >= 2 && (
+              <div style="margin-bottom: 0.85rem;">
+                <Sparkline
+                  values={snaps.map((s) => s.price)}
+                  label={`Evolución de ${p.title}`}
+                />
+              </div>
+            )}
 
-          <div class="product-actions">
-            <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy">
-              <span>Comprar en Amazon.es</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </AmazonLink>
-            <a href={u(`p/${p.id}/`)} class="btn-details">
-              Ver histórico y gráfica ({st.count} registros)
-            </a>
+            <div class="card-actions">
+              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-terminal-buy">
+                <span>Comprar en Amazon.es</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </AmazonLink>
+              <a href={u(`p/${p.id}/`)} class="btn-terminal-details">
+                Ver histórico y gráfica ({st.count} registros) →
+              </a>
+            </div>
           </div>
         </article>
       ))}

@@ -50,64 +50,75 @@ const deltaLabel = (d: number | null) =>
   <article class="sheet">
     <header class="sheet-head">
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
-        <span class="product-cat">{categoryLabel[product.category]}</span>
-        <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
+        <span class="cat-tag">{categoryLabel[product.category]}</span>
+        <span class={`status-badge ${st.lastIsMin ? 'historic' : ''}`}>
           {st.lastIsMin ? 'MÍNIMO HISTÓRICO' : st.statusBadge}
         </span>
       </div>
-      <h1 style="margin: 0 0 0.65rem;">{product.title}</h1>
+      <h1 class="sheet-title">{product.title}</h1>
       <p class="sheet-notes">{product.notes}</p>
     </header>
 
     <!-- Bloque de Métricas y Precio -->
-    <section class="sheet-block" aria-label="Análisis de precio actual">
-      <h2>Estado Actual del Precio</h2>
+    <section aria-label="Análisis de precio actual">
+      <h2>Métricas de Cotización</h2>
       {st.count === 0 ? (
-        <div class="empty-state">
-          <p class="empty-state-title">A la espera de primeras anotaciones</p>
-          <p class="empty-state-text">Este producto está en lista de seguimiento. En cuanto se registre la primera comprobación, aparecerá la gráfica y su rango.</p>
+        <div style="padding: 1.5rem 0; color: var(--muted);">
+          <p>A la espera de primeras anotaciones de precio para este producto.</p>
         </div>
       ) : (
         <>
-          <div class="sheet-stats" role="group" aria-label="Métricas del precio">
-            <div class="sheet-stat">
-              <span class="sheet-stat-label">Precio Registrado</span>
-              <span class="sheet-stat-value" style="font-size: 1.35rem; color: var(--ink);">
+          <div class="sheet-metrics" role="group" aria-label="Métricas del precio">
+            <div class="sheet-metric-card">
+              <span class="metric-title">Cotización Registrada</span>
+              <span class="metric-num" style="color: var(--ink);">
                 {fmtEur(st.last!.price)}
               </span>
-              <span style="font-size: 0.75rem; color: var(--muted);">{st.lastSeenLabel}</span>
+              <span class="metric-caption">{st.lastSeenLabel}</span>
             </div>
-            <div class="sheet-stat">
-              <span class="sheet-stat-label">Mínimo Histórico</span>
-              <span class="sheet-stat-value" style="color: var(--emerald);">
+            <div class="sheet-metric-card">
+              <span class="metric-title">Mínimo Histórico</span>
+              <span class="metric-num" style="color: var(--emerald);">
                 {fmtEur(st.min!)}
               </span>
-              <span style="font-size: 0.75rem; color: var(--muted);">
-                {st.lastIsMin ? '¡En mínimo ahora!' : `Máx: ${fmtEur(st.max!)}`}
+              <span class="metric-caption">
+                {st.lastIsMin ? 'Mínimo activo' : `Máx: ${fmtEur(st.max!)}`}
               </span>
             </div>
-            <div class="sheet-stat">
-              <span class="sheet-stat-label">Ahorro Estimado</span>
-              <span class="sheet-stat-value" style="color: var(--accent);">
+            <div class="sheet-metric-card">
+              <span class="metric-title">Máximo Visto</span>
+              <span class="metric-num" style="color: var(--muted);">
+                {st.max ? fmtEur(st.max) : '—'}
+              </span>
+              <span class="metric-caption">Pico registrado</span>
+            </div>
+            <div class="sheet-metric-card">
+              <span class="metric-title">Ahorro Detectado</span>
+              <span class="metric-num" style="color: var(--accent);">
                 {st.max && st.max > st.last!.price ? fmtEur(st.max - st.last!.price) : '0,00 €'}
               </span>
-              <span style="font-size: 0.75rem; color: var(--muted);">
-                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máximo` : 'Precio base'}
+              <span class="metric-caption">
+                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máx` : 'Cotización base'}
               </span>
             </div>
           </div>
 
           <!-- Botón de Compra Directa Primario -->
-          <div style="margin: 1.5rem 0;">
-            <AmazonLink asin={product.asin} query={product.amazonQuery} class="btn-buy" style="font-size: 1.05rem; padding: 0.85rem 1.6rem; width: 100%;">
+          <div style="margin: 1.5rem 0 2rem;">
+            <AmazonLink
+              asin={product.asin}
+              query={product.amazonQuery}
+              class="btn-terminal-buy"
+              style="font-size: 1rem; padding: 0.85rem 1.6rem; width: 100%;"
+            >
               <span>Ver Oferta y Comprar en Amazon.es</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </AmazonLink>
-            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.4rem 0 0; text-align: center;">
-              Enlace con atribución de afiliado a Amazon.es · Sin coste adicional para ti
+            <p style="font-size: 0.75rem; color: var(--muted); margin: 0.45rem 0 0; text-align: center;">
+              Enlace con atribución de afiliado a Amazon.es · Sin ningún sobrecoste para ti
             </p>
           </div>
         </>
@@ -270,159 +281,3 @@ const deltaLabel = (d: number | null) =>
     })();
   </script>
 </Base>
-
-<style>
-  .sheet {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: var(--shadow-subtle);
-    padding: 1.6rem 1.6rem 1.75rem;
-  }
-
-  
-
-  .sheet-head h1 {
-    margin-bottom: 0.6rem;
-  }
-
-  .sheet-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 0 0 0.75rem;
-  }
-
-  .sheet-notes {
-    color: var(--muted);
-    margin: 0;
-  }
-
-  .sheet-block {
-    border-top: 1px solid var(--line-subtle);
-    margin-top: 1.6rem;
-    padding-top: 1.2rem;
-  }
-
-  .sheet-block h2 {
-    margin: 0 0 0.75rem;
-  }
-
-  .sheet-last {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: clamp(1.9rem, 6vw, 2.6rem);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    margin: 0 0 0.3rem;
-  }
-
-  .sheet-last.is-recent {
-    color: var(--ink);
-  }
-
-  .sheet-last.is-stale {
-    color: var(--muted);
-  }
-
-  .sheet-last-date {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin: 0 0 1rem;
-  }
-
-  .sheet-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--card-alt);
-    margin: 0.25rem 0 0;
-  }
-
-  .sheet-stat {
-    padding: 0.75rem 0.9rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .sheet-stat + .sheet-stat {
-    border-left: 1px solid var(--line);
-  }
-
-  .sheet-stat-label {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .sheet-stat-value {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 1.05rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: var(--ink);
-  }
-
-  .sheet-axis {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    margin: 0.5rem 0 0;
-  }
-
-  .sheet-tablewrap {
-    overflow-x: auto;
-  }
-
-  table.sheet-lines th {
-    border-bottom: 1px solid var(--line);
-  }
-
-  table.sheet-lines tbody tr:last-child td {
-    border-bottom: 1px solid var(--line-subtle);
-  }
-
-  .lines-no {
-    color: var(--muted);
-    font-size: 0.78rem;
-  }
-
-  .lines-delta.is-up {
-    color: var(--accent);
-  }
-
-  .lines-delta.is-down {
-    color: var(--beacon);
-  }
-
-  .lines-delta.is-flat {
-    color: var(--muted);
-  }
-
-  .sheet-note {
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-
-  @media (max-width: 560px) {
-    .sheet {
-      padding: 1.25rem 1.1rem 1.4rem;
-    }
-
-    .sheet-stats {
-      grid-template-columns: 1fr;
-    }
-
-    .sheet-stat + .sheet-stat {
-      border-left: 0;
-      border-top: 1px solid var(--line);
-    }
-  }
-</style>

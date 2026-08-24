@@ -1,7 +1,7 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Sparkline from '../../components/Sparkline.astro';
-import AmazonLink from '../../components/AmazonLink.astro';
+import Base from "../../layouts/Base.astro";
+import AmazonLink from "../../components/AmazonLink.astro";
+import Sparkline from "../../components/Sparkline.astro";
 import {
   products,
   sortedSnapshots,
@@ -9,15 +9,15 @@ import {
   fmtEur,
   fmtDate,
   categoryLabel,
-} from '../../lib/catalog';
+} from "../../lib/catalog";
 
-const base = import.meta.env.BASE_URL.endsWith('/')
+const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
-  : import.meta.env.BASE_URL + '/';
-const u = (p: string) => base + p.replace(/^\//, '');
+  : import.meta.env.BASE_URL + "/";
+const u = (p: string) => base + p.replace(/^\//, "");
 
 const rows = products.map((p, i) => ({
-  no: String(i + 1).padStart(3, '0'),
+  no: String(i + 1).padStart(3, "0"),
   p,
   snaps: sortedSnapshots(p.id),
   st: priceStats(p.id),
@@ -32,13 +32,22 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
   <div style="margin-bottom: 2rem;">
     <h1 style="margin: 0 0 0.75rem;">Histórico y Registro de Precios</h1>
     <p class="lede" style="margin-bottom: 1.25rem;">
-      Tabla completa de productos monitoreados en Amazon.es. Cada registro almacena fechas reales para que compruebes si el precio actual es un chollo o está inflado.
+      Base de datos completa de referencias monitoreadas en Amazon.es. Cada registro almacena fechas reales para que compruebes si el precio actual es un mínimo o una cotización inflada.
     </p>
 
-    <div class="telemetry-chips">
-      <span class="telemetry-chip"><strong>{rows.length}</strong> productos monitoreados</span>
-      <span class="telemetry-chip"><strong>{totalSnaps}</strong> comprobaciones registradas</span>
-      <span class="telemetry-chip"><span class="telemetry-dot" aria-hidden="true"></span> Precios actualizados</span>
+    <div class="ticker-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 1.5rem;">
+      <div class="ticker-cell">
+        <span class="ticker-label">Productos Monitoreados</span>
+        <span class="ticker-val">{rows.length}</span>
+      </div>
+      <div class="ticker-cell">
+        <span class="ticker-label">Snapshots Fechados</span>
+        <span class="ticker-val" style="color: var(--accent);">{totalSnaps}</span>
+      </div>
+      <div class="ticker-cell">
+        <span class="ticker-label">Estado de la Base</span>
+        <span class="ticker-val" style="color: var(--emerald); font-size: 0.95rem; font-weight: 700;">VERIFICADO</span>
+      </div>
     </div>
   </div>
 
@@ -46,7 +55,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     <table class="reg">
       <thead>
         <tr>
-          <th scope="col">Nº</th>
+          <th scope="col">#</th>
           <th scope="col">Producto</th>
           <th scope="col">Último Precio</th>
           <th scope="col">Mín / Máx</th>
@@ -60,23 +69,23 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
           <tr>
             <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
             <td>
-              <a class="table-product-title" href={u(`p/${p.id}/`)}>{p.title}</a>
-              <div style="font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem;">
-                {categoryLabel[p.category]}
+              <a href={u(`p/${p.id}/`)} style="color: var(--ink); font-weight: 700; text-decoration: none;">{p.title}</a>
+              <div style="font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; font-family: ui-monospace, Menlo, monospace;">
+                {categoryLabel[p.category]} · {p.asin}
               </div>
             </td>
-            <td class="table-price">
-              {st.count === 0 ? '—' : fmtEur(st.last!.price)}
-              <div style="font-size: 0.72rem; color: var(--muted); font-weight: normal;">
-                {st.last ? fmtDate(st.last.date) : ''}
+            <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700;">
+              {st.count === 0 ? "—" : fmtEur(st.last!.price)}
+              <div style="font-size: 0.7rem; color: var(--muted); font-weight: normal;">
+                {st.last ? fmtDate(st.last.date) : ""}
               </div>
             </td>
-            <td style="font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem;">
-              {st.count >= 2 ? `${fmtEur(st.min!)} / ${fmtEur(st.max!)}` : '—'}
+            <td style="font-family: ui-monospace, Menlo, monospace; font-size: 0.8rem; color: var(--muted);">
+              {st.count >= 2 ? `${fmtEur(st.min!)} / ${fmtEur(st.max!)}` : "—"}
             </td>
             <td>
-              <span class={`deal-badge ${st.lastIsMin ? 'historic' : ''}`}>
-                {st.lastIsMin ? 'MÍNIMO' : st.statusBadge}
+              <span class={`status-badge ${st.lastIsMin ? "historic" : ""}`}>
+                {st.lastIsMin ? "MÍNIMO" : st.statusBadge}
               </span>
             </td>
             <td style="min-width: 120px;">
@@ -90,7 +99,7 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
               )}
             </td>
             <td>
-              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; min-height: 32px;">
+              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-terminal-buy" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; min-height: 32px;">
                 <span>Amazon →</span>
               </AmazonLink>
             </td>
@@ -100,313 +109,3 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
     </table>
   </div>
 </Base>
-
-<style>
-  
-
-  .reg-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    background: var(--card-alt);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 0.55rem 0.9rem;
-    margin: 0 0 1.25rem;
-  }
-
-  .reg-meta-sep {
-    color: var(--accent);
-  }
-
-  .reg-sheet {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: var(--shadow-subtle);
-    padding: 0.25rem 0.9rem 0.9rem;
-  }
-
-  .reg-caption {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  table.reg {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.85rem;
-    margin: 0.75rem 0 0;
-  }
-
-  table.reg th {
-    text-align: left;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 0.6rem 0.6rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .reg-num-head {
-    text-align: right;
-  }
-
-  table.reg td {
-    padding: 0.75rem 0.6rem;
-    border-bottom: 1px solid var(--line-subtle);
-    vertical-align: middle;
-  }
-
-  table.reg tbody tr:last-child td {
-    border-bottom: 1px solid var(--line-subtle);
-  }
-
-  table.reg tbody tr:hover {
-    background: var(--card-alt);
-  }
-
-  .reg-no {
-    color: var(--muted);
-    font-size: 0.78rem;
-    width: 3rem;
-  }
-
-  .reg-product {
-    font-family: inherit;
-  }
-
-  .reg-title {
-    display: block;
-    font-weight: 600;
-    color: var(--ink);
-    text-decoration: none;
-    line-height: 1.35;
-  }
-
-  .reg-title:hover {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .reg-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.4rem;
-  }
-
-  .reg-num {
-    text-align: right;
-  }
-
-  .reg-price {
-    display: block;
-    font-size: 1rem;
-  }
-
-  .reg-date {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-top: 0.15rem;
-  }
-
-  .reg-range {
-    white-space: nowrap;
-    color: var(--ink);
-  }
-
-  .reg-nil {
-    color: var(--muted);
-  }
-
-  tr.is-empty .reg-nil {
-    font-style: normal;
-    opacity: 0.75;
-  }
-
-  .reg-spark-cell {
-    width: 8.5rem;
-  }
-
-  .reg-spark {
-    width: 8.5rem;
-    color: var(--accent);
-    margin-left: auto;
-  }
-
-  .reg-colophon {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-top: 1px dashed var(--line);
-    margin: 0.9rem 0 0;
-    padding-top: 0.7rem;
-  }
-
-  .reg-empty {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: var(--shadow-subtle);
-    padding: 1.75rem 1.6rem;
-  }
-
-  .reg-empty-title {
-    font-family: 'Outfit', system-ui, sans-serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0 0 0.4rem;
-  }
-
-  .reg-empty-text {
-    font-size: 0.98rem;
-    color: var(--muted);
-    margin: 0 0 1.25rem;
-    max-width: 55ch;
-  }
-
-  .reg-empty-steps {
-    margin: 0 0 1.5rem;
-    padding-left: 1.3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    font-size: 0.95rem;
-    color: var(--ink);
-  }
-
-  .reg-empty-steps strong {
-    font-weight: 600;
-  }
-
-  .reg-empty-steps code {
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
-    font-size: 0.82rem;
-    background: var(--card-alt);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.15rem 0.45rem;
-    word-break: break-all;
-  }
-
-  .reg-empty-waiting {
-    border-top: 1px solid var(--line-subtle);
-    padding-top: 1.1rem;
-  }
-
-  .reg-empty-waiting-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 0.5rem;
-  }
-
-  .reg-empty-waiting-list {
-    margin: 0;
-    padding-left: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    font-size: 0.95rem;
-  }
-
-
-  @media (max-width: 640px) {
-    table.reg thead {
-      display: none;
-    }
-
-    table.reg,
-    table.reg tbody,
-    table.reg tr,
-    table.reg td {
-      display: block;
-      width: 100%;
-    }
-
-    table.reg tbody tr {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--card);
-      padding: 0.35rem 0.75rem;
-      margin: 0.75rem 0;
-    }
-
-    table.reg tbody tr:hover {
-      background: var(--card);
-    }
-
-    table.reg tbody tr:last-child td {
-      border-bottom: 1px solid var(--line-subtle);
-    }
-
-    table.reg td {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 1rem;
-      border-bottom: 1px solid var(--line-subtle);
-      padding: 0.45rem 0;
-      text-align: right;
-    }
-
-    table.reg td::before {
-      content: attr(data-label);
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-align: left;
-      flex-shrink: 0;
-    }
-
-    .reg-no {
-      display: none;
-    }
-
-    .reg-product {
-      display: block;
-    }
-
-    .reg-product::before {
-      content: none;
-    }
-
-    .reg-title {
-      text-align: right;
-    }
-
-    .reg-badges {
-      justify-content: flex-end;
-    }
-
-    .reg-spark-cell .reg-spark {
-      margin-left: 0;
-    }
-  }
-</style>
