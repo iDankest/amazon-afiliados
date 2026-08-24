@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import Icon from '../../components/Icon.astro';
+import ProductImage from '../../components/ProductImage.astro';
 import {
   products,
   sortedSnapshots,
@@ -50,14 +51,23 @@ const deltaLabel = (d: number | null) =>
 >
   <article class="sheet">
     <header class="sheet-head">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
-        <span class="category-pill">{categoryLabel[product.category]}</span>
-        <span class={`discount-tag ${st.lastIsMin ? 'historic' : ''}`}>
-          {st.lastIsMin ? '🔥 MÍNIMO HISTÓRICO' : st.statusBadge}
-        </span>
+      <div class="sheet-head-grid">
+        {product.asin && (
+          <div style="display: flex; justify-content: center;">
+            <ProductImage asin={product.asin} title={product.title} size="hero" />
+          </div>
+        )}
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
+            <span class="category-pill">{categoryLabel[product.category]}</span>
+            <span class={`discount-tag ${st.lastIsMin ? 'historic' : ''}`}>
+              {st.lastIsMin ? '🔥 MÍNIMO HISTÓRICO' : st.statusBadge}
+            </span>
+          </div>
+          <h1 class="sheet-title">{product.title}</h1>
+          <p class="sheet-notes">{product.notes}</p>
+        </div>
       </div>
-      <h1 class="sheet-title">{product.title}</h1>
-      <p class="sheet-notes">{product.notes}</p>
     </header>
 
     <!-- Métricas de Cotización -->

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import Sparkline from '../../components/Sparkline.astro';
 import Icon from '../../components/Icon.astro';
+import ProductImage from '../../components/ProductImage.astro';
 import { products, isRecentMinimum, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from '../../lib/catalog';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -46,6 +47,12 @@ const deals = products
                 {st.lastIsMin ? '🔥 MÍNIMO HISTÓRICO' : `-${st.discountPercent}% REBAJA`}
               </span>
             </div>
+
+            {p.asin && (
+              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+                <ProductImage asin={p.asin} title={p.title} size="md" />
+              </a>
+            )}
 
             <h3 class="product-name">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>

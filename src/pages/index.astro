@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import AmazonLink from "../components/AmazonLink.astro";
 import Sparkline from "../components/Sparkline.astro";
 import Icon from "../components/Icon.astro";
+import ProductImage from "../components/ProductImage.astro";
 import { products, priceStats, fmtEur, categoryLabel, sortedSnapshots } from "../lib/catalog";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -106,10 +107,13 @@ const suggestions = allProductsWithStats.slice(0, 3);
         </h2>
         <div>
           {suggestions.map(({ p, st }) => (
-            <div class="suggestion-item">
-              <span class="suggestion-tag">{categoryLabel[p.category]}</span>
-              <a href={u(`p/${p.id}/`)} class="suggestion-title">{p.title}</a>
-              <span class="suggestion-price">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
+            <div class="suggestion-item" style="display: flex; flex-direction: row; gap: 0.75rem; align-items: center;">
+              {p.asin && <ProductImage asin={p.asin} title={p.title} size="sm" />}
+              <div style="flex: 1; min-width: 0;">
+                <span class="suggestion-tag">{categoryLabel[p.category]}</span>
+                <a href={u(`p/${p.id}/`)} class="suggestion-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{p.title}</a>
+                <span class="suggestion-price">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
+              </div>
             </div>
           ))}
         </div>
@@ -144,6 +148,12 @@ const suggestions = allProductsWithStats.slice(0, 3);
                   {st.lastIsMin ? "🔥 MÍNIMO HISTÓRICO" : `-${st.discountPercent}% REBAJA`}
                 </span>
               </div>
+
+              {p.asin && (
+                <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+                  <ProductImage asin={p.asin} title={p.title} size="md" />
+                </a>
+              )}
 
               <h3 class="stitch-card-title">
                 <a href={u(`p/${p.id}/`)}>{p.title}</a>
@@ -194,19 +204,24 @@ const suggestions = allProductsWithStats.slice(0, 3);
 
   <!-- Spotlight Banner (Chollo de la semana) -->
   <section class="stitch-spotlight" aria-label="Chollo Destacado">
-    <div style="max-width: 36rem;">
-      <span class="stitch-discount-badge historic" style="margin-bottom: 0.5rem; display: inline-block;">DESTACADO DE LA SEMANA</span>
-      <h3 style="font-family: Outfit, sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--ink); margin: 0 0 0.45rem;">
-        Logitech MX Master 3S en Mínimo Registrado
-      </h3>
-      <p style="font-size: 1rem; color: var(--muted); line-height: 1.55; margin: 0;">
-        El ratón de productividad de referencia para programadores y diseñadores ha tocado su cotización más baja en Amazon.es. Silencioso, rueda MagSpeed electromagnética y batería de hasta 70 días.
-      </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; width: 100%;">
+      <div style="max-width: 32rem;">
+        <span class="stitch-discount-badge historic" style="margin-bottom: 0.5rem; display: inline-block;">DESTACADO DE LA SEMANA</span>
+        <h3 style="font-family: Outfit, sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--ink); margin: 0 0 0.45rem;">
+          Logitech MX Master 3S en Mínimo Registrado
+        </h3>
+        <p style="font-size: 1rem; color: var(--muted); line-height: 1.55; margin: 0 0 1rem;">
+          El ratón de productividad de referencia para programadores y diseñadores ha tocado su cotización más baja en Amazon.es. Silencioso, rueda MagSpeed electromagnética y batería de hasta 70 días.
+        </p>
+        <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="stitch-btn-buy" style="width: auto; padding: 0.85rem 1.75rem; background: var(--amber); color: #ffffff;">
+          <span>Comprar en Amazon.es</span>
+          <Icon name="arrow-right" size={16} />
+        </AmazonLink>
+      </div>
+      <div style="max-width: 220px; width: 100%;">
+        <ProductImage asin="B07W4DGBMC" title="Logitech MX Master 3S" size="lg" />
+      </div>
     </div>
-    <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="stitch-btn-buy" style="width: auto; padding: 0.85rem 1.75rem; background: var(--amber); color: #ffffff;">
-      <span>Comprar en Amazon.es</span>
-      <Icon name="arrow-right" size={16} />
-    </AmazonLink>
   </section>
 
   <!-- Catálogo General / Tendencias Populares -->
@@ -229,6 +244,12 @@ const suggestions = allProductsWithStats.slice(0, 3);
               <span class="stitch-cat-label">{categoryLabel[p.category]}</span>
               {p.badge && <span class="stitch-discount-badge">{p.badge}</span>}
             </div>
+
+            {p.asin && (
+              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+                <ProductImage asin={p.asin} title={p.title} size="md" />
+              </a>
+            )}
 
             <h3 class="stitch-card-title">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>

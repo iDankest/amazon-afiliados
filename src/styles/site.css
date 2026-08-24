@@ -810,6 +810,19 @@ html[data-theme="dark"] .stitch-btn-buy {
   border-bottom: 1px solid var(--line);
 }
 
+.sheet-head-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  align-items: center;
+}
+
+@media (min-width: 720px) {
+  .sheet-head-grid {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
 .sheet-title {
   font-family: "Outfit", system-ui, sans-serif;
   font-size: clamp(1.35rem, 4.5vw, 2.75rem);
