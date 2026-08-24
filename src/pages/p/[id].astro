@@ -125,13 +125,20 @@ const deltaLabel = (d: number | null) =>
 
     {chartPoints.length >= 2 && (
       <section style="margin: 2.75rem 0;" aria-label="Gráfica de evolución">
-        <h2>Evolución Histórica de Precios</h2>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <h2 style="margin: 0;">Evolución Histórica de Precios</h2>
+          <div class="quick-search-tags" role="group" aria-label="Filtrar rango de fechas">
+            <button type="button" class="quick-tag-chip time-filter-btn" data-days="30">30 Días</button>
+            <button type="button" class="quick-tag-chip time-filter-btn" data-days="90">90 Días</button>
+            <button type="button" class="quick-tag-chip time-filter-btn active" data-days="all" style="background: var(--accent); color: var(--accent-ink); border-color: var(--accent);">Todo</button>
+          </div>
+        </div>
         <div class="chart-container">
           <div class="chart-header">
-            <span style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
+            <span id="chart-range-text" style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
               Rango: {chartLabels?.min} — {chartLabels?.max}
             </span>
-            <span style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--muted);">
+            <span id="chart-dates-text" style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--muted);">
               {chartLabels?.first} a {chartLabels?.last}
             </span>
           </div>
@@ -196,6 +203,43 @@ const deltaLabel = (d: number | null) =>
         var ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        var rangeText = document.getElementById('chart-range-text');
+        var datesText = document.getElementById('chart-dates-text');
+        var filterBtns = document.querySelectorAll('.time-filter-btn');
+
+        var activePoints = chartPoints.slice();
+
+        function filterByDays(days) {
+          if (days === 'all') {
+            activePoints = chartPoints.slice();
+          } else {
+            var numDays = parseInt(days, 10);
+            var cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - numDays);
+            var cutoffStr = cutoff.toISOString().split('T')[0];
+            var filtered = chartPoints.filter(function (p) { return p.date >= cutoffStr; });
+            activePoints = filtered.length >= 2 ? filtered : chartPoints.slice();
+          }
+          render();
+        }
+
+        filterBtns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            filterBtns.forEach(function (b) {
+              b.classList.remove('active');
+              b.style.background = '';
+              b.style.color = '';
+              b.style.borderColor = '';
+            });
+            btn.classList.add('active');
+            btn.style.background = 'var(--accent)';
+            btn.style.color = 'var(--accent-ink)';
+            btn.style.borderColor = 'var(--accent)';
+            var days = btn.getAttribute('data-days');
+            filterByDays(days);
+          });
+        });
+
         function render() {
           var rect = canvas.getBoundingClientRect();
           var dpr = window.devicePixelRatio || 1;
@@ -210,11 +254,18 @@ const deltaLabel = (d: number | null) =>
           var padT = 20;
           var padB = 30;
 
-          var prices = chartPoints.map(function (p) { return p.price; });
+          var prices = activePoints.map(function (p) { return p.price; });
           var minP = Math.min.apply(null, prices);
           var maxP = Math.max.apply(null, prices);
           var range = maxP - minP;
           if (range === 0) range = 1;
+
+          if (rangeText) {
+            rangeText.textContent = 'RANGO: ' + minP.toFixed(2) + ' € — ' + maxP.toFixed(2) + ' €';
+          }
+          if (datesText && activePoints.length > 0) {
+            datesText.textContent = activePoints[0].date + ' a ' + activePoints[activePoints.length - 1].date;
+          }
 
           var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
           var lineColor = isDark ? '#38bdf8' : '#2563eb';
@@ -235,8 +286,8 @@ const deltaLabel = (d: number | null) =>
           ctx.stroke();
 
           // Price points
-          var coords = chartPoints.map(function (p, idx) {
-            var x = padL + (W - padL - padR) * (idx / (chartPoints.length - 1));
+          var coords = activePoints.map(function (p, idx) {
+            var x = padL + (W - padL - padR) * (idx / (activePoints.length - 1));
             var y = padT + (H - padT - padB) * (1 - (p.price - minP) / range);
             return { x: x, y: y, price: p.price, date: p.date };
           });

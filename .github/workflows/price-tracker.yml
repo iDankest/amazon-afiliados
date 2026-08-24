@@ -1,0 +1,44 @@
+name: Price Tracker Cron
+
+on:
+  schedule:
+    # Run daily at 07:00 UTC (09:00 CEST)
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  track-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run price tracker
+        run: node scripts/track-prices.mjs
+
+      - name: Validate data integrity
+        run: npm run validate:data
+
+      - name: Commit and push snapshot updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/snapshots)" ]; then
+            git add data/snapshots/
+            git commit -m "chore(tracker): automated price snapshot update"
+            git push origin main
+          else
+            console.log "No price changes to commit."
+          fi
