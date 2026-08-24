@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
+import Icon from '../../components/Icon.astro';
 import {
   products,
   sortedSnapshots,
@@ -112,10 +113,7 @@ const deltaLabel = (d: number | null) =>
               style="font-size: 1.05rem; padding: 0.95rem 1.75rem; width: 100%; border-radius: 10px;"
             >
               <span>Ver Oferta y Comprar en Amazon.es</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
+              <Icon name="arrow-up-right" size={18} />
             </AmazonLink>
             <p style="font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0; text-align: center;">
               Enlace con atribución de afiliado a Amazon.es · Sin sobrecostes para ti

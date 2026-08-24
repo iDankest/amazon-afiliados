@@ -1,0 +1,237 @@
+---
+interface Props {
+  name:
+    | "search"
+    | "trending-down"
+    | "tag"
+    | "flame"
+    | "zap"
+    | "arrow-up-right"
+    | "arrow-right"
+    | "keyboard"
+    | "mouse"
+    | "headphones"
+    | "moon"
+    | "sun"
+    | "sparkles"
+    | "shield-check"
+    | "badge-percent"
+    | "shopping-bag"
+    | "calendar"
+    | "layers"
+    | "sliders"
+    | "grid"
+    | "check"
+    | "external-link"
+    | "chart";
+  size?: number | string;
+  class?: string;
+  strokeWidth?: number;
+}
+
+const { name, size = 18, class: className = "", strokeWidth = 2 } = Astro.props;
+const sz = typeof size === "number" ? `${size}px` : size;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={sz}
+  height={sz}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={`lucide-icon lucide-${name} ${className}`}
+  aria-hidden="true"
+>
+  {name === "search" && (
+    <>
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+    </>
+  )}
+
+  {name === "trending-down" && (
+    <>
+      <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+      <polyline points="16 17 22 17 22 11"></polyline>
+    </>
+  )}
+
+  {name === "tag" && (
+    <>
+      <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path>
+      <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
+    </>
+  )}
+
+  {name === "flame" && (
+    <>
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+    </>
+  )}
+
+  {name === "zap" && (
+    <>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </>
+  )}
+
+  {name === "arrow-up-right" && (
+    <>
+      <path d="M7 7h10v10"></path>
+      <path d="M7 17 17 7"></path>
+    </>
+  )}
+
+  {name === "arrow-right" && (
+    <>
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </>
+  )}
+
+  {name === "keyboard" && (
+    <>
+      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+      <path d="M6 8h.01"></path>
+      <path d="M10 8h.01"></path>
+      <path d="M14 8h.01"></path>
+      <path d="M18 8h.01"></path>
+      <path d="M8 12h.01"></path>
+      <path d="M12 12h.01"></path>
+      <path d="M16 12h.01"></path>
+      <path d="M7 16h10"></path>
+    </>
+  )}
+
+  {name === "mouse" && (
+    <>
+      <rect width="14" height="20" x="5" y="2" rx="7"></rect>
+      <path d="M12 6v4"></path>
+    </>
+  )}
+
+  {name === "headphones" && (
+    <>
+      <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"></path>
+    </>
+  )}
+
+  {name === "moon" && (
+    <>
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+    </>
+  )}
+
+  {name === "sun" && (
+    <>
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2"></path>
+      <path d="M12 20v2"></path>
+      <path d="m4.93 4.93 1.41 1.41"></path>
+      <path d="m17.66 17.66 1.41 1.41"></path>
+      <path d="M2 12h2"></path>
+      <path d="M20 12h2"></path>
+      <path d="m6.34 17.66-1.41 1.41"></path>
+      <path d="m19.07 4.93-1.41 1.41"></path>
+    </>
+  )}
+
+  {name === "sparkles" && (
+    <>
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+      <path d="M5 3v4"></path>
+      <path d="M19 17v4"></path>
+      <path d="M3 5h4"></path>
+      <path d="M17 19h4"></path>
+    </>
+  )}
+
+  {name === "shield-check" && (
+    <>
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+      <path d="m9 12 2 2 4-4"></path>
+    </>
+  )}
+
+  {name === "badge-percent" && (
+    <>
+      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+      <path d="m15 9-6 6"></path>
+      <path d="M9 9h.01"></path>
+      <path d="M15 15h.01"></path>
+    </>
+  )}
+
+  {name === "shopping-bag" && (
+    <>
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+      <path d="M3 6h18"></path>
+      <path d="M16 10a4 4 0 0 1-8 0"></path>
+    </>
+  )}
+
+  {name === "calendar" && (
+    <>
+      <path d="M8 2v4"></path>
+      <path d="M16 2v4"></path>
+      <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+      <path d="M3 10h18"></path>
+    </>
+  )}
+
+  {name === "layers" && (
+    <>
+      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path>
+      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path>
+      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path>
+    </>
+  )}
+
+  {name === "sliders" && (
+    <>
+      <line x1="4" x2="4" y1="21" y2="14"></line>
+      <line x1="4" x2="4" y1="10" y2="3"></line>
+      <line x1="12" x2="12" y1="21" y2="12"></line>
+      <line x1="12" x2="12" y1="8" y2="3"></line>
+      <line x1="20" x2="20" y1="21" y2="16"></line>
+      <line x1="20" x2="20" y1="12" y2="3"></line>
+      <line x1="1" x2="7" y1="14" y2="14"></line>
+      <line x1="9" x2="15" y1="8" y2="8"></line>
+      <line x1="17" x2="23" y1="16" y2="16"></line>
+    </>
+  )}
+
+  {name === "grid" && (
+    <>
+      <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+      <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+      <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+      <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+    </>
+  )}
+
+  {name === "check" && (
+    <>
+      <path d="M20 6 9 17l-5-5"></path>
+    </>
+  )}
+
+  {name === "external-link" && (
+    <>
+      <path d="M15 3h6v6"></path>
+      <path d="M10 14 21 3"></path>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+    </>
+  )}
+
+  {name === "chart" && (
+    <>
+      <path d="M3 3v18h18"></path>
+      <path d="m19 9-5 5-4-4-3 3"></path>
+    </>
+  )}
+</svg>

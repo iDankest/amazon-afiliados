@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import Sparkline from '../../components/Sparkline.astro';
+import Icon from '../../components/Icon.astro';
 import { products, isRecentMinimum, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from '../../lib/catalog';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
@@ -81,10 +82,7 @@ const deals = products
             <div class="card-buttons">
               <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-buy-amazon">
                 <span>Comprar en Amazon.es</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
+                <Icon name="arrow-up-right" size={15} />
               </AmazonLink>
               <a href={u(`p/${p.id}/`)} class="btn-view-analysis">
                 Ver historial de precios ({st.count} comprobaciones) →
