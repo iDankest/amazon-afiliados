@@ -115,6 +115,8 @@ rounded:
 
 # Design System: ORZA — Cazador de Precios y Chollos en Amazon.es
 
+> **Nota de contexto (transición ORZAR):** este archivo documenta el diseño del sitio Orza actual. La referencia de diseño vigente del proyecto ORZAR es [`docs/26-design-system.md`](docs/26-design-system.md) (con sus complementos 27–31).
+
 ## Principio
 
 Una plataforma moderna, cuidada y humana para descubrir chollos reales y comprobar el historial de precios en Amazon.es. Diseñada con calidez mediterránea, excelente jerarquía visual y foco total en la usabilidad y la conversión honesta.

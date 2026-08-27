@@ -1,4 +1,4 @@
-# Handoff — Orza (parar 23-ago-2026)
+# Handoff — Orza / ORZAR (parar 23-ago-2026)
 
 Clona esto en el otro PC. El chat de Grok **no** viaja; este archivo sí.
 
@@ -13,13 +13,15 @@ Abre `http://localhost:4321/orza/` (el `base` es GitHub Pages). En este Mac el d
 
 ## Qué es
 
-Marca **Orza**. Afiliados Amazon.es: guías (descanso + teclados) + **registro de precios anotados a mano**. Sin snapshot no hay euros. Dark/light. Astro, no Nuxt.
+Este repo es ahora el del proyecto **ORZAR**: plataforma de descubrimiento, comparación, análisis de precios y alertas — no una web de afiliados. Dirección y fases: [docs/00-project-vision.md](docs/00-project-vision.md) y [docs/05-roadmap.md](docs/05-roadmap.md) (ORZAR ya es la dirección activa; antes de decidir algo mira también `docs/24-decision-log.md` y `docs/25-open-questions.md`).
 
-Dominio `orza.es` / `orzar.es`: **no comprar**. Tag: `dankest-21` en `js/config.js`; Astro usa `PUBLIC_AMAZON_TAG` (var de Pages). StoreID Associates: `dankest-21`.
+Dentro sigue vivo el sitio Astro **Orza**: afiliados Amazon.es (descanso + teclados) + **registro de precios anotados a mano** — la semilla del pipeline de datos de ORZAR. Sin snapshot no hay euros. Dark/light. Astro, no Nuxt.
+
+Estructura: sitio en `src/`, docs de producto/arquitectura en `docs/` (00–31), datos en `data/`, scripts en `scripts/`, esqueleto de worker en `worker/`.
+
+Dominio `orza.es` / `orzar.es`: **no comprar**. Tag: `dankest-21`; Astro usa `PUBLIC_AMAZON_TAG` (var de Pages). StoreID Associates: `dankest-21`.
 
 **Associates:** URL de la web `https://idankest.github.io/orza/` (ya listada). La caja de apps va vacía. Pulsa Confirmar. Sin auto-clic. 3 ventas cualificadas / 180 días.
-
-**Futuro (apagado, no condenado):** ClaveCD-shaped pero solo Amazon.es — gráfica, chollo si el snapshot toca mínimo, avisos a precio X, Telegram primero a ti, anuncios en página (nunca en el salto a Amazon). Mismo `data/catalog.json` + snapshots. No scrape. No repo nuevo. No esta noche.
 
 Añadir un precio **solo si lo has visto** en Amazon.es:
 
@@ -35,7 +37,7 @@ No scrape. No inventar tops ni ofertas. No mezclar con Medusa/dropshipping. No a
 
 | Repo | Estado |
 |---|---|
-| `iDankest/orza` | Orza. Repo renombrado (antes `amazon-afiliados`) |
+| `iDankest/orza` | ORZAR. Repo renombrado (antes `amazon-afiliados`) |
 | `iDankest/dropshipping-research` | Kit JUEYONG. I4 aparcado: este PC tenía Node 26 y sin Docker |
 | `iDankest/income-ideas` | Mapa de vías. Una a la vez |
 

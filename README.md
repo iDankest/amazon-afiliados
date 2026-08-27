@@ -1,44 +1,57 @@
-# Orza — Amazon afiliados (ES)
+# ORZAR — plataforma de descubrimiento y precios (repo en transición)
 
 **Retomar en otro PC:** lee [HANDOFF.md](HANDOFF.md).
 
-Marca: **Orza**. Dominio previsto: `orza.es` (comprobar en el registrador; no comprado). Nicho: descanso y teclados. Registro de precios anotados a mano. No es una wiki de videojuegos.
+Este es el repo del proyecto **ORZAR**: una plataforma inteligente de descubrimiento, comparación, análisis de precios y alertas de productos. Responde a «¿qué debería comprar?» explicando qué encaja con cada necesidad, si el precio actual es bueno frente a su historial y cuándo avisar de una bajada. No es una web de afiliados: la afiliación es un mecanismo, no el producto.
 
 - GitHub: https://github.com/iDankest/orza
-- Pages: https://idankest.github.io/orza/
+- Pages (sitio Astro actual): https://idankest.github.io/orza/
 - Registro afiliados: https://afiliados.amazon.es/
 
-## Por qué este repo y no una wiki Tarkov/WARDOGS
+## Estado
 
-WARDOGS ya tiene wikis EN y guía ES. El juego se vende en Steam: Amazon no paga comisión. Este sitio afilia **Amazon.es**, donde sí hay antifaces y tapones.
+Phase 0 → transición. La documentación completa de producto y arquitectura vive en `docs/` (00–31):
 
-## Arranque
+- [docs/00-project-vision.md](docs/00-project-vision.md) — qué es y qué no es ORZAR.
+- [docs/05-roadmap.md](docs/05-roadmap.md) — fases 0–11, qué hacer y qué no hacer todavía.
+- [docs/25-open-questions.md](docs/25-open-questions.md) — decisiones pendientes; si tu tarea depende de una, no la resuelvas por tu cuenta.
 
-1. Publicar el sitio (GitHub Pages, rama `main`, carpeta `/`).
-2. URL pública → pedir alta en Amazon Associates con esa URL.
-3. Cuando Amazon te dé el **tag** (tipo `algo-21`), pégalo en `js/config.js` → `AFFILIATE.tag`.
-4. 3 ventas cualificadas en 180 días o cierran la cuenta.
-5. Aviso de afiliado ya está en cabecera y pie.
+El sitio Astro de este repo (marca **Orza**, afiliados Amazon.es, nicho descanso + teclados) sigue vivo como producto existente y es la base de la que parte ORZAR: su registro manual de precios y snapshots es la semilla del pipeline de datos.
 
-No comprar stock. No claims médicos. No auto-clics en tus enlaces.
+## Estructura del repo
+
+- `src/` — sitio Astro actual (páginas, componentes, layouts). Build → `dist/` (GitHub Actions).
+- `docs/` — documentación de producto y arquitectura de ORZAR (00–31). Léelos antes de tocar código.
+- `data/` — `catalog.json` (productos) y `snapshots/{id}.json` (precios, append-only).
+- `scripts/` — `add-snapshot.mjs`, `validate-json.mjs`.
+- `worker/` — esqueleto de worker (Telegram/precios), sin scrape.
+- `public/`, `astro.config.mjs`, `.env.example`.
 
 ## Local
 
-Dos sitios conviven hasta que el HTML suelto se tuelle:
+```bash
+npm install
+npm run dev        # http://localhost:4321/orza/
+npm run build      # → dist/
+npm run validate:data
+npm run snapshot -- --id <id> --price <n> [--date YYYY-MM-DD]
+```
 
-- **Astro (nuevo, con registro de precios):** `npm install`, `npm run dev` (preview en localhost), `npm run build` → `dist/`.
-- **HTML suelto (viejo):** abre `index.html` o un static server.
+Tag de afiliado: variable `PUBLIC_AMAZON_TAG` (ver `.env.example`). Vacío = enlaces sin `tag=`.
 
-Tag de afiliado (Astro): variable `PUBLIC_AMAZON_TAG` (ver `.env.example`). Vacío = enlaces sin `tag=`.
+## Reglas prácticas
 
-## Registro de precios
+- Sin snapshot no hay cifra. Si el último es de hace 7+ días se muestra «visto el {fecha}», nunca «precio actual».
+- No scrape. No auto-clics en tus enlaces. No inventar tops ni ofertas.
+- La IA interpreta y explica; nunca es fuente de verdad de precios ni specs (eso es la capa de datos).
+- No comprar a través de los propios enlaces.
 
-- `data/catalog.json` — productos (`id`, `title`, `category`, `asin?`, `amazonQuery`, `tested`, `notes`).
-- `data/snapshots/{id}.json` — array `{ date, price, currency: "EUR", source: "manual" }`, append-only.
-- Añadir snapshot: `node scripts/add-snapshot.mjs --id <id> --price <n> [--date YYYY-MM-DD]`.
-- Validar datos: `node scripts/validate-json.mjs` (lo que corre el worker del Día 1).
+## GitHub Pages y Associates
 
-Regla: sin snapshot no hay cifra. Si el último es de hace 7+ días se muestra «visto el {fecha}», nunca «precio actual». Worker (esqueleto, sin scrape): `worker/`.
+1. Pages se publica desde GitHub Actions (rama `main`, build de Astro).
+2. URL pública listada en Amazon Associates: `https://idankest.github.io/orza/`.
+3. 3 ventas cualificadas en 180 días o cierran la cuenta.
+4. Aviso de afiliado presente en cabecera y pie; enlaces con `rel="nofollow sponsored"`.
 
 ## Relacionado
 

@@ -1,5 +1,7 @@
 # Product
 
+> **Nota de contexto (transición ORZAR):** este documento describe el producto Orza actual. La referencia de diseño vigente del proyecto ORZAR es [`docs/26-design-system.md`](docs/26-design-system.md) (con sus complementos 27–31).
+
 <!-- impeccable:product-schema 1 -->
 
 ## Platform
