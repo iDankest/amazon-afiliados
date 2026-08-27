@@ -4,7 +4,7 @@ import AmazonLink from "../components/AmazonLink.astro";
 import Sparkline from "../components/Sparkline.astro";
 import Icon from "../components/Icon.astro";
 import ProductImage from "../components/ProductImage.astro";
-import { products, priceStats, fmtEur, categoryLabel, sortedSnapshots } from "../lib/catalog";
+import { products, priceStats, fmtEur, fmtDate, categoryLabel, sortedSnapshots } from "../lib/catalog";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -18,10 +18,15 @@ const allProductsWithStats = products.map((p) => {
 });
 
 const deals = [...allProductsWithStats]
-  .filter(({ st }) => st.count > 0 && (st.lastIsMin || st.discountPercent > 0))
+  .filter(({ st }) => st.count > 1 && (st.lastIsMin || st.discountPercent > 0))
   .sort((a, b) => b.st.discountPercent - a.st.discountPercent);
 
 const suggestions = allProductsWithStats.slice(0, 3);
+
+const countByCategory = (cat: string) => products.filter((p) => p.category === cat).length;
+
+const spotlightProduct = products.find((p) => p.id === "logitech-mx-master-3s");
+const spotlightStats = spotlightProduct ? priceStats(spotlightProduct.id) : null;
 ---
 
 <Base
@@ -82,19 +87,19 @@ const suggestions = allProductsWithStats.slice(0, 3);
           </button>
           <button type="button" class="category-filter-btn" data-cat="teclados">
             <span>Teclados Mecánicos</span>
-            <span class="category-count">2</span>
+            <span class="category-count">{countByCategory("teclados")}</span>
           </button>
           <button type="button" class="category-filter-btn" data-cat="perifericos">
             <span>Periféricos & Setup</span>
-            <span class="category-count">2</span>
+            <span class="category-count">{countByCategory("perifericos")}</span>
           </button>
           <button type="button" class="category-filter-btn" data-cat="audio">
             <span>Audio & Auriculares</span>
-            <span class="category-count">1</span>
+            <span class="category-count">{countByCategory("audio")}</span>
           </button>
           <button type="button" class="category-filter-btn" data-cat="descanso">
             <span>Descanso & Salud</span>
-            <span class="category-count">3</span>
+            <span class="category-count">{countByCategory("descanso")}</span>
           </button>
         </div>
       </div>
@@ -112,7 +117,14 @@ const suggestions = allProductsWithStats.slice(0, 3);
               <div style="flex: 1; min-width: 0;">
                 <span class="suggestion-tag">{categoryLabel[p.category]}</span>
                 <a href={u(`p/${p.id}/`)} class="suggestion-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{p.title}</a>
-                <span class="suggestion-price">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
+                <span class="suggestion-price">
+                  {st.count > 0 ? fmtEur(st.last!.price) : "—"}
+                  {st.last && (
+                    <span style="display: block; font-size: 0.64rem; font-weight: 400; color: var(--muted);">
+                      {st.isRecent ? `registrado ${fmtDate(st.last.date)}` : `visto el ${fmtDate(st.last.date)}`}
+                    </span>
+                  )}
+                </span>
               </div>
             </div>
           ))}
@@ -166,13 +178,19 @@ const suggestions = allProductsWithStats.slice(0, 3);
               <div class="stitch-price-box">
                 <div class="stitch-price-row">
                   <span class="stitch-price-now">{fmtEur(st.last!.price)}</span>
-                  {st.max && st.max > st.last!.price && (
-                    <span class="stitch-price-was">{fmtEur(st.max)}</span>
+                  {st.discountRef && st.discountRef > st.last!.price && (
+                    <span class="stitch-price-was">{fmtEur(st.discountRef)}</span>
                   )}
                 </div>
                 <div class={`stitch-price-beacon ${st.lastIsMin ? "historic" : ""}`}>
                   <span class="beacon-dot"></span>
-                  <span>{st.lastIsMin ? "Precio mínimo histórico detectado" : `Buen precio (ahorras ${fmtEur(st.max! - st.last!.price)})`}</span>
+                  <span>
+                    {st.lastIsMin
+                      ? "Precio mínimo histórico detectado"
+                      : st.discountRef && st.discountRef > st.last!.price
+                        ? `Buen precio (ahorras ${fmtEur(st.discountRef - st.last!.price)} vs mínimo 30 días)`
+                        : st.lastSeenLabel}
+                  </span>
                 </div>
               </div>
 
@@ -202,27 +220,34 @@ const suggestions = allProductsWithStats.slice(0, 3);
     </main>
   </div>
 
-  <!-- Spotlight Banner (Chollo de la semana) -->
-  <section class="stitch-spotlight" aria-label="Chollo Destacado">
-    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; width: 100%;">
-      <div style="max-width: 32rem;">
-        <span class="stitch-discount-badge historic" style="margin-bottom: 0.5rem; display: inline-block;">DESTACADO DE LA SEMANA</span>
-        <h3 style="font-family: Outfit, sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--ink); margin: 0 0 0.45rem;">
-          Logitech MX Master 3S en Mínimo Registrado
-        </h3>
-        <p style="font-size: 1rem; color: var(--muted); line-height: 1.55; margin: 0 0 1rem;">
-          El ratón de productividad de referencia para programadores y diseñadores ha tocado su cotización más baja en Amazon.es. Silencioso, rueda MagSpeed electromagnética y batería de hasta 70 días.
-        </p>
-        <AmazonLink asin="B07W4DGBMC" query="logitech mx master 3s" class="stitch-btn-buy" style="width: auto; padding: 0.85rem 1.75rem; background: var(--amber); color: #ffffff;">
-          <span>Comprar en Amazon.es</span>
-          <Icon name="arrow-right" size={16} />
-        </AmazonLink>
+  <!-- Spotlight Banner (Chollo de la semana) — datos del tracker, nunca hardcodeados -->
+  {spotlightProduct && spotlightStats && spotlightStats.count > 0 && spotlightProduct.asin && (
+    <section class="stitch-spotlight" aria-label="Chollo Destacado">
+      <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; width: 100%;">
+        <div style="max-width: 32rem;">
+          <span class="stitch-discount-badge historic" style="margin-bottom: 0.5rem; display: inline-block;">DESTACADO DE LA SEMANA</span>
+          <h3 style="font-family: Outfit, sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--ink); margin: 0 0 0.45rem;">
+            {spotlightStats.lastIsMin
+              ? `${spotlightProduct.shortTitle ?? spotlightProduct.title} en Mínimo Registrado`
+              : `${spotlightProduct.shortTitle ?? spotlightProduct.title} en Seguimiento`}
+          </h3>
+          <p style="font-size: 1rem; color: var(--muted); line-height: 1.55; margin: 0 0 1rem;">
+            El ratón de productividad de referencia para programadores y diseñadores. Silencioso, rueda MagSpeed electromagnética y batería de hasta 70 días.
+            {spotlightStats.lastIsMin && spotlightStats.last && (
+              <>Comprobado el {fmtDate(spotlightStats.last.date)}: mínimo de todo su histórico registrado.</>
+            )}
+          </p>
+          <AmazonLink asin={spotlightProduct.asin} query={spotlightProduct.amazonQuery} class="stitch-btn-buy" style="width: auto; padding: 0.85rem 1.75rem; background: var(--amber); color: #ffffff;">
+            <span>Comprar en Amazon.es</span>
+            <Icon name="arrow-right" size={16} />
+          </AmazonLink>
+        </div>
+        <div style="max-width: 220px; width: 100%;">
+          <ProductImage asin={spotlightProduct.asin} title={spotlightProduct.title} size="lg" />
+        </div>
       </div>
-      <div style="max-width: 220px; width: 100%;">
-        <ProductImage asin="B07W4DGBMC" title="Logitech MX Master 3S" size="lg" />
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- Catálogo General / Tendencias Populares -->
   <section id="tops" aria-label="Catálogo Completo" style="margin-top: 3.5rem;">
@@ -262,8 +287,8 @@ const suggestions = allProductsWithStats.slice(0, 3);
             <div class="stitch-price-box">
               <div class="stitch-price-row">
                 <span class="stitch-price-now">{st.count > 0 ? fmtEur(st.last!.price) : "—"}</span>
-                {st.count >= 2 && (
-                  <span class="stitch-price-was">{fmtEur(st.max!)}</span>
+                {st.discountRef && st.discountRef > st.last!.price && (
+                  <span class="stitch-price-was">{fmtEur(st.discountRef)}</span>
                 )}
               </div>
               <div class="stitch-price-beacon">

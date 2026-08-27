@@ -63,6 +63,9 @@ export function sortedSnapshots(id: string): Snapshot[] {
 }
 
 export const RECENT_DAYS = 7;
+/** Ventana del precio de referencia de descuento: mínimo real de los últimos 30 días
+ *  (criterio de la Directiva Ómnibus; docs/10-pricing-engine.md, docs/24-decision-log.md). */
+export const REF_WINDOW_DAYS = 30;
 
 export interface PriceStats {
   count: number;
@@ -73,7 +76,10 @@ export interface PriceStats {
   lastIsMin: boolean;
   isRecent: boolean;
   lastSeenLabel: string;
-  discountPercent: number; // % descuento respecto al máximo
+  /** Mínimo real de los 30 días previos al último snapshot. Solo con histórico suficiente;
+   *  sin referencia válida no se muestra ningún descuento. */
+  discountRef?: number;
+  discountPercent: number; // % descuento respecto a discountRef (0 sin referencia válida)
   statusBadge: string;
 }
 
@@ -119,7 +125,22 @@ export function priceStats(id: string, now = new Date()): PriceStats {
     ? `Registrado ${age === 0 ? 'hoy' : `hace ${age}d`}: ${fmtEur(last.price)}`
     : `Visto el ${fmtDate(last.date)}: ${fmtEur(last.price)}`;
 
-  const discountPercent = max > min && max > 0 ? Math.round(((max - last.price) / max) * 100) : 0;
+  const lastDate = new Date(last.date + 'T00:00:00Z');
+  const historyDays = daysBetween(snaps[0].date, lastDate);
+  const refCandidates =
+    historyDays >= REF_WINDOW_DAYS
+      ? snaps.slice(0, -1).filter((s) => {
+          const d = daysBetween(s.date, lastDate);
+          return d >= 1 && d <= REF_WINDOW_DAYS;
+        })
+      : [];
+  const discountRef =
+    refCandidates.length > 0 ? Math.min(...refCandidates.map((s) => s.price)) : undefined;
+
+  const discountPercent =
+    discountRef !== undefined && discountRef > last.price
+      ? Math.round(((discountRef - last.price) / discountRef) * 100)
+      : 0;
   const lastIsMin = last.price <= min;
 
   let statusBadge = 'Precio Habitual';
@@ -140,6 +161,7 @@ export function priceStats(id: string, now = new Date()): PriceStats {
     lastIsMin,
     isRecent,
     lastSeenLabel,
+    discountRef,
     discountPercent,
     statusBadge,
   };
@@ -158,9 +180,9 @@ export const categoryLabel: Record<Category, string> = {
   descanso: 'Descanso & Salud',
 };
 
-/** ¿Apto para sección de ofertas? Si tiene descuento o es mínimo histórico */
+/** ¿Apto para sección de ofertas? Mínimo histórico o descuento comprobado; exige ≥2 snapshots. */
 export function isRecentMinimum(id: string, now = new Date()): boolean {
   const st = priceStats(id, now);
-  return st.count > 0 && (st.lastIsMin || st.discountPercent > 10);
+  return st.count > 1 && (st.lastIsMin || st.discountPercent > 10);
 }
 

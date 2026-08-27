@@ -27,7 +27,7 @@ const deals = products
     </div>
     <h1>Chollos y Ofertas de la Semana</h1>
     <p class="lede">
-      Descuentos y bajadas de precio reales en Amazon.es. Cada producto listado aquí se encuentra en su mínimo histórico o con un descuento relevante frente a su precio habitual.
+      Descuentos y bajadas de precio reales en Amazon.es. Cada producto listado aquí se encuentra en su mínimo histórico o con un descuento comprobado frente al mínimo de sus últimos 30 días registrados.
     </p>
   </section>
 
@@ -65,14 +65,14 @@ const deals = products
             <div class="price-box">
               <div class="price-top-line">
                 <span class="price-main">{fmtEur(st.last!.price)}</span>
-                {st.max && st.max > st.last!.price && (
-                  <span class="price-crossed">{fmtEur(st.max)}</span>
+                {st.discountRef && st.discountRef > st.last!.price && (
+                  <span class="price-crossed">{fmtEur(st.discountRef)}</span>
                 )}
               </div>
               <div class="price-bottom-line">
                 <span>{st.lastSeenLabel}</span>
-                {st.max && st.max > st.last!.price && (
-                  <span class="savings-highlight">Ahorras {fmtEur(st.max - st.last!.price)}</span>
+                {st.discountRef && st.discountRef > st.last!.price && (
+                  <span class="savings-highlight">Ahorras {fmtEur(st.discountRef - st.last!.price)} vs mínimo 30 días</span>
                 )}
               </div>
             </div>

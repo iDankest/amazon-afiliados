@@ -45,6 +45,13 @@ const isCurrent = (href: string) => {
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Orza" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(u('apple-touch-icon.png'), Astro.site).toString()} />
+    <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#f8fafc" id="meta-theme-color" />
     <link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={u('apple-touch-icon.png')} />

@@ -43,12 +43,47 @@ const u = (p: string) => base + p.replace(/^\//, '');
 
 const deltaLabel = (d: number | null) =>
   d === null ? '—' : (d > 0 ? '+' : d < 0 ? '−' : '±') + fmtEur(Math.abs(d));
+
+const canonical = new URL(u(`p/${product.id}/`), Astro.site);
+const jsonLdImage = product.asin
+  ? `https://images-na.ssl-images-amazon.com/images/P/${product.asin}.01._SCLZZZZZZZ_SX500_.jpg`
+  : null;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Product',
+      name: product.title,
+      description: product.notes,
+      ...(jsonLdImage ? { image: jsonLdImage } : {}),
+      ...(st.last
+        ? {
+            offers: {
+              '@type': 'Offer',
+              url: canonical.toString(),
+              priceCurrency: st.last.currency,
+              price: st.last.price,
+            },
+          }
+        : {}),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL(u(''), Astro.site).toString() },
+        { '@type': 'ListItem', position: 2, name: product.title, item: canonical.toString() },
+      ],
+    },
+  ],
+};
 ---
 
 <Base
   title={`${product.title} — Análisis de Precio e Histórico en Amazon.es`}
   description={`${product.title}: evolución de precios en Amazon.es, alertas de mínimos comprobados y enlace directo de compra.`}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
   <article class="sheet">
     <header class="sheet-head">
       <div class="sheet-head-grid">
@@ -104,12 +139,18 @@ const deltaLabel = (d: number | null) =>
               <span class="metric-caption">Pico registrado</span>
             </div>
             <div class="sheet-metric-card">
-              <span class="metric-title">Ahorro Estimado</span>
+              <span class="metric-title">Referencia 30 Días</span>
               <span class="metric-num" style="color: var(--accent);">
-                {st.max && st.max > st.last!.price ? fmtEur(st.max - st.last!.price) : '0,00 €'}
+                {st.discountRef ? fmtEur(st.discountRef) : '—'}
               </span>
               <span class="metric-caption">
-                {st.discountPercent > 0 ? `-${st.discountPercent}% vs máximo` : 'Precio base'}
+                {st.discountRef
+                  ? st.discountPercent > 0
+                    ? `-${st.discountPercent}% vs mínimo 30 días`
+                    : st.last!.price > st.discountRef
+                      ? 'Por encima de su referencia'
+                      : 'Al nivel de su referencia'
+                  : 'Sin histórico suficiente (30 días)'}
               </span>
             </div>
           </div>
