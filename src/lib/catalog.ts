@@ -14,6 +14,8 @@ export interface Product {
   category: Category;
   badge?: string;
   asin?: string;
+  /** URLs de imágenes reales del producto (p. ej. futura PA-API); mandan sobre la derivada del ASIN. */
+  images?: string[];
   amazonQuery: string;
   tested?: Tested;
   notes: string;

@@ -1,26 +1,59 @@
 ---
+import { SIZE_PX, imageUrlFor, fallbackChain, FALLBACK_PX } from '../lib/productImages';
+import type { ImageSize } from '../lib/productImages';
+
 interface Props {
-  asin: string;
+  /** Producto del catálogo (porta `asin` y `images?`). */
+  product: { asin?: string; images?: string[] };
   title: string;
-  size?: 'sm' | 'md' | 'lg' | 'hero';
+  size?: ImageSize;
   class?: string;
 }
 
-const { asin, title, size = 'md', class: className = '' } = Astro.props;
+const { product, title, size = 'md', class: className = '' } = Astro.props;
 
-// Amazon Direct High-Resolution Media CDN pattern for official product thumbnails
-const imageUrl = `https://images-na.ssl-images-amazon.com/images/P/${asin}.01._SCLZZZZZZZ_SX500_.jpg`;
+// Single source of truth (src/lib/productImages.ts): m.media-amazon.com +
+// variante _SX{n}_ por tamaño; imágenes reales del catálogo tienen prioridad.
+const src = imageUrlFor(product, size);
+const chain = fallbackChain(product, size);
+const fallbackPx = Math.max(SIZE_PX[size], FALLBACK_PX);
+const initials = title
+  .split(/\s+/)
+  .filter((w) => /[0-9A-ZÁÉÍÓÚÑ]/i.test(w))
+  .map((w) => [...w][0])
+  .filter((c) => /[0-9A-ZÁÉÍÓÚÑ]/i.test(c))
+  .slice(0, 2)
+  .join('')
+  .toUpperCase();
 ---
 
 <div class={`product-img-wrap size-${size} ${className}`}>
-  <img
-    src={imageUrl}
-    alt={`Foto oficial de ${title}`}
-    loading="lazy"
-    decoding="async"
-    class="product-img-el"
-    onerror="this.style.opacity='0.4'; this.classList.add('img-fallback');"
-  />
+  {
+    src ? (
+      <img
+        src={src}
+        alt={`Foto oficial de ${title}`}
+        loading="lazy"
+        decoding="async"
+        class="product-img-el"
+        data-fallback={JSON.stringify(chain.slice(1))}
+        onload="if(this.naturalWidth<=1)this.onerror()"
+        onerror={`var n=(this.dataset.fb=this.dataset.fb?JSON.parse(this.dataset.fb):[]),u=n.shift();if(u){this.dataset.fb=JSON.stringify(n);this.src=u}else{this.style.display='none';this.parentElement.classList.add('no-image')}`}
+      />
+    ) : (
+      <div class="product-img-el no-image" aria-hidden="true"></div>
+    )
+  }
+  {
+    /* Placeholder explícito: se muestra cuando no hay URL legítima o la cadena de
+       fallback (pedida → SX500) se agota. Colores propios para tema claro y oscuro. */
+  }
+  <svg class="product-img-ph" viewBox="0 0 120 80" role="img" aria-label={`Imagen no disponible para ${title}`}>
+    <text x="60" y="42" text-anchor="middle" dominant-baseline="central" class="product-img-ph-initials">
+      {initials || '·'}
+    </text>
+    <text x="60" y="68" text-anchor="middle" class="product-img-ph-label">Imagen no disponible</text>
+  </svg>
 </div>
 
 <style>
@@ -80,5 +113,40 @@ const imageUrl = `https://images-na.ssl-images-amazon.com/images/P/${asin}.01._S
 
   .product-img-wrap:hover .product-img-el {
     transform: scale(1.04);
+  }
+
+  /* Fallback explícito: iniciales del producto + texto honesto (sin inventar imágenes). */
+  .product-img-ph {
+    display: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-img-wrap.no-image .product-img-ph,
+  .product-img-el.no-image + .product-img-ph {
+    display: block;
+  }
+  .product-img-ph-initials {
+    font-family: var(--font-display, inherit);
+    font-size: 28px;
+    font-weight: 700;
+    fill: #6f7787;
+  }
+
+  .product-img-ph-label {
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    fill: #6f7787;
+  }
+
+  .product-img-wrap.size-sm .product-img-ph-label {
+    display: none;
+  }
+
+  html[data-theme="dark"] .product-img-ph-initials,
+  html[data-theme="dark"] .product-img-ph-label {
+    fill: #a9b2c4;
   }
 </style>

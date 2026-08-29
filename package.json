@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "snapshot": "node scripts/add-snapshot.mjs",
-    "validate:data": "node scripts/validate-json.mjs"
+    "validate:data": "node scripts/validate-json.mjs",
+    "probe:images": "node scripts/probe-images.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

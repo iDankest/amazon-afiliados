@@ -71,3 +71,13 @@ Estas son propuestas fundamentadas de la fase de Discovery, listas para tu confi
 **Why:** cumplir las reglas adoptadas, eliminar un riesgo real de rotura del deploy, y no dar por tomada una decisión de estrategia de datos (OQ #3) que sigue abierta y requiere revisión legal. El código eliminado queda recuperable en el historial git (commit `7e19a48`).
 **Trade-offs:** sin automatización de precios hasta que la OQ #3 defina una fuente legítima (connector compatible con robots.txt/ToS o PA-API cuando haya elegibilidad); el registro manual exige disciplina de comprobación visual.
 **Date:** 2026-08-27
+
+---
+
+**Decision:** Migrar las imágenes de producto del host legado `images-na.ssl-images-amazon.com` a `m.media-amazon.com`, centralizar la construcción de URLs en `src/lib/productImages.ts`, y detectar en build las imágenes principales inválidas (HTTP 200 + GIF 1×1) con un sondeo HEAD al CDN (`scripts/probe-images.mjs` → `.image-probe.json`, gitignored). *(Decisión ejecutada.)*
+**Context:** La auditoría de 2026-08-29 encontró que la URL de imagen se construía hardcoded en dos sitios (ProductImage.astro y el JSON-LD de la ficha), que Amazon devuelve un GIF 1×1 de 43 bytes con HTTP 200 para ASINs sin imagen (el `onerror` del navegador nunca salta), y que no existía normalización, validación ni variantes por tamaño. El sondeo solo pide assets de imagen del CDN público (lo mismo que descarga cualquier visitante), no toca páginas de listing y no almacena imágenes: sigue la regla de no-scraping (AGENTS.md §6).
+**Options considered:** hotlink directo con onerror (status quo) · descargar y almacenar imágenes en el repo · sondeo HEAD del CDN en build + fallback explícito.
+**Chosen option:** sondeo HEAD fail-open en build + single source of truth + variantes `_SX{n}_` por tamaño + placeholder explícito (SVG con iniciales) cuando la cadena pedida → SX500 se agota o el sondeo marca inválido. Cadena de fallback limitada a dos intentos.
+**Why:** cero almacenamiento, cero servicios nuevos, cero scraping; el fallback se vuelve determinista en build y el JSON-LD deja de emitir URLs de placeholder. El campo `images[]` (opcional, validado) queda listo para datos reales de PA-API, que mandan sobre la URL derivada del ASIN.
+**Trade-offs:** el sondeo depende del egress de CI al CDN de Amazon (fail-open: nunca bloquea el deploy); entre builds, el runtime conserva la cadena pedida → SX500 → placeholder para cambios posteriores en Amazon.
+**Date:** 2026-08-29

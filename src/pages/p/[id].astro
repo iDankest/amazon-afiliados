@@ -11,6 +11,7 @@ import {
   fmtDate,
   categoryLabel,
 } from '../../lib/catalog';
+import { imageUrlFor } from '../../lib/productImages';
 
 export function getStaticPaths() {
   return products.map((p) => ({ params: { id: p.id }, props: { product: p } }));
@@ -45,9 +46,9 @@ const deltaLabel = (d: number | null) =>
   d === null ? '—' : (d > 0 ? '+' : d < 0 ? '−' : '±') + fmtEur(Math.abs(d));
 
 const canonical = new URL(u(`p/${product.id}/`), Astro.site);
-const jsonLdImage = product.asin
-  ? `https://images-na.ssl-images-amazon.com/images/P/${product.asin}.01._SCLZZZZZZZ_SX500_.jpg`
-  : null;
+// Single source of truth: src/lib/productImages.ts (sin URL duplicada ni host legado).
+// Omite `image` del JSON-LD si la imagen principal es inválida conocida (probe).
+const jsonLdImage = imageUrlFor(product, 'hero');
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -87,11 +88,9 @@ const jsonLd = {
   <article class="sheet">
     <header class="sheet-head">
       <div class="sheet-head-grid">
-        {product.asin && (
-          <div style="display: flex; justify-content: center;">
-            <ProductImage asin={product.asin} title={product.title} size="hero" />
-          </div>
-        )}
+        <div style="display: flex; justify-content: center;">
+          <ProductImage product={product} title={product.title} size="hero" />
+        </div>
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
             <span class="category-pill">{categoryLabel[product.category]}</span>

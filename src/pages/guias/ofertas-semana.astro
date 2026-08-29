@@ -48,11 +48,9 @@ const deals = products
               </span>
             </div>
 
-            {p.asin && (
-              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
-                <ProductImage asin={p.asin} title={p.title} size="md" />
-              </a>
-            )}
+            <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+              <ProductImage product={p} title={p.title} size="md" />
+            </a>
 
             <h3 class="product-name">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>

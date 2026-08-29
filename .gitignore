@@ -10,6 +10,9 @@ node_modules/
 dist/
 .astro/
 
+# Estado local del sondeo de imágenes (scripts/probe-images.mjs)
+.image-probe.json
+
 # Agent harnesses & skills
 .agent/
 .agents/

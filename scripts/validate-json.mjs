@@ -38,6 +38,22 @@ if (Array.isArray(catalog)) {
     if (typeof p.title !== 'string' || !p.title) errors.push(`${where}: falta title`);
     if (!CATS.has(p.category)) errors.push(`${where}: category debe ser descanso|teclados|audio|perifericos`);
     if (p.asin !== undefined && !/^[A-Z0-9]{10}$/.test(p.asin)) errors.push(`${where}: asin no parece ASIN`);
+    if (p.images !== undefined) {
+      if (!Array.isArray(p.images)) {
+        errors.push(`${where}: images debe ser un array`);
+      } else {
+        if (p.images.length > 8) errors.push(`${where}: images tiene más de 8 entradas`);
+        const seen = new Set();
+        for (const [i, url] of p.images.entries()) {
+          if (typeof url !== 'string' || !/^https:\/\/m\.media-amazon\.com\/images\/.+/.test(url)) {
+            errors.push(`${where}: images[${i}] debe ser una URL https de m.media-amazon.com/images/*`);
+            continue;
+          }
+          if (seen.has(url)) errors.push(`${where}: images[${i}] duplicada`);
+          seen.add(url);
+        }
+      }
+    }
     if (typeof p.amazonQuery !== 'string' || !p.amazonQuery) errors.push(`${where}: falta amazonQuery`);
     if (p.tested !== undefined && !TESTED.has(p.tested)) errors.push(`${where}: tested debe ser yes|no|partial`);
     if (typeof p.notes !== 'string') errors.push(`${where}: notes debe ser string`);

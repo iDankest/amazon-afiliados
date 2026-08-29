@@ -113,7 +113,7 @@ const spotlightStats = spotlightProduct ? priceStats(spotlightProduct.id) : null
         <div>
           {suggestions.map(({ p, st }) => (
             <div class="suggestion-item" style="display: flex; flex-direction: row; gap: 0.75rem; align-items: center;">
-              {p.asin && <ProductImage asin={p.asin} title={p.title} size="sm" />}
+              <ProductImage product={p} title={p.title} size="sm" />
               <div style="flex: 1; min-width: 0;">
                 <span class="suggestion-tag">{categoryLabel[p.category]}</span>
                 <a href={u(`p/${p.id}/`)} class="suggestion-title" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{p.title}</a>
@@ -161,11 +161,9 @@ const spotlightStats = spotlightProduct ? priceStats(spotlightProduct.id) : null
                 </span>
               </div>
 
-              {p.asin && (
-                <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
-                  <ProductImage asin={p.asin} title={p.title} size="md" />
-                </a>
-              )}
+              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+                <ProductImage product={p} title={p.title} size="md" />
+              </a>
 
               <h3 class="stitch-card-title">
                 <a href={u(`p/${p.id}/`)}>{p.title}</a>
@@ -243,7 +241,7 @@ const spotlightStats = spotlightProduct ? priceStats(spotlightProduct.id) : null
           </AmazonLink>
         </div>
         <div style="max-width: 220px; width: 100%;">
-          <ProductImage asin={spotlightProduct.asin} title={spotlightProduct.title} size="lg" />
+          <ProductImage product={spotlightProduct} title={spotlightProduct.title} size="lg" />
         </div>
       </div>
     </section>
@@ -270,11 +268,9 @@ const spotlightStats = spotlightProduct ? priceStats(spotlightProduct.id) : null
               {p.badge && <span class="stitch-discount-badge">{p.badge}</span>}
             </div>
 
-            {p.asin && (
-              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
-                <ProductImage asin={p.asin} title={p.title} size="md" />
-              </a>
-            )}
+            <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+              <ProductImage product={p} title={p.title} size="md" />
+            </a>
 
             <h3 class="stitch-card-title">
               <a href={u(`p/${p.id}/`)}>{p.title}</a>
