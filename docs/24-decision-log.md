@@ -81,3 +81,13 @@ Estas son propuestas fundamentadas de la fase de Discovery, listas para tu confi
 **Why:** cero almacenamiento, cero servicios nuevos, cero scraping; el fallback se vuelve determinista en build y el JSON-LD deja de emitir URLs de placeholder. El campo `images[]` (opcional, validado) queda listo para datos reales de PA-API, que mandan sobre la URL derivada del ASIN.
 **Trade-offs:** el sondeo depende del egress de CI al CDN de Amazon (fail-open: nunca bloquea el deploy); entre builds, el runtime conserva la cadena pedida → SX500 → placeholder para cambios posteriores en Amazon.
 **Date:** 2026-08-29
+
+---
+
+**Decision:** Scope SEO de fase: solo 10 URLs indexables (home, /registro/, 8 fichas /p/*); guías (10) y legales/info (4) con meta noindex y fuera del sitemap. *(Decisión ejecutada.)*
+**Context:** El build publicaba 24 URLs indexables (sitemap sin filtro, cero noindex) contra el límite de fase de ≤15. El usuario eligió el conjunto "core only" sobre las alternativas "15 exacto" y "14".
+**Options considered:** noindex solo a las 9 guías-detalle (15 exacto) · noindex a guías y mantener legales (14) · noindex a guías y legales/info (10, core only).
+**Chosen option:** core only (10).
+**Why:** alineado con docs/01-product-requirements.md (guías = V1, fichas con datos únicos = MVP) y deja margen de 5 URLs para productos nuevos sin volver a tocar el scope.
+**Trade-offs:** las guías pierden tráfico orgánico hasta que se reindexen en V1; reversibles quitando el meta y el filter.
+**Date:** 2026-08-29
