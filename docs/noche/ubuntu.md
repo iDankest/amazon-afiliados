@@ -3,8 +3,14 @@
 **Regla dura: el worker de Orza NUNCA convive con el servidor de Minecraft en el mismo
 compose ni comparte red/volúmenes con él. Son stacks separados por diseño.**
 
-Y esta noche: **no conectarse al servidor**. Este documento es solo el checklist;
-la conexión y el despliegue se hacen en su momento con calma y desde cero.
+**Estado** (2026-08-30): repo clonado en el server (`dankest-server`) en `~/orza` —
+NO en `/opt/orza`: el usuario `agent` no tiene permisos de escritura en `/opt` ni
+sudo sin contraseña. Desviación registrada; si se prefiere `/opt/orza`, crearlo y
+dar ownership con sudo y mover el checkout. `validate-json` y el dry-run de
+`worker/telegram/check.mjs` corren OK con el Node del host (sin compose todavía).
+Pendiente del checklist: compose, cron elegido, `.env` con los secretos de Telegram.
+La regla dura de separación con Minecraft sigue vigente: `~/orza` está fuera de las
+carpetas del servidor de Minecraft.
 
 ## Qué hace el worker (V1)
 
