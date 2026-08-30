@@ -24,9 +24,9 @@ Nunca diseñar mecanismos para evadir sistemas de protección o límites de acce
 
 ## Amazon: la restricción que condiciona el MVP
 
-La Product Advertising API (PA-API) de Amazon exige una cuenta de Associates con **al menos 3 ventas cualificadas en los primeros 180 días** para el acceso inicial, y hay reportes consistentes (no confirmados oficialmente por Amazon en su documentación pública) de que **mantener** el acceso requiere ventas cualificadas recurrentes dentro de una ventana continua de referencia — el propio FAQ de Amazon advierte pérdida de acceso tras 30 días consecutivos sin ventas cualificadas. Esto crea un problema de arranque: para tener catálogo/precios fiables hacen falta datos, pero para acceder a la API oficial hacen falta ventas que dependen de tener ya el catálogo funcionando.
+**Actualización 2026-08-30:** PA-API 5.0 fue deprecada por Amazon; sus endpoints quedaron retirados el 2026-05-15. El sucesor oficial es la **Creators API** (REST + OAuth 2.0 client credentials, operaciones `SearchItems`/`GetItems`/`GetVariations`/`GetBrowseNodes`), que exige **10 ventas cualificadas en los últimos 30 días** para acceder y mantener el acceso (verificado en la documentación oficial: `affiliate-program.amazon.com/creatorsapi`). El problema de arranque persiste: para acceder a la API oficial hacen falta ventas que dependen de tener el catálogo funcionando.
 
-Esta es una decisión de negocio/legal, no solo técnica — ver `25-open-questions.md` #3. El pipeline de arriba está diseñado para que la fuente inicial sea intercambiable: se puede arrancar con un connector que respete robots.txt/ToS mientras se gana elegibilidad para PA-API, y sustituirlo por el connector oficial en cuanto esté disponible, sin rediseñar nada aguas abajo del Normalizer.
+Esta es una decisión de negocio/legal, no solo técnica — ver `25-open-questions.md` #3 (resuelta parcialmente el 2026-08-30: registro manual interino). El pipeline de arriba está diseñado para que la fuente inicial sea intercambiable: se arranca con registro manual mientras se gana elegibilidad para la Creators API, y se sustituye por el connector oficial en cuanto esté disponible, sin rediseñar nada aguas abajo del Normalizer.
 
 ## Consideración regional (Canarias)
 

@@ -91,3 +91,13 @@ Estas son propuestas fundamentadas de la fase de Discovery, listas para tu confi
 **Why:** alineado con docs/01-product-requirements.md (guías = V1, fichas con datos únicos = MVP) y deja margen de 5 URLs para productos nuevos sin volver a tocar el scope.
 **Trade-offs:** las guías pierden tráfico orgánico hasta que se reindexen en V1; reversibles quitando el meta y el filter.
 **Date:** 2026-08-29
+
+---
+
+**Decision:** Estrategia de adquisición de datos interina: registro manual puro (`scripts/add-snapshot.mjs`) hasta alcanzar la elegibilidad de la Creators API de Amazon. *(Decisión ejecutada, confirma la política interina de 2026-08-27.)*
+**Context:** El usuario pidió soluciones tras la percepción de que "el escrapeo no funciona". Verificado: el scraper fue eliminado a propósito el 2026-08-27 (riesgo de baneo de la cuenta de afiliado, regla no-scraping de AGENTS.md §6), y el fallo visible era un cron zombie del workflow ya borrado. Además, PA-API 5.0 fue retirada por Amazon (endpoints muertos desde 2026-05-15); su sucesor oficial es la Creators API, que exige 10 ventas cualificadas en los últimos 30 días.
+**Options considered:** registro manual puro · API de terceros de pago (Keepa, ~$20/mes) · esperar sin cargar histórico.
+**Chosen option:** registro manual puro.
+**Why:** cero coste, cero riesgo legal, ya implementado y validado; Keepa añade coste recurrente y restricciones de redisplay que requieren la revisión legal pendiente (OQ #6); no cargar histórico sacrifica el valor propio del producto justo cuando necesita SEO para generar las 10 ventas.
+**Trade-offs:** ~5 min/semana de mantenimiento manual para el catálogo actual; el dato depende de comprobación visual del precio en Amazon.es; sin automatización de precios hasta la Creators API.
+**Date:** 2026-08-30

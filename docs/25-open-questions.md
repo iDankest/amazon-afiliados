@@ -22,9 +22,11 @@ Ninguna de estas decisiones se ha tomado por defecto — se necesita tu confirma
 
    **Material para decidir** (2026-08-27):
    - Política interina vigente: registro manual de precios vistos en Amazon.es (`scripts/add-snapshot.mjs`). El tracker de scraping fue eliminado el 2026-08-27 por contradecir las reglas adoptadas (ver `docs/24-decision-log.md`).
-   - Opciones: (a) connector que respete robots.txt/ToS mientras se ganan las 3 ventas cualificadas y después PA-API (`worker/paapi.md`); (b) otra fuente inicial (feed/catálogo con licencia); (c) esperar con registro manual hasta tener elegibilidad PA-API.
-   - Dependencias: la opción (a) necesita revisión legal previa (ToS de Amazon + relacionada con la pregunta #6); la elegibilidad PA-API depende del checkpoint de negocio de 3 ventas cualificadas en 180 días (HANDOFF).
+   - Opciones: (a) connector que respete robots.txt/ToS mientras se ganan las ventas cualificadas y después API oficial (`worker/paapi.md`); (b) otra fuente inicial (feed/catálogo con licencia); (c) esperar con registro manual hasta tener elegibilidad.
+   - Dependencias: la opción (a) necesita revisión legal previa (ToS de Amazon + relacionada con la pregunta #6); la elegibilidad depende del checkpoint de negocio de ventas cualificadas (HANDOFF).
    - Bloquea directamente Phase 2 del roadmap (`docs/05-roadmap.md`).
+
+   **Resolución parcial** (2026-08-30): el usuario eligió **registro manual puro** como estrategia interina (opción c). Descartadas: (a) reconstruir cualquier scraper — riesgo de baneo de la cuenta de afiliado y violación de reglas adoptadas; (b) APIs de terceros de pago (p. ej. Keepa) — coste recurrente y restricciones de redisplay que requerirían la revisión legal de la pregunta #6. Cambio de contexto relevante: PA-API 5.0 fue retirada por Amazon (2026-05-15); el sucesor es la Creators API con requisito de **10 ventas cualificadas en los últimos 30 días** (ver `worker/paapi.md` y `docs/09-data-ingestion.md`). Pendiente de revaluar cuando se alcance esa elegibilidad.
 
 ## High
 
