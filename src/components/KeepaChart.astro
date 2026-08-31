@@ -3,8 +3,12 @@
  * Gráfico de histórico de precios servido por Keepa (hotlink público).
  * Orza no almacena, no agrega y no calcula precios: el PNG lo sirve
  * graph.keepa.com en el momento de la carga y se atribuye a Keepa.
- * domain=es = marketplace español. width/height explícitos evitan CLS.
- * Verificado empíricamente; gate de CI: scripts/verify-asins.mjs.
+ * domain=es = marketplace español.
+ *
+ * Mejoras sobre el PNG plano: resolución 1000x400, selector de rango
+ * (30/90/365 días) con preload, skeleton de carga, estado de error con
+ * reintento y enlace directo a Keepa. Verificado empíricamente;
+ * gate de CI: scripts/verify-asins.mjs.
  */
 interface Props {
   asin: string;
@@ -12,19 +16,112 @@ interface Props {
   range?: number;
 }
 const { asin, title, range = 365 } = Astro.props;
+const url = (r: number) =>
+  `https://graph.keepa.com/pricehistory.png?asin=${asin}&domain=es&range=${r}&width=1000&height=400`;
+const RANGES = [30, 90, 365];
+const rangeLabel: Record<number, string> = { 30: '30 días', 90: '90 días', 365: '1 año' };
 ---
 
-<figure class="keepa-chart">
-  <img
-    src={`https://graph.keepa.com/pricehistory.png?asin=${asin}&domain=es&range=${range}`}
-    alt={`Histórico de precio en Amazon.es de ${title}, según Keepa`}
-    width="500" height="200" loading="lazy" decoding="async" />
+<figure class="keepa-chart" data-asin={asin} data-range={String(range)}>
+  <div class="keepa-toolbar" role="group" aria-label={`Rango del histórico de ${title}`}>
+    {RANGES.map((r) => (
+      <button
+        type="button"
+        class={`keepa-range-btn${r === range ? ' active' : ''}`}
+        data-range={String(r)}
+      >
+        {rangeLabel[r]}
+      </button>
+    ))}
+    <span class="keepa-note">Amazon.es · vía Keepa</span>
+  </div>
+
+  <div class="keepa-stage">
+    <div class="keepa-skeleton" aria-hidden="true"></div>
+    <img
+      src={url(range)}
+      alt={`Histórico de precio en Amazon.es de ${title}, según Keepa`}
+      width="1000" height="400" loading="lazy" decoding="async" />
+    <div class="keepa-error" hidden>
+      <p>No se pudo cargar el histórico de Keepa ahora mismo.</p>
+      <div class="keepa-error-actions">
+        <button type="button" class="keepa-retry">Reintentar</button>
+        <a href={`https://keepa.com/#!product/9-${asin}`} rel="nofollow noopener" target="_blank">
+          Ver en Keepa
+        </a>
+      </div>
+    </div>
+  </div>
+
   <figcaption>
     Histórico de precio de Amazon.es. Datos de
     <a href={`https://keepa.com/#!product/9-${asin}`} rel="nofollow noopener" target="_blank">Keepa</a>.
     Orza no almacena precios: el gráfico lo sirve Keepa en el momento de la carga.
   </figcaption>
 </figure>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('figure.keepa-chart').forEach(function (fig) {
+      var asin = fig.getAttribute('data-asin');
+      var img = fig.querySelector('img');
+      var skeleton = fig.querySelector('.keepa-skeleton');
+      var errorBox = fig.querySelector('.keepa-error');
+      var retryBtn = fig.querySelector('.keepa-retry');
+      var btns = fig.querySelectorAll('.keepa-range-btn');
+      var current = parseInt(fig.getAttribute('data-range') || '365', 10);
+
+      function urlFor(r) {
+        return 'https://graph.keepa.com/pricehistory.png?asin=' + asin +
+          '&domain=es&range=' + r + '&width=1000&height=400';
+      }
+
+      function showSkeleton(on) {
+        skeleton.classList.toggle('on', on);
+        img.style.opacity = on ? '0.25' : '1';
+      }
+
+      function load(r) {
+        current = r;
+        fig.setAttribute('data-range', String(r));
+        showSkeleton(true);
+        errorBox.hidden = true;
+        var pre = new Image();
+        pre.onload = function () {
+          if (parseInt(fig.getAttribute('data-range'), 10) !== r) return; // ganó otro rango
+          img.src = pre.src;
+          showSkeleton(false);
+        };
+        pre.onerror = function () {
+          if (parseInt(fig.getAttribute('data-range'), 10) !== r) return;
+          showSkeleton(false);
+          errorBox.hidden = false;
+        };
+        pre.src = urlFor(r);
+      }
+
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          btns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          load(parseInt(btn.getAttribute('data-range'), 10));
+        });
+        // Preload al pasar el ratón: el cambio de rango es instantáneo.
+        btn.addEventListener('mouseenter', function () {
+          (new Image()).src = urlFor(parseInt(btn.getAttribute('data-range'), 10));
+        });
+      });
+
+      retryBtn.addEventListener('click', function () { load(current); });
+
+      img.addEventListener('load', function () { showSkeleton(false); });
+      img.addEventListener('error', function () {
+        showSkeleton(false);
+        errorBox.hidden = false;
+      });
+    });
+  })();
+</script>
 
 <style>
   .keepa-chart {
@@ -35,11 +132,125 @@ const { asin, title, range = 365 } = Astro.props;
     padding: 1rem;
   }
 
-  .keepa-chart img {
+  .keepa-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .keepa-range-btn {
+    font: 600 0.78rem/1 'Figtree', system-ui, sans-serif;
+    color: var(--ink-secondary);
+    background: var(--card-alt);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+
+  .keepa-range-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .keepa-range-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .keepa-note {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .keepa-stage {
+    position: relative;
+    aspect-ratio: 5 / 2;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .keepa-stage img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     border-radius: 8px;
+    transition: opacity 0.2s;
+  }
+
+  /* El PNG de Keepa siempre es claro: en tema oscuro se enmarca como
+     documento incrustado para que parezca intencional. */
+  [data-theme='dark'] .keepa-stage {
+    background: #f8fafc;
+    padding: 0.35rem;
+  }
+
+  .keepa-skeleton {
+    position: absolute;
+    inset: 0;
+    display: none;
+    border-radius: 8px;
+    background: linear-gradient(100deg, var(--card-alt) 40%, var(--line) 50%, var(--card-alt) 60%);
+    background-size: 200% 100%;
+    animation: keepa-shimmer 1.2s linear infinite;
+  }
+
+  .keepa-skeleton.on {
+    display: block;
+  }
+
+  @keyframes keepa-shimmer {
+    to { background-position: -200% 0; }
+  }
+
+  .keepa-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--card);
+    border-radius: 8px;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .keepa-error[hidden] {
+    display: none;
+  }
+
+  .keepa-error p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .keepa-error-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .keepa-retry {
+    font: 600 0.78rem/1 'Figtree', system-ui, sans-serif;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    cursor: pointer;
+  }
+
+  .keepa-error-actions a {
+    font-size: 0.78rem;
+    color: var(--muted);
   }
 
   .keepa-chart figcaption {
