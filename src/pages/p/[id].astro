@@ -3,14 +3,8 @@ import Base from '../../layouts/Base.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import Icon from '../../components/Icon.astro';
 import ProductImage from '../../components/ProductImage.astro';
-import {
-  products,
-  sortedSnapshots,
-  priceStats,
-  fmtEur,
-  fmtDate,
-  categoryLabel,
-} from '../../lib/catalog';
+import KeepaChart from '../../components/KeepaChart.astro';
+import { products, categoryLabel } from '../../lib/catalog';
 import { imageUrlFor } from '../../lib/productImages';
 
 export function getStaticPaths() {
@@ -18,36 +12,17 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const snaps = sortedSnapshots(product.id);
-const st = priceStats(product.id);
-const chartPoints = snaps.map((s) => ({ date: s.date, price: s.price }));
-const chartLabels =
-  chartPoints.length >= 2
-    ? {
-        min: fmtEur(st.min!),
-        max: fmtEur(st.max!),
-        first: fmtDate(snaps[0].date),
-        last: fmtDate(snaps[snaps.length - 1].date),
-      }
-    : null;
-
-const history = snaps.map((s, i) => ({
-  no: String(i + 1).padStart(3, '0'),
-  s,
-  delta: i === 0 ? null : s.price - snaps[i - 1].price,
-}));
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : import.meta.env.BASE_URL + '/';
 const u = (p: string) => base + p.replace(/^\//, '');
 
-const deltaLabel = (d: number | null) =>
-  d === null ? '—' : (d > 0 ? '+' : d < 0 ? '−' : '±') + fmtEur(Math.abs(d));
-
 const canonical = new URL(u(`p/${product.id}/`), Astro.site);
 // Single source of truth: src/lib/productImages.ts (sin URL duplicada ni host legado).
 // Omite `image` del JSON-LD si la imagen principal es inválida conocida (probe).
+// Sin bloque `offers`: Orza no es vendedor del producto (solo enlaza a Amazon.es),
+// y Google reserva los `Offer` de merchant listings a quien vende el producto.
 const jsonLdImage = imageUrlFor(product, 'hero');
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -57,16 +32,6 @@ const jsonLd = {
       name: product.title,
       description: product.notes,
       ...(jsonLdImage ? { image: jsonLdImage } : {}),
-      ...(st.last
-        ? {
-            offers: {
-              '@type': 'Offer',
-              url: canonical.toString(),
-              priceCurrency: st.last.currency,
-              price: st.last.price,
-            },
-          }
-        : {}),
     },
     {
       '@type': 'BreadcrumbList',
@@ -80,8 +45,8 @@ const jsonLd = {
 ---
 
 <Base
-  title={`${product.title} — Análisis de Precio e Histórico en Amazon.es`}
-  description={`${product.title}: evolución de precios en Amazon.es, alertas de mínimos comprobados y enlace directo de compra.`}
+  title={`${product.title} — Ficha e Histórico en Amazon.es`}
+  description={`${product.title}: histórico de precios real de Amazon.es servido por Keepa, criterio de compra y enlace directo de afiliado.`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
@@ -94,9 +59,6 @@ const jsonLd = {
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
             <span class="category-pill">{categoryLabel[product.category]}</span>
-            <span class={`discount-tag ${st.lastIsMin ? 'historic' : ''}`}>
-              {st.lastIsMin ? '🔥 MÍNIMO HISTÓRICO' : st.statusBadge}
-            </span>
           </div>
           <h1 class="sheet-title">{product.title}</h1>
           <p class="sheet-notes">{product.notes}</p>
@@ -104,288 +66,34 @@ const jsonLd = {
       </div>
     </header>
 
-    <!-- Métricas de Cotización -->
-    <section aria-label="Métricas de precio">
-      <h2>Métricas de Precio</h2>
-      {st.count === 0 ? (
-        <div style="padding: 1.5rem 0; color: var(--muted);">
-          <p>A la espera de primeras anotaciones de precio para este producto.</p>
-        </div>
-      ) : (
-        <>
-          <div class="sheet-metrics" role="group" aria-label="Métricas del precio">
-            <div class="sheet-metric-card">
-              <span class="metric-title">Precio Registrado</span>
-              <span class="metric-num" style="color: var(--ink);">
-                {fmtEur(st.last!.price)}
-              </span>
-              <span class="metric-caption">{st.lastSeenLabel}</span>
-            </div>
-            <div class="sheet-metric-card">
-              <span class="metric-title">Mínimo Histórico</span>
-              <span class="metric-num" style="color: var(--emerald);">
-                {fmtEur(st.min!)}
-              </span>
-              <span class="metric-caption">
-                {st.lastIsMin ? 'En mínimo ahora' : `Pico: ${fmtEur(st.max!)}`}
-              </span>
-            </div>
-            <div class="sheet-metric-card">
-              <span class="metric-title">Máximo Visto</span>
-              <span class="metric-num" style="color: var(--muted);">
-                {st.max ? fmtEur(st.max) : '—'}
-              </span>
-              <span class="metric-caption">Pico registrado</span>
-            </div>
-            <div class="sheet-metric-card">
-              <span class="metric-title">Referencia 30 Días</span>
-              <span class="metric-num" style="color: var(--accent);">
-                {st.discountRef ? fmtEur(st.discountRef) : '—'}
-              </span>
-              <span class="metric-caption">
-                {st.discountRef
-                  ? st.discountPercent > 0
-                    ? `-${st.discountPercent}% vs mínimo 30 días`
-                    : st.last!.price > st.discountRef
-                      ? 'Por encima de su referencia'
-                      : 'Al nivel de su referencia'
-                  : 'Sin histórico suficiente (30 días)'}
-              </span>
-            </div>
-          </div>
-
-          <!-- Botón de Compra Directa -->
-          <div style="margin: 1.75rem 0 2.25rem;">
-            <AmazonLink
-              asin={product.asin}
-              query={product.amazonQuery}
-              class="btn-buy-amazon"
-              style="font-size: 1.05rem; padding: 0.95rem 1.75rem; width: 100%; border-radius: 10px;"
-            >
-              <span>Ver Oferta y Comprar en Amazon.es</span>
-              <Icon name="arrow-up-right" size={18} />
-            </AmazonLink>
-            <p style="font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0; text-align: center;">
-              Enlace con atribución de afiliado a Amazon.es · Sin sobrecostes para ti
-            </p>
-          </div>
-        </>
-      )}
-    </section>
-
-    {chartPoints.length >= 2 && (
-      <section style="margin: 2.75rem 0;" aria-label="Gráfica de evolución">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
-          <h2 style="margin: 0;">Evolución Histórica de Precios</h2>
-          <div class="quick-search-tags" role="group" aria-label="Filtrar rango de fechas">
-            <button type="button" class="quick-tag-chip time-filter-btn" data-days="30">30 Días</button>
-            <button type="button" class="quick-tag-chip time-filter-btn" data-days="90">90 Días</button>
-            <button type="button" class="quick-tag-chip time-filter-btn active" data-days="all" style="background: var(--accent); color: var(--accent-ink); border-color: var(--accent);">Todo</button>
-          </div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-header">
-            <span id="chart-range-text" style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
-              Rango: {chartLabels?.min} — {chartLabels?.max}
-            </span>
-            <span id="chart-dates-text" style="font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--muted);">
-              {chartLabels?.first} a {chartLabels?.last}
-            </span>
-          </div>
-          <canvas
-            id="priceChart"
-            class="chart-canvas"
-            width="800"
-            height="220"
-            role="img"
-            aria-label={`Evolución del precio de ${product.title}: mínimo ${chartLabels?.min}, máximo ${chartLabels?.max}`}
-          ></canvas>
-        </div>
-      </section>
-    )}
-
-    <!-- Historial de Snapshots -->
-    <section style="margin-top: 2.75rem;" aria-label="Historial de comprobaciones">
-      <h2>Historial de Comprobaciones</h2>
-      <div class="table-wrap">
-        <table class="reg">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Precio</th>
-              <th scope="col">Variación</th>
-              <th scope="col">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {history.map(({ no, s, delta }) => (
-              <tr>
-                <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
-                <td style="font-family: ui-monospace, Menlo, monospace;">{fmtDate(s.date)}</td>
-                <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700;">{fmtEur(s.price)}</td>
-                <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: delta && delta < 0 ? 'var(--emerald)' : delta && delta > 0 ? 'var(--coral)' : 'var(--muted)';">
-                  {deltaLabel(delta)}
-                </td>
-                <td>
-                  {s.price === st.min && (
-                    <span class="discount-tag historic">MÍNIMO</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <!-- Botón de Compra Directa -->
+    <section aria-label="Compra">
+      <div style="margin: 1.75rem 0 2.25rem;">
+        <AmazonLink
+          asin={product.asin}
+          query={product.amazonQuery}
+          class="btn-buy-amazon"
+          style="font-size: 1.05rem; padding: 0.95rem 1.75rem; width: 100%; border-radius: 10px;"
+        >
+          <span>Ver Oferta y Comprar en Amazon.es</span>
+          <Icon name="arrow-up-right" size={18} />
+        </AmazonLink>
+        <p style="font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0; text-align: center;">
+          Enlace con atribución de afiliado a Amazon.es · Sin sobrecostes para ti
+        </p>
       </div>
     </section>
 
+    {product.asin && (
+      <section style="margin: 2.75rem 0;" aria-label="Histórico de precios">
+        <h2>Histórico de Precios en Amazon.es</h2>
+        <KeepaChart asin={product.asin} title={product.title} />
+      </section>
+    )}
+
     <div style="margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
       <a class="section-link" href={u('')}>← Volver al inicio</a>
-      <a class="section-link" href={u('registro/')}>Ver registro global de precios →</a>
+      <a class="section-link" href={u('registro/')}>Ver todos los productos seguidos →</a>
     </div>
   </article>
-
-  {chartPoints.length >= 2 && (
-    <script is:inline define:vars={{ chartPoints }}>
-      (function () {
-        var canvas = document.getElementById('priceChart');
-        if (!canvas) return;
-        var ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        var rangeText = document.getElementById('chart-range-text');
-        var datesText = document.getElementById('chart-dates-text');
-        var filterBtns = document.querySelectorAll('.time-filter-btn');
-
-        var activePoints = chartPoints.slice();
-
-        function filterByDays(days) {
-          if (days === 'all') {
-            activePoints = chartPoints.slice();
-          } else {
-            var numDays = parseInt(days, 10);
-            var cutoff = new Date();
-            cutoff.setDate(cutoff.getDate() - numDays);
-            var cutoffStr = cutoff.toISOString().split('T')[0];
-            var filtered = chartPoints.filter(function (p) { return p.date >= cutoffStr; });
-            activePoints = filtered.length >= 2 ? filtered : chartPoints.slice();
-          }
-          render();
-        }
-
-        filterBtns.forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            filterBtns.forEach(function (b) {
-              b.classList.remove('active');
-              b.style.background = '';
-              b.style.color = '';
-              b.style.borderColor = '';
-            });
-            btn.classList.add('active');
-            btn.style.background = 'var(--accent)';
-            btn.style.color = 'var(--accent-ink)';
-            btn.style.borderColor = 'var(--accent)';
-            var days = btn.getAttribute('data-days');
-            filterByDays(days);
-          });
-        });
-
-        function render() {
-          var rect = canvas.getBoundingClientRect();
-          var dpr = window.devicePixelRatio || 1;
-          canvas.width = rect.width * dpr;
-          canvas.height = rect.height * dpr;
-          ctx.scale(dpr, dpr);
-
-          var W = rect.width;
-          var H = rect.height;
-          var padL = 60;
-          var padR = 20;
-          var padT = 20;
-          var padB = 30;
-
-          var prices = activePoints.map(function (p) { return p.price; });
-          var minP = Math.min.apply(null, prices);
-          var maxP = Math.max.apply(null, prices);
-          var range = maxP - minP;
-          if (range === 0) range = 1;
-
-          if (rangeText) {
-            rangeText.textContent = 'RANGO: ' + minP.toFixed(2) + ' € — ' + maxP.toFixed(2) + ' €';
-          }
-          if (datesText && activePoints.length > 0) {
-            datesText.textContent = activePoints[0].date + ' a ' + activePoints[activePoints.length - 1].date;
-          }
-
-          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-          var lineColor = isDark ? '#38bdf8' : '#2563eb';
-          var gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-          var textColor = isDark ? '#94a3b8' : '#71717a';
-
-          ctx.clearRect(0, 0, W, H);
-
-          // Grid lines
-          ctx.strokeStyle = gridColor;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          for (var i = 0; i <= 3; i++) {
-            var y = padT + (H - padT - padB) * (i / 3);
-            ctx.moveTo(padL, y);
-            ctx.lineTo(W - padR, y);
-          }
-          ctx.stroke();
-
-          // Price points
-          var coords = activePoints.map(function (p, idx) {
-            var x = padL + (W - padL - padR) * (idx / (activePoints.length - 1));
-            var y = padT + (H - padT - padB) * (1 - (p.price - minP) / range);
-            return { x: x, y: y, price: p.price, date: p.date };
-          });
-
-          // Draw curve
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = 2.5;
-          ctx.lineJoin = 'round';
-          ctx.beginPath();
-          coords.forEach(function (pt, idx) {
-            if (idx === 0) ctx.moveTo(pt.x, pt.y);
-            else ctx.lineTo(pt.x, pt.y);
-          });
-          ctx.stroke();
-
-          // Fill area
-          ctx.lineTo(coords[coords.length - 1].x, H - padB);
-          ctx.lineTo(coords[0].x, H - padB);
-          ctx.closePath();
-          var grad = ctx.createLinearGradient(0, padT, 0, H - padB);
-          grad.addColorStop(0, isDark ? 'rgba(56,189,248,0.22)' : 'rgba(37,99,235,0.14)');
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.fill();
-
-          // Draw points
-          coords.forEach(function (pt) {
-            ctx.fillStyle = lineColor;
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = isDark ? '#131a2c' : '#ffffff';
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
-            ctx.fill();
-          });
-
-          // Text labels
-          ctx.fillStyle = textColor;
-          ctx.font = '600 11px system-ui';
-          ctx.textAlign = 'right';
-          ctx.fillText(maxP.toFixed(2) + ' €', padL - 8, padT + 4);
-          ctx.fillText(minP.toFixed(2) + ' €', padL - 8, H - padB);
-        }
-
-        render();
-        window.addEventListener('resize', render);
-      })();
-    </script>
-  )}
 </Base>

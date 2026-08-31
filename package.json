@@ -7,8 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "snapshot": "node scripts/add-snapshot.mjs",
     "validate:data": "node scripts/validate-json.mjs",
+    "verify:asins": "node scripts/verify-asins.mjs",
     "probe:images": "node scripts/probe-images.mjs"
   },
   "dependencies": {

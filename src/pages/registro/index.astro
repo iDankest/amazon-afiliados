@@ -1,15 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import AmazonLink from "../../components/AmazonLink.astro";
-import Sparkline from "../../components/Sparkline.astro";
-import {
-  products,
-  sortedSnapshots,
-  priceStats,
-  fmtEur,
-  fmtDate,
-  categoryLabel,
-} from "../../lib/catalog";
+import { products, categoryLabel, testedLabel } from "../../lib/catalog";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -19,36 +10,20 @@ const u = (p: string) => base + p.replace(/^\//, "");
 const rows = products.map((p, i) => ({
   no: String(i + 1).padStart(3, "0"),
   p,
-  snaps: sortedSnapshots(p.id),
-  st: priceStats(p.id),
 }));
-const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
 ---
 
 <Base
-  title="Historial Completo de Precios y Mínimos — ORZA"
-  description="Registro histórico y comparador de precios de productos en Amazon.es. Detección de mínimos, medias y evolución."
+  title="Productos Seguidos — ORZA"
+  description="Índice de productos seguidos en Amazon.es con ASIN verificado. El histórico de precios lo sirve Keepa en cada ficha; Orza no almacena precios."
 >
   <div style="margin-bottom: 2rem;">
-    <h1 style="margin: 0 0 0.75rem;">Histórico y Registro de Precios</h1>
+    <h1 style="margin: 0 0 0.75rem;">Productos Seguidos</h1>
     <p class="lede" style="margin-bottom: 1.25rem;">
-      Base de datos completa de referencias monitoreadas en Amazon.es. Cada registro almacena fechas reales para que compruebes si el precio actual es un mínimo o una cotización inflada.
+      {rows.length} producto{rows.length === 1 ? "" : "s"} en seguimiento con ASIN verificado en
+      Amazon.es. Cada ficha enlaza su histórico de precios real, servido por Keepa en el momento
+      de la carga: aquí no se almacena ni se estima ningún precio.
     </p>
-
-    <div class="ticker-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 1.5rem;">
-      <div class="ticker-cell">
-        <span class="ticker-label">Productos Monitoreados</span>
-        <span class="ticker-val">{rows.length}</span>
-      </div>
-      <div class="ticker-cell">
-        <span class="ticker-label">Snapshots Fechados</span>
-        <span class="ticker-val" style="color: var(--accent);">{totalSnaps}</span>
-      </div>
-      <div class="ticker-cell">
-        <span class="ticker-label">Estado de la Base</span>
-        <span class="ticker-val" style="color: var(--emerald); font-size: 0.9rem; font-weight: 700;">VERIFICADO</span>
-      </div>
-    </div>
   </div>
 
   <div class="table-wrap">
@@ -56,52 +31,24 @@ const totalSnaps = rows.reduce((n, r) => n + r.st.count, 0);
       <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">Categoría</th>
           <th scope="col">Producto</th>
-          <th scope="col">Último Precio</th>
-          <th scope="col">Mín / Máx</th>
           <th scope="col">Estado</th>
-          <th scope="col">Evolución</th>
-          <th scope="col">Comprar</th>
         </tr>
       </thead>
       <tbody>
-        {rows.map(({ no, p, snaps, st }) => (
+        {rows.map(({ no, p }) => (
           <tr>
             <td style="color: var(--muted); font-family: ui-monospace, Menlo, monospace;">{no}</td>
+            <td style="font-size: 0.8rem; color: var(--muted);">{categoryLabel[p.category]}</td>
             <td>
               <a href={u(`p/${p.id}/`)} style="color: var(--ink); font-weight: 700; text-decoration: none;">{p.title}</a>
               <div style="font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; font-family: ui-monospace, Menlo, monospace;">
-                {categoryLabel[p.category]} · {p.asin}
+                {p.asin}
               </div>
             </td>
-            <td style="font-family: ui-monospace, Menlo, monospace; font-weight: 700;">
-              {st.count === 0 ? "—" : fmtEur(st.last!.price)}
-              <div style="font-size: 0.7rem; color: var(--muted); font-weight: normal;">
-                {st.last ? fmtDate(st.last.date) : ""}
-              </div>
-            </td>
-            <td style="font-family: ui-monospace, Menlo, monospace; font-size: 0.8rem; color: var(--muted);">
-              {st.count >= 2 ? `${fmtEur(st.min!)} / ${fmtEur(st.max!)}` : "—"}
-            </td>
             <td>
-              <span class={`status-badge ${st.lastIsMin ? "historic" : ""}`}>
-                {st.lastIsMin ? "MÍNIMO" : st.statusBadge}
-              </span>
-            </td>
-            <td style="min-width: 120px;">
-              {snaps.length >= 2 ? (
-                <Sparkline
-                  values={snaps.map((s) => s.price)}
-                  label={`Evolución de ${p.title}`}
-                />
-              ) : (
-                <span style="color: var(--muted); font-size: 0.78rem;">1 registro</span>
-              )}
-            </td>
-            <td>
-              <AmazonLink asin={p.asin} query={p.amazonQuery} class="btn-terminal-buy" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; min-height: 32px;">
-                <span>Amazon →</span>
-              </AmazonLink>
+              <span class="status-badge">{testedLabel[p.tested ?? "no"]}</span>
             </td>
           </tr>
         ))}

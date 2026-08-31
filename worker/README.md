@@ -1,11 +1,13 @@
-# Worker (esqueleto — Día 1)
+# Worker (validación de datos)
 
-Pequeño contenedor Node que, por ahora, **solo valida el JSON del registro** (y sabe
-invocar `scripts/add-snapshot.mjs` cuando haya un precio anotado a mano). Nada más.
+Pequeño contenedor Node que **valida el catálogo** (`scripts/validate-json.mjs`)
+y puede verificar la existencia de cada ASIN contra Keepa
+(`scripts/verify-asins.mjs`). Nada más.
 
 ## Qué NO hace
 
 - **No scrapea Amazon.** Ni Selenium, ni requests al listing, ni PA-API sin elegibilidad.
+- **No almacena precios.** El histórico lo sirve Keepa; el repo solo guarda ASIN verificados.
 - No despliega el sitio (el sitio público sigue siendo estático).
 - No toca Medusa, ni el compose de la tienda, ni el puerto `5433`.
 
@@ -16,15 +18,17 @@ docker build -t adc-worker ./worker
 docker run --rm -v "$PWD/data:/app/data" adc-worker
 ```
 
-El `CMD` ejecuta `node scripts/validate-json.mjs` (valida `data/catalog.json` y
-`data/snapshots/*.json`).
+El `CMD` ejecuta `node scripts/validate-json.mjs` (valida `data/catalog.json`).
 
-Para añadir un snapshot dentro del contenedor (dato manual):
+Para verificar que cada ASIN del catálogo existe en amazon.es (serie real en
+Keepa; sin esta comprobación un ASIN inventado rompería cada enlace de afiliado):
 
 ```sh
-docker run --rm -v "$PWD/data:/app/data" --entrypoint node adc-worker \
-  scripts/add-snapshot.mjs --id loop-quiet-2 --price 24.95
+docker run --rm -v "$PWD/data:/app/data" adc-worker node scripts/verify-asins.mjs
 ```
+
+`verify-asins.mjs` necesita salida a red hacia `graph.keepa.com` (no toca
+amazon.es). Es el mismo gate que ejecuta el CI antes de cada deploy.
 
 ## Cron en el host Ubuntu
 
@@ -40,20 +44,9 @@ Ejemplo de línea de cron (validación diaria a las 07:15):
 15 7 * * *  adc  cd /opt/adc/amazon-afiliados && docker compose -f worker/compose.yml run --rm worker
 ```
 
-## Telegram (V1: DM al dueño)
+## Creators API (estado)
 
-`worker/telegram/check.mjs` lee `data/snapshots/` y avisa si el último snapshot
-de un producto tiene más de 7 días (o no tiene ninguno). **Dry-run por defecto**:
-
-```sh
-node worker/telegram/check.mjs
-```
-
-Para enviar de verdad hacen falta `TELEGRAM_BOT_TOKEN` y `TELEGRAM_OWNER_CHAT_ID`
-en el entorno (`.env` con permisos 600 en el host, nunca en git). Sin canal público.
-Decisiones y checklist: `docs/noche/telegram.md` y `docs/noche/ubuntu.md`.
-
-## PA-API
-
-Ver `worker/paapi.md`. Resumen: si Amazon responde `AssociateNotEligible`,
-no hay API y el registro sigue siendo manual (`add-snapshot.mjs`).
+Ver `worker/paapi.md`. PA-API 5 está retirada; el sucesor (Creators API) exige
+10 ventas cualificadas en los últimos 30 días. Mientras no haya elegibilidad,
+no hay API: el catálogo se mantiene con ASIN verificados a mano y el histórico
+de precios vive exclusivamente en Keepa.

@@ -20,15 +20,13 @@ const canonical = new URL(canonicalPath, Astro.site);
 
 const bannerText = hasTag
   ? DISCLOSURE
-  : 'Rastreador de precios y ofertas en Amazon.es. Enlaces de compra directa con atribución legal. Más info en ' +
+  : 'Histórico de precios de Amazon.es vía Keepa. Enlaces de compra directa con atribución legal. Más info en ' +
     u('aviso-afiliados/');
 
 const nav: Array<[string, string]> = [
   ['Inicio', u('')],
-  ['Chollos', u('') + '#chollos'],
-  ['Tops', u('') + '#tops'],
-  ['Historial', u('registro/')],
-  ['Buscador', u('') + '#buscador'],
+  ['Guías', u('guias/')],
+  ['Productos', u('registro/')],
 ];
 
 const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
@@ -109,16 +107,15 @@ const isCurrent = (href: string) => {
           <div class="footer-brand">
             <Logo size="md" />
             <p class="fine" style="margin-top: 0.85rem;">
-              Plataforma de inteligencia y seguimiento de precios en Amazon.es. Diseñada para comprar con criterio técnico y al menor coste registrado.
+              Catálogo con ASIN verificado en Amazon.es e histórico de precios real servido por Keepa. Diseñada para comprar con criterio.
             </p>
           </div>
           <div class="footer-col">
-            <span class="footer-heading">Categorías</span>
+            <span class="footer-heading">Sitio</span>
             <ul class="footer-links">
-              <li><a href={u('') + '#chollos'}>Chollos & Descuentos</a></li>
-              <li><a href={u('registro/')}>Registro Histórico</a></li>
-              <li><a href={u('') + '#tops'}>Tops por Categoría</a></li>
-              <li><a href={u('') + '#buscador'}>Buscador Amazon</a></li>
+              <li><a href={u('registro/')}>Productos Seguidos</a></li>
+              <li><a href={u('guias/')}>Guías de Compra</a></li>
+              <li><a href={u('')}>Catálogo</a></li>
             </ul>
           </div>
           <div class="footer-col">

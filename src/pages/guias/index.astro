@@ -26,9 +26,6 @@ const teclados: Guia[] = [
   { slug: 'teclados', title: 'Teclados mecánicos', desc: 'Guía de compra honesta: switch, tamaño, conexión, layout. Lo no probado se etiqueta.' },
 ];
 
-const registro: Guia[] = [
-  { slug: 'ofertas-semana', title: 'Ofertas de la semana', desc: 'Aún sin fuente de descuentos: si no hay snapshot que lo respalde, no hay lista.' },
-];
 ---
 
 <Base title="Guías — Orza" description="Índice de guías de Orza: descanso (antifaces, tapones, kits) y teclados. Criterio de compra antes del clic; lo no probado se etiqueta.">
@@ -71,22 +68,6 @@ const registro: Guia[] = [
     ))}
   </div>
 
-  <h2>Desde el registro</h2>
-  <p class="section-desc">Páginas que dependen del registro de precios anotado a mano.</p>
-  <div class="grid">
-    {registro.map((g) => (
-      <article class="card">
-        <div>
-          <div class="card-header-mono">Registro</div>
-          <h3>{g.title}</h3>
-          <p>{g.desc}</p>
-        </div>
-        <div class="card-actions">
-          <a class="card-link" href={u(`guias/${g.slug}/`)}>Ver ofertas <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-    ))}
-  </div>
 </Base>
 
 <style>

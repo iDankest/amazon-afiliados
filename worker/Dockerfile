@@ -2,9 +2,9 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Solo lo mínimo para validar datos y anotar snapshots manuales.
+# Solo lo mínimo para validar el catálogo y verificar ASIN.
 COPY scripts ./scripts
 COPY data ./data
 
-# Sin red en runtime si se quiere: este worker no llama a ningún servicio.
+# verify-asins.mjs necesita salida a graph.keepa.com; validate-json.mjs no usa red.
 CMD ["node", "scripts/validate-json.mjs"]

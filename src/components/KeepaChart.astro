@@ -1,0 +1,56 @@
+---
+/**
+ * Gráfico de histórico de precios servido por Keepa (hotlink público).
+ * Orza no almacena, no agrega y no calcula precios: el PNG lo sirve
+ * graph.keepa.com en el momento de la carga y se atribuye a Keepa.
+ * domain=es = marketplace español. width/height explícitos evitan CLS.
+ * Verificado empíricamente; gate de CI: scripts/verify-asins.mjs.
+ */
+interface Props {
+  asin: string;
+  title: string;
+  range?: number;
+}
+const { asin, title, range = 365 } = Astro.props;
+---
+
+<figure class="keepa-chart">
+  <img
+    src={`https://graph.keepa.com/pricehistory.png?asin=${asin}&domain=es&range=${range}`}
+    alt={`Histórico de precio en Amazon.es de ${title}, según Keepa`}
+    width="500" height="200" loading="lazy" decoding="async" />
+  <figcaption>
+    Histórico de precio de Amazon.es. Datos de
+    <a href={`https://keepa.com/#!product/9-${asin}`} rel="nofollow noopener" target="_blank">Keepa</a>.
+    Orza no almacena precios: el gráfico lo sirve Keepa en el momento de la carga.
+  </figcaption>
+</figure>
+
+<style>
+  .keepa-chart {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1rem;
+  }
+
+  .keepa-chart img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .keepa-chart figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .keepa-chart figcaption a {
+    color: inherit;
+    text-decoration: underline;
+  }
+</style>

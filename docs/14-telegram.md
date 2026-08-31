@@ -2,6 +2,8 @@
 
 Fase V1 (MVP+), no MVP estricto — ver `04-mvp.md`.
 
+> **BLOQUEADO por la licencia de Amazon Associates (2026-08-31).** La cláusula §6(y) de los requisitos de participación («su Sitio no deberá tener funcionalidad de seguimiento de precios y/o de alertas de precio», salvo acuerdo por escrito con Amazon) prohíbe explícitamente las **alertas de precio**, que son la función central de este bot. Esto no es un pendiente de roadmap: el bot de alertas queda bloqueado hasta que exista el acuerdo por escrito que exige la cláusula (`docs/25-open-questions.md` #3b). Ninguna parte de este documento debe implementarse mientras tanto. Todo lo demás del proyecto asume ya esta restricción (`docs/24-decision-log.md`, 2026-08-31).
+
 ## Librería y transporte
 
 Candidato recomendado: **grammY** (TypeScript-first, mantenimiento activo, ecosistema de plugins para control de flood/rate limit) — alternativa: `node-telegram-bot-api`. Decisión final de librería concreta: `25-open-questions.md` #11. Webhook en producción (no polling), verificado por secreto en la URL o header, nunca long-polling en el servicio principal.
