@@ -51,16 +51,28 @@ interface ProbeEntry {
   productId?: string;
 }
 
-let probeCache: Record<string, ProbeEntry> | null | undefined;
+interface ProbeReport {
+  asins: Record<string, ProbeEntry>;
+  explicitImages: Record<string, ProbeEntry>;
+}
+
+let probeCache: ProbeReport | null | undefined;
 
 /** Lee el último sondeo local si existe (`.image-probe.json`, generado por scripts/probe-images.mjs). */
-function loadProbe(): Record<string, ProbeEntry> | null {
+function loadProbe(): ProbeReport | null {
   if (probeCache !== undefined) return probeCache;
   try {
     const file = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.image-probe.json');
     if (!existsSync(file)) return (probeCache = null);
-    const report = JSON.parse(readFileSync(file, 'utf8')) as { asins?: Record<string, ProbeEntry> };
-    probeCache = report && typeof report === 'object' && report.asins && typeof report.asins === 'object' ? report.asins : null;
+    const report = JSON.parse(readFileSync(file, 'utf8')) as Partial<ProbeReport>;
+    const asins =
+      report && typeof report === 'object' && report.asins && typeof report.asins === 'object' ? report.asins : null;
+    // Informes anteriores a 2026-08-31 no traen `explicitImages`: se tratan como vacío.
+    const explicitImages =
+      report && typeof report === 'object' && report.explicitImages && typeof report.explicitImages === 'object'
+        ? report.explicitImages
+        : {};
+    probeCache = asins ? { asins, explicitImages } : null;
   } catch {
     probeCache = null;
   }
@@ -70,33 +82,42 @@ function loadProbe(): Record<string, ProbeEntry> | null {
 /** ¿La imagen principal derivada de este ASIN consta como inválida en el último sondeo? */
 export function isKnownBadImage(asin: string | undefined): boolean {
   if (!asin) return false;
-  return loadProbe()?.[asin]?.status === 'invalid';
+  return loadProbe()?.asins?.[asin]?.status === 'invalid';
+}
+
+/** ¿La URL explícita de `images[0]` consta como inválida en el último sondeo? */
+export function isKnownBadImageUrl(url: string | undefined): boolean {
+  if (!url) return false;
+  return loadProbe()?.explicitImages?.[url]?.status === 'invalid';
 }
 
 /**
  * URL principal de imagen para un producto y tamaño, o `null` si no hay imagen legítima.
- * Prioridad: `images[0]` real del catálogo (compatibilidad PA-API) → derivada del ASIN.
- * Devuelve `null` si no hay ASIN o el sondeo marcó la imagen derivada como inválida.
+ * Prioridad: `images[0]` del catálogo si el sondeo no la marcó inválida → derivada del ASIN.
+ * Devuelve `null` si no queda ninguna URL válida (el componente pinta su placeholder).
  */
 export function imageUrlFor(product: ImageCarrier, size: ImageSize): string | null {
   const explicit = product.images?.[0];
-  if (explicit) return explicit;
+  if (explicit && !isKnownBadImageUrl(explicit)) return explicit;
   if (!product.asin) return null;
   if (isKnownBadImage(product.asin)) return null;
   return amazonImageUrl(product.asin, SIZE_PX[size]);
 }
 
 /**
- * Cadena de fallback del cliente: variante pedida → SX500 → (el componente aporta el placeholder).
- * Para URLs explícitas de `images[]` no se pueden derivar variantes: cadena de un solo salto.
+ * Cadena de fallback del cliente: URL en uso → derivada(tamaño) → derivada(SX500)
+ * → (el componente aporta el placeholder). Permite que una `images[0]` rota en
+ * caliente caiga a la imagen derivada del ASIN sin recargar la página.
  */
 export function fallbackChain(product: ImageCarrier, size: ImageSize): string[] {
   const src = imageUrlFor(product, size);
   if (!src) return [];
   const chain = [src];
-  if (product.asin && !(product.images && product.images.length)) {
-    const fb = amazonImageUrl(product.asin, FALLBACK_PX);
-    if (fb !== src) chain.push(fb);
+  if (product.asin && !isKnownBadImage(product.asin)) {
+    for (const px of [SIZE_PX[size], FALLBACK_PX]) {
+      const u = amazonImageUrl(product.asin, px);
+      if (!chain.includes(u)) chain.push(u);
+    }
   }
   return chain;
 }

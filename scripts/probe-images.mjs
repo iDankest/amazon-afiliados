@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * probe-images: sondeo de salud de las imágenes principales derivadas del ASIN.
+ * probe-images: sondeo de salud de las imágenes de producto.
  *
- * Pregunta al CDN público de Amazon (HEAD) si cada ASIN del catálogo tiene una
- * imagen principal válida. NO scrapea listings, NO descarga ni almacena imágenes:
- * escribe solo un archivo de estado local `.image-probe.json` (gitignored) que
+ * Pregunta al CDN público de Amazon (HEAD) por dos URLs de cada producto: la
+ * derivada del ASIN y, si existe, la explícita del catálogo (`images[0]`).
+ * NO scrapea listings, NO descarga ni almacena imágenes: escribe solo un archivo
+ * de estado local `.image-probe.json` (gitignored) que
  * ProductImage/productImages.ts usan para no emitir URLs inválidas.
  *
  * Critérios de invalidez (ver docs/24-decision-log.md, 2026-08-29):
@@ -36,8 +37,11 @@ const GIF_PLACEHOLDER_MAX = MIN_BYTES;
 
 const imageUrl = (asin, px = 500) => `${MEDIA_CDN}/images/P/${asin}.01._SCLZZZZZZZ_SX${px}_.jpg`;
 
-async function probe(asin) {
-  const url = imageUrl(asin);
+/** URL de imagen explícita del catálogo (mandan sobre la derivada del ASIN). */
+const explicitImageUrl = (p) =>
+  Array.isArray(p.images) && typeof p.images[0] === 'string' ? p.images[0] : null;
+
+async function probeUrl(url) {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -86,22 +90,38 @@ if (!Array.isArray(catalog)) {
 }
 
 const results = {};
+const explicitImages = {};
 let ok = 0;
 let invalid = 0;
 let unknown = 0;
+let explicitTotal = 0;
+let explicitInvalid = 0;
 
 for (const p of catalog) {
-  if (!p || typeof p.asin !== 'string' || !p.asin) continue;
-  const r = await probe(p.asin); // secuencial: cortesía con el CDN, sin concurrencia agresiva
-  results[p.asin] = { ...r, productId: p.id };
-  if (r.status === 'ok') ok++;
-  else if (r.status === 'invalid') invalid++;
-  else unknown++;
-  console.log(`probe-images: ${p.asin} (${p.id}) → ${r.status} · ${r.reason}`);
+  if (!p || typeof p !== 'object') continue;
+
+  if (typeof p.asin === 'string' && p.asin) {
+    const r = await probeUrl(imageUrl(p.asin)); // secuencial: cortesía con el CDN, sin concurrencia agresiva
+    results[p.asin] = { ...r, productId: p.id };
+    if (r.status === 'ok') ok++;
+    else if (r.status === 'invalid') invalid++;
+    else unknown++;
+    console.log(`probe-images: ${p.asin} (${p.id}) → ${r.status} · ${r.reason}`);
+  }
+
+  const explicit = explicitImageUrl(p);
+  if (explicit) {
+    const re = await probeUrl(explicit);
+    explicitImages[explicit] = { ...re, productId: p.id };
+    explicitTotal++;
+    if (re.status === 'invalid') explicitInvalid++;
+    console.log(`probe-images: ${p.id} images[0] → ${re.status} · ${re.reason}`);
+  }
 }
 
-const report = { generatedAt: new Date().toISOString(), asins: results };
+const report = { generatedAt: new Date().toISOString(), asins: results, explicitImages };
 writeFileSync(probeFile, JSON.stringify(report, null, 2) + '\n', 'utf8');
 console.log(
-  `probe-images: ${ok} ok · ${invalid} inválidas · ${unknown} desconocidas → ${path.relative(repoRoot, probeFile)}`
+  `probe-images: ${ok} ok · ${invalid} inválidas · ${unknown} desconocidas · ` +
+    `${explicitTotal} explícitas (${explicitInvalid} inválidas) → ${path.relative(repoRoot, probeFile)}`
 );
