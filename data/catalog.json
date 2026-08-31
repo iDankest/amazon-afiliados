@@ -8,5 +8,80 @@
     "amazonQuery": "sony wh 1000xm5 auriculares",
     "tested": "no",
     "notes": "Cancelación de ruido líder del sector con 8 micrófonos, audio de alta resolución LDAC y 30 horas de autonomía."
+  },
+  {
+    "id": "loop-quiet-2",
+    "title": "Loop Quiet 2 — Tapones de Silicona Reutilizables para Dormir",
+    "shortTitle": "Loop Quiet 2",
+    "category": "descanso",
+    "asin": "B0D3V6TR98",
+    "images": ["https://m.media-amazon.com/images/I/51it73+RbUL.jpg"],
+    "amazonQuery": "loop quiet 2 tapones",
+    "tested": "no",
+    "notes": "Tapones de silicona reutilizables con almohadillas en varias tallas. El modelo de referencia entre los tapones de diseño para dormir y concentrarse."
+  },
+  {
+    "id": "antifaz-3d-innelo",
+    "title": "INNELO Antifaz para Dormir 3D, Mejorado para Dormir de Lado",
+    "shortTitle": "Antifaz 3D INNELO",
+    "category": "descanso",
+    "asin": "B0DQLFVN7X",
+    "images": ["https://m.media-amazon.com/images/I/815fr2cIvnL.jpg"],
+    "amazonQuery": "antifaz dormir 3d blackout",
+    "tested": "no",
+    "notes": "Antifaz con copas 3D que no presionan los ojos ni las pestañas, pensado para dormir de lado y bloquear la luz por el puente nasal."
+  },
+  {
+    "id": "logitech-mx-master-3s",
+    "title": "Logitech MX Master 3S — Ratón Inalámbrico Performance",
+    "shortTitle": "Logitech MX Master 3S",
+    "category": "perifericos",
+    "asin": "B07W5JKHFZ",
+    "amazonQuery": "logitech mx master 3s",
+    "tested": "no",
+    "notes": "Ratón ergonómico de productividad con sensor de 8000 DPI, clics silenciosos y rueda electromagnética MagSpeed."
+  },
+  {
+    "id": "teclado-mecanico-60",
+    "title": "GXTrust Acira Teclado Mecánico 60% Español QWERTY",
+    "shortTitle": "Teclado Mecánico 60%",
+    "category": "teclados",
+    "asin": "B0CZ11JN9F",
+    "images": ["https://m.media-amazon.com/images/I/71iFyNWstwL.jpg"],
+    "amazonQuery": "teclado mecanico 60 por ciento español",
+    "tested": "no",
+    "notes": "Formato compacto de 61 teclas con layout español. Una puerta de entrada barata al formato 60% sin renunciar a la ñ."
+  },
+  {
+    "id": "epomaker-aula-f75",
+    "title": "EPOMAKER Aula F75 ISO-ES Teclado Mecánico de 3 Modos",
+    "shortTitle": "EPOMAKER Aula F75",
+    "category": "teclados",
+    "asin": "B0FN78X8KG",
+    "images": ["https://m.media-amazon.com/images/I/712IuFfgI2L.jpg"],
+    "amazonQuery": "epomaker teclado mecanico iso es",
+    "tested": "no",
+    "notes": "Teclado 75% con triple conexión (cable, Bluetooth y 2.4 GHz) y layout ISO español de fábrica."
+  },
+  {
+    "id": "ergosolid-f80",
+    "title": "ErgoSolid F80 — Brazo Articulado para Monitor 17-32\"",
+    "shortTitle": "Brazo Monitor ErgoSolid F80",
+    "category": "perifericos",
+    "asin": "B091D2CKC7",
+    "amazonQuery": "brazo monitor resorte gas 17 32",
+    "tested": "no",
+    "notes": "Soporte de escritorio con resorte de gas para monitores de 17 a 32 pulgadas, VESA 75/100 y hasta 9 kg."
+  },
+  {
+    "id": "tiras-nasales-haslom",
+    "title": "HASLOM Tiras Nasales para Dormir (Pack 60)",
+    "shortTitle": "Tiras Nasales (Pack 60)",
+    "category": "descanso",
+    "asin": "B0D3J3H21J",
+    "images": ["https://m.media-amazon.com/images/I/61cl3QMlw3L.jpg"],
+    "amazonQuery": "tiras nasales dormir",
+    "tested": "no",
+    "notes": "Pack de 60 tiras nasales adhesivas, el formato de consumo clásico para dormir y hacer deporte."
   }
 ]
