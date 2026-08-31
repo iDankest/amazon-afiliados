@@ -12,11 +12,18 @@ Pendiente del checklist: compose, cron elegido, `.env` con los secretos de Teleg
 La regla dura de separación con Minecraft sigue vigente: `~/orza` está fuera de las
 carpetas del servidor de Minecraft.
 
-## Qué hace el worker (V1)
+**Estado** (2026-08-31): nota OBSOLETA en lo relativo a Telegram. `worker/telegram/check.mjs`
+fue eliminado y el bot de alertas quedó bloqueado por la cláusula §6(y) de la licencia de
+Associates (`docs/24-decision-log.md` y `docs/14-telegram.md`, 2026-08-31). La tarea real del
+worker ahora es `scripts/validate-json.mjs` + `scripts/verify-asins.mjs` (`worker/README.md`).
+El checklist de separación con Minecraft sigue vigente.
 
-- `check.mjs` (Node, sin dependencias): lee `data/snapshots/` y avisa por DM
-  si el último snapshot de un producto tiene 7+ días.
-- Cron diario. Nada más. Sin scrape, sin escuchar puertos.
+## Qué hace el worker (V1, desde 2026-08-31)
+
+- `node scripts/validate-json.mjs`: valida `data/catalog.json`.
+- `node scripts/verify-asins.mjs`: verifica que cada ASIN del catálogo existe en
+  amazon.es (serie real en Keepa). Necesita salida a `graph.keepa.com`.
+- Cron diario. Nada más. Sin scrape, sin escuchar puertos, sin Telegram.
 
 ## Checklist de despliegue (futuro)
 
