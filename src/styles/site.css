@@ -480,6 +480,12 @@ html[data-theme="dark"] .stitch-search-btn:hover {
   gap: 1.5rem;
 }
 
+@media (min-width: 860px) {
+  .sidebar-sticky {
+    position: sticky;
+    top: 5.25rem;
+  }
+}
 .sidebar-box {
   background: var(--card);
   border: 1px solid var(--line);
