@@ -59,6 +59,12 @@ const jsonLd = {
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
             <span class="category-pill">{categoryLabel[product.category]}</span>
+            {product.asin && (
+              <span class="stitch-asin-badge" title={`ASIN verificado: ${product.asin}`}>
+                <span class="asin-dot" aria-hidden="true"></span>
+                <span>ASIN: {product.asin}</span>
+              </span>
+            )}
           </div>
           <h1 class="sheet-title">{product.title}</h1>
           <p class="sheet-notes">{product.notes}</p>
@@ -73,7 +79,6 @@ const jsonLd = {
           asin={product.asin}
           query={product.amazonQuery}
           class="btn-buy-amazon"
-          style="font-size: 1.05rem; padding: 0.95rem 1.75rem; width: 100%; border-radius: 10px;"
         >
           <span>Ver Oferta y Comprar en Amazon.es</span>
           <Icon name="arrow-up-right" size={18} />

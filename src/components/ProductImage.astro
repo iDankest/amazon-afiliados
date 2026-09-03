@@ -44,109 +44,137 @@ const initials = title
       <div class="product-img-el no-image" aria-hidden="true"></div>
     )
   }
-  {
-    /* Placeholder explícito: se muestra cuando no hay URL legítima o la cadena de
-       fallback (pedida → SX500) se agota. Colores propios para tema claro y oscuro. */
-  }
-  <svg class="product-img-ph" viewBox="0 0 120 80" role="img" aria-label={`Imagen no disponible para ${title}`}>
-    <text x="60" y="42" text-anchor="middle" dominant-baseline="central" class="product-img-ph-initials">
-      {initials || '·'}
-    </text>
-    <text x="60" y="68" text-anchor="middle" class="product-img-ph-label">Imagen no disponible</text>
-  </svg>
+  <div class="product-img-ph" aria-label={`Imagen no disponible para ${title}`}>
+    <svg class="product-img-ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+    <span class="product-img-ph-initials">{initials || '·'}</span>
+    <span class="product-img-ph-label">Imagen en catálogo</span>
+  </div>
 </div>
 
 <style>
   .product-img-wrap {
-    background: var(--card-alt);
+    background: #ffffff;
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
-    transition: transform 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  }
+
+  html[data-theme="dark"] .product-img-wrap {
+    background: #ffffff;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow-md);
   }
 
   .product-img-wrap.size-sm {
-    width: 64px;
-    height: 64px;
+    width: 60px;
+    height: 60px;
     border-radius: 8px;
     flex-shrink: 0;
+    padding: 0.35rem;
   }
 
   .product-img-wrap.size-md {
     width: 100%;
-    height: 180px;
+    height: 190px;
     margin-bottom: 1rem;
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   .product-img-wrap.size-lg {
     width: 100%;
-    height: 240px;
+    height: 250px;
     margin-bottom: 1.25rem;
-    padding: 1rem;
+    padding: 1.25rem;
   }
 
   .product-img-wrap.size-hero {
     width: 100%;
     max-width: 380px;
     height: 320px;
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: 1.75rem;
+    border-radius: 14px;
   }
+  @media (max-width: 640px) {
+    .product-img-wrap.size-hero {
+      height: 230px;
+      padding: 1.25rem;
+    }
+  }
+
 
   .product-img-el {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     mix-blend-mode: multiply;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04));
   }
 
   html[data-theme="dark"] .product-img-el {
-    mix-blend-mode: normal;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+    /* On white studio plate in dark mode, multiply works seamlessly to blend any off-white jpg artifacts */
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
   }
 
   .product-img-wrap:hover .product-img-el {
-    transform: scale(1.04);
+    transform: scale(1.05) translateY(-2px);
   }
 
-  /* Fallback explícito: iniciales del producto + texto honesto (sin inventar imágenes). */
+  /* Fallback refinado cuando no hay imagen disponible */
   .product-img-ph {
     display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
     width: 100%;
     height: 100%;
+    color: var(--muted);
+    background: var(--card-alt);
   }
 
   .product-img-wrap.no-image .product-img-ph,
   .product-img-el.no-image + .product-img-ph {
-    display: block;
+    display: flex;
   }
+
+  .product-img-ph-icon {
+    width: 28px;
+    height: 28px;
+    stroke: var(--muted-light);
+    opacity: 0.8;
+  }
+
   .product-img-ph-initials {
     font-family: var(--font-display, inherit);
-    font-size: 28px;
-    font-weight: 700;
-    fill: #6f7787;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--muted);
+    line-height: 1;
   }
 
   .product-img-ph-label {
-    font-family: inherit;
-    font-size: 8px;
-    font-weight: 500;
+    font-family: var(--font-body, inherit);
+    font-size: 0.72rem;
+    font-weight: 600;
     letter-spacing: 0.04em;
-    fill: #6f7787;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
-  .product-img-wrap.size-sm .product-img-ph-label {
+  .product-img-wrap.size-sm .product-img-ph-label,
+  .product-img-wrap.size-sm .product-img-ph-icon {
     display: none;
-  }
-
-  html[data-theme="dark"] .product-img-ph-initials,
-  html[data-theme="dark"] .product-img-ph-label {
-    fill: #a9b2c4;
   }
 </style>

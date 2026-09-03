@@ -21,7 +21,7 @@ const countByCategory = (cat: string) => products.filter((p) => p.category === c
   <section class="hero-stitch-card" aria-label="Catálogo">
     <h1 class="hero-stitch-headline">Compra con criterio en Amazon.es.</h1>
     <p class="hero-stitch-subtitle">
-      Pocos productos, ASIN verificado y el histórico de precios real servido por Keepa en cada ficha.
+      Catálogo curado con ASIN verificado e histórico de precios real Keepa en cada ficha. Sin relleno ni precios inventados.
     </p>
 
     <!-- Filtro de catálogo -->
@@ -32,20 +32,25 @@ const countByCategory = (cat: string) => products.filter((p) => p.category === c
           type="search"
           id="product-search"
           class="stitch-search-input"
-          placeholder="Filtrar el catálogo por nombre o marca"
+          placeholder="Buscar por modelo, marca o categoría (presiona / para buscar)..."
           aria-label="Filtrar el catálogo"
         />
+        <kbd class="search-kbd" title="Presiona / para enfocar la búsqueda">/</kbd>
       </div>
-      <button type="button" id="search-action-btn" class="stitch-search-btn">
-        <Icon name="search" size={16} />
-        <span>Filtrar</span>
+      <button type="button" id="search-action-btn" class="stitch-search-btn" aria-label="Filtrar catálogo">
+        <Icon name="search" size={15} />
+        <span>Buscar</span>
       </button>
     </div>
 
     <!-- Filtros rápidos -->
-    <div class="quick-search-tags">
-      <span>Tendencias:</span>
+    <div class="quick-search-tags" aria-label="Búsquedas destacadas">
+      <span>Populares:</span>
       <button type="button" class="quick-tag-chip" data-term="Sony WH-1000XM5">Sony ANC</button>
+      <button type="button" class="quick-tag-chip" data-term="MX Master 3S">MX Master 3S</button>
+      <button type="button" class="quick-tag-chip" data-term="Aula F75">Aula F75</button>
+      <button type="button" class="quick-tag-chip" data-term="Loop Quiet">Loop Quiet 2</button>
+      <button type="button" class="quick-tag-chip" data-term="Antifaz">Antifaz 3D</button>
     </div>
   </section>
 
@@ -101,14 +106,25 @@ const countByCategory = (cat: string) => products.filter((p) => p.category === c
       </div>
 
       <div class="products-feed-grid" id="main-products-grid">
-        {products.map((p) => (
-          <article class="stitch-card" data-category={p.category} data-title={p.title.toLowerCase()}>
+        {products.map((p, index) => (
+          <article
+            class="stitch-card"
+            data-category={p.category}
+            data-title={p.title.toLowerCase()}
+            style={`--card-index: ${index};`}
+          >
             <div>
               <div class="stitch-card-top">
                 <span class="stitch-cat-label">{categoryLabel[p.category]}</span>
+                {p.asin && (
+                  <span class="stitch-asin-badge" title={`ASIN verificado: ${p.asin}`}>
+                    <span class="asin-dot" aria-hidden="true"></span>
+                    <span>ASIN: {p.asin}</span>
+                  </span>
+                )}
               </div>
 
-              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;">
+              <a href={u(`p/${p.id}/`)} style="text-decoration: none; display: block;" aria-label={`Ficha de ${p.title}`}>
                 <ProductImage product={p} title={p.title} size="md" />
               </a>
 
@@ -119,14 +135,15 @@ const countByCategory = (cat: string) => products.filter((p) => p.category === c
               <p class="stitch-card-desc">{p.notes}</p>
             </div>
 
-            <div>
+            <div class="stitch-card-actions">
               <AmazonLink asin={p.asin} query={p.amazonQuery} class="stitch-btn-buy">
                 <span>Ver en Amazon.es</span>
-                <Icon name="arrow-up-right" size={15} />
+                <Icon name="arrow-up-right" size={15} class="btn-icon-move" />
               </AmazonLink>
               <a href={u(`p/${p.id}/`)} class="stitch-btn-analysis">
-                <span>Ver histórico de precios</span>
-                <Icon name="arrow-right" size={13} style="margin-left: 0.25rem;" />
+                <Icon name="activity" size={14} />
+                <span>Histórico de precios Keepa</span>
+                <Icon name="arrow-right" size={13} class="btn-icon-arrow" />
               </a>
             </div>
           </article>
@@ -201,6 +218,24 @@ const countByCategory = (cat: string) => products.filter((p) => p.category === c
           filterCards();
         });
       }
+
+      // Atajo de teclado: presionar '/' para enfocar el buscador, 'Escape' para desenfocar/limpiar
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "/" && document.activeElement !== searchInput && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+          }
+        } else if (e.key === "Escape" && document.activeElement === searchInput) {
+          if (searchInput.value) {
+            searchInput.value = "";
+            searchQuery = "";
+            filterCards();
+          }
+          searchInput.blur();
+        }
+      });
 
       tagChips.forEach((chip) => {
         chip.addEventListener("click", () => {
